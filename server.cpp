@@ -33,18 +33,18 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
     signal(SIGINT, handleSigint);
-    struct sockaddr_in ssin, csin;
-    memset(&ssin, 0, socklen);
-    ssin.sin_family = AF_INET;
-    ssin.sin_port = htons(atoi(argv[1]));
-    ssin.sin_addr.s_addr = htonl(INADDR_ANY);
+    struct sockaddr_in serverSocket, clientSocket;
+    memset(&serverSocket, 0, socklen);
+    serverSocket.sin_family = AF_INET;
+    serverSocket.sin_port = htons(atoi(argv[1]));
+    serverSocket.sin_addr.s_addr = htonl(INADDR_ANY);
 
     const int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
         perror("socket");
         exit(1);
     }
-    if (bind(fd, (struct sockaddr *)&ssin, socklen) == -1) {
+    if (bind(fd, (struct sockaddr *)&serverSocket, socklen) == -1) {
         perror("bind");
         exit(1);
     }
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
                     exit(0);
                 }
             } else if (evlist[i].data.fd == fd) {
-                cfd = accept(fd, (struct sockaddr *)&csin, &socklen);
+                cfd = accept(fd, (struct sockaddr *)&clientSocket, &socklen);
                 if (cfd == -1) {
                     perror("accept");
                     exit(1);
@@ -118,17 +118,8 @@ int main(int argc, char *argv[]) {
                     }
                 } else {
                     buf[buflen] = '\0';
-                    std::string msgPrefix =
-                        "some-prefix-to-prevent-arbitrary-connection";
                     std::string msg = buf;
-
-                    if (msgPrefix.length() > msg.length())
-                        continue;
-                    if (!strcmp(msgPrefix.c_str(),
-                                msg.substr(0, msgPrefix.length()).c_str())) {
-                        msg = msg.substr(msgPrefix.length(), msg.length());
-                        std::cout << msg << std::endl;
-                    }
+                    std::cout << msg << std::endl;
                 }
             }
         }
