@@ -15,12 +15,19 @@
 
 struct epoll_event evlist[MAX_CLIENTS];
 
-void handleSigint(int signum) {
+static void handleSigint(int signum) {
     (void)signum;
-    std::cout << "\rExit by interrupt signal" << std::endl;
+    std::cout << "\r💞 Good bye. 💞\n";
     for (int i = 0; i < MAX_CLIENTS; ++i)
         close(evlist[i].data.fd);
     exit(EXIT_SUCCESS);
+}
+
+static void syscall(int returnValue, const char *funcName) {
+    if (returnValue == -1) {
+        perror(funcName);
+        exit(EXIT_FAILURE);
+    }
 }
 
 int main(int argc, char **argv) {
@@ -42,20 +49,9 @@ int main(int argc, char **argv) {
         perror("socket");
         exit(1);
     }
-    if (bind(fd, (struct sockaddr *)&serverSocket, socklen) == -1) {
-        perror("bind");
-        exit(1);
-    }
-    if (listen(fd, 5) == -1) {
-        perror("listen");
-        exit(1);
-    }
-
-    epfd = epoll_create1(0);
-    if (epfd == -1) {
-        perror("epoll_create1");
-        exit(1);
-    }
+    syscall(bind(fd, (struct sockaddr *)&serverSocket, socklen), "bind");
+    syscall(listen(fd, 5), "listen");
+    syscall(epfd = epoll_create1(0), "epoll_create1");
     struct epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = STDIN_FILENO;
@@ -69,7 +65,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    std::cout << "Listening on port " << argv[1] << std::endl;
+    std::cout << "👂 Listening on port " << argv[1] << ". 👂\n";
 
     while (true) {
         const int nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1);
@@ -120,5 +116,4 @@ int main(int argc, char **argv) {
             }
         }
     }
-    return EXIT_SUCCESS;
 }
