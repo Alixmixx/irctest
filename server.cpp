@@ -11,16 +11,20 @@
 #include <thread>
 
 #define MAX_CLIENTS 1024
-#define BUFFER_SIZE_IRC 8192
+#define BUFFER_SIZE_IRC 5 // TODO 1024
 
 int fd;
 struct epoll_event evlist[MAX_CLIENTS];
 
-static void goodBye() {
-    std::cout << "\rGood bye. 💞\n";
+static void clean() {
     for (int i = 0; i < MAX_CLIENTS; ++i)
         close(evlist[i].data.fd);
     close(fd);
+}
+
+static void goodBye() {
+    std::cout << "\rGood bye. 💞\n";
+    clean();
     exit(EXIT_SUCCESS);
 }
 
@@ -32,7 +36,22 @@ static void handleSigint(int signum) {
 static void syscall(int returnValue, const char *funcName) {
     if (returnValue == -1) {
         perror(funcName);
+        clean();
         exit(EXIT_FAILURE);
+    }
+}
+
+static std::string fullRead(int fd) {
+    std::string message;
+    char buf[BUFFER_SIZE_IRC];
+
+    while (true) {
+        int buflen;
+        syscall(buflen = read(fd, buf, BUFFER_SIZE_IRC - 1), "read");
+        buf[buflen] = '\0';
+        message += buf;
+        if (buflen < BUFFER_SIZE_IRC - 1)
+            return message;
     }
 }
 
@@ -68,10 +87,8 @@ int main(int argc, char **argv) {
         syscall(nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1), "epoll_wait");
         for (int i = 0; i < nfds; ++i) {
             if (evlist[i].data.fd == STDIN_FILENO) {
-                syscall(buflen = read(STDIN_FILENO, buf, BUFFER_SIZE_IRC - 1),
-                        "read");
-                buf[buflen] = '\0';
-                if (!strcmp(buf, "quit\n"))
+                std::string input = fullRead(STDIN_FILENO);
+                if (input == "quit\n")
                     goodBye();
             } else if (evlist[i].data.fd == fd) {
                 cfd = accept(fd, (struct sockaddr *)&clientSocket, &socklen);
