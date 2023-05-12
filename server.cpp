@@ -13,21 +13,19 @@
 #define MAX_CLIENTS 1024
 #define BUFFER_SIZE_IRC 8192
 
-int nfds;
-socklen_t socklen = sizeof(struct sockaddr);
-struct epoll_event ev;
 struct epoll_event evlist[MAX_CLIENTS];
 
 void handleSigint(int signum) {
     (void)signum;
     std::cout << "\rExit by interrupt signal" << std::endl;
-    for (int i = 0; i < nfds; ++i)
+    for (int i = 0; i < MAX_CLIENTS; ++i)
         close(evlist[i].data.fd);
     exit(EXIT_SUCCESS);
 }
 
-int main(int argc, char *argv[]) {
-    int ret, cfd, epfd;
+int main(int argc, char **argv) {
+    static socklen_t socklen = sizeof(struct sockaddr);
+    int cfd, epfd;
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " port\n";
         return EXIT_FAILURE;
@@ -58,6 +56,7 @@ int main(int argc, char *argv[]) {
         perror("epoll_create1");
         exit(1);
     }
+    struct epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = STDIN_FILENO;
     if (epoll_ctl(epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev) == -1) {
@@ -73,7 +72,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Listening on port " << argv[1] << std::endl;
 
     while (true) {
-        nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1);
+        const int nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1);
         if (nfds == -1) {
             perror("epoll_wait");
             exit(1);
@@ -96,8 +95,7 @@ int main(int argc, char *argv[]) {
                 printf("\x1b[0;32m[*] accept\x1b[0m\n");
                 ev.events = EPOLLIN;
                 ev.data.fd = cfd;
-                ret = epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev);
-                if (ret == -1) {
+                if (epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev) == -1) {
                     perror("epoll_ctl");
                     exit(1);
                 }
@@ -105,15 +103,13 @@ int main(int argc, char *argv[]) {
                 cfd = evlist[i].data.fd;
                 int buflen = read(cfd, buf, BUFFER_SIZE_IRC - 1);
                 if (buflen == 0) {
-                    close(cfd);
-                    if (cfd == -1) {
-                        perror("close");
+                    printf("\x1b[0;31m[*] close\x1b[0m\n");
+                    if (epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]) == -1) {
+                        perror("epoll_ctl");
                         exit(1);
                     }
-                    printf("\x1b[0;31m[*] close\x1b[0m\n");
-                    epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]);
-                    if (ret == -1) {
-                        perror("epoll_ctl");
+                    if (close(cfd) == -1) {
+                        perror("close");
                         exit(1);
                     }
                 } else {
