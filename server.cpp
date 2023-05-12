@@ -57,8 +57,7 @@ static std::string fullRead(int fd) {
 
 int main(int argc, char **argv) {
     static socklen_t socklen = sizeof(struct sockaddr);
-    int buflen, cfd, epfd, nfds;
-    char buf[BUFFER_SIZE_IRC];
+    int cfd, epfd, nfds;
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " port\n";
         return EXIT_FAILURE;
@@ -96,24 +95,20 @@ int main(int argc, char **argv) {
                     perror("accept");
                     exit(1);
                 }
-                printf("\x1b[0;32m[*] accept\x1b[0m\n");
+                std::cout << "\x1b[0;32m[*] accept\x1b[0m\n";
                 ev.events = EPOLLIN;
                 ev.data.fd = cfd;
-                if (epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev) == -1) {
-                    perror("epoll_ctl");
-                    exit(1);
-                }
+                syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev), "epoll_ctl");
             } else {
                 cfd = evlist[i].data.fd;
-                syscall(buflen = read(cfd, buf, BUFFER_SIZE_IRC - 1), "read");
-                if (buflen == 0) {
+                std::string msg = fullRead(cfd);
+                if (msg == "") {
                     std::cout << "\x1b[0;31m[*] close\x1b[0m\n";
                     syscall(epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]),
                             "epoll_ctl");
                     close(cfd);
                 } else {
-                    buf[buflen] = '\0';
-                    std::cout << buf << std::endl;
+                    std::cout << msg << std::endl;
                 }
             }
         }
