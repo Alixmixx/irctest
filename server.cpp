@@ -14,7 +14,6 @@
 #define BUFFER_SIZE_IRC 8192
 
 int nfds;
-struct sockaddr_in ssin, csin;
 socklen_t socklen = sizeof(struct sockaddr);
 struct epoll_event ev;
 struct epoll_event evlist[MAX_CLIENTS];
@@ -28,18 +27,19 @@ void handleSigint(int signum) {
 }
 
 int main(int argc, char *argv[]) {
-    int ret, fd, cfd, epfd;
+    int ret, cfd, epfd;
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " port\n";
         return EXIT_FAILURE;
     }
     signal(SIGINT, handleSigint);
+    struct sockaddr_in ssin, csin;
     memset(&ssin, 0, socklen);
     ssin.sin_family = AF_INET;
     ssin.sin_port = htons(atoi(argv[1]));
     ssin.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    fd = socket(AF_INET, SOCK_STREAM, 0);
+    const int fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
         perror("socket");
         exit(1);
@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
         perror("epoll_ctl");
         exit(1);
     }
+
+    std::cout << "Listening on port " << argv[1] << std::endl;
 
     while (true) {
         nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1);
