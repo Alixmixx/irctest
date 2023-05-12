@@ -10,8 +10,9 @@
 #include <iostream>
 #include <thread>
 
-#define MAX_CLIENTS 1024
+#define BACKLOG 128
 #define BUFFER_SIZE_IRC 1024
+#define MAX_CLIENTS 1024
 
 int fd;
 struct epoll_event evlist[MAX_CLIENTS];
@@ -70,7 +71,7 @@ int main(int argc, char **argv) {
 
     syscall(fd = socket(AF_INET, SOCK_STREAM, 0), "socket");
     syscall(bind(fd, (struct sockaddr *)&serverSocket, socklen), "bind");
-    syscall(listen(fd, 5), "listen");
+    syscall(listen(fd, BACKLOG), "listen");
     syscall(epfd = epoll_create1(0), "epoll_create1");
     struct epoll_event ev;
     ev.events = EPOLLIN;
