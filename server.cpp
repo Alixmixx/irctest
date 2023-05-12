@@ -13,14 +13,20 @@
 #define MAX_CLIENTS 1024
 #define BUFFER_SIZE_IRC 8192
 
+int fd;
 struct epoll_event evlist[MAX_CLIENTS];
+
+static void goodBye() {
+    std::cout << "\rGood bye. 💞\n";
+    for (int i = 0; i < MAX_CLIENTS; ++i)
+        close(evlist[i].data.fd);
+    close(fd);
+    exit(EXIT_SUCCESS);
+}
 
 static void handleSigint(int signum) {
     (void)signum;
-    std::cout << "\r💞 Good bye. 💞\n";
-    for (int i = 0; i < MAX_CLIENTS; ++i)
-        close(evlist[i].data.fd);
-    exit(EXIT_SUCCESS);
+    goodBye();
 }
 
 static void syscall(int returnValue, const char *funcName) {
@@ -32,7 +38,8 @@ static void syscall(int returnValue, const char *funcName) {
 
 int main(int argc, char **argv) {
     static socklen_t socklen = sizeof(struct sockaddr);
-    int cfd, epfd;
+    int buflen, cfd, epfd, nfds;
+    char buf[BUFFER_SIZE_IRC];
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " port\n";
         return EXIT_FAILURE;
@@ -44,44 +51,28 @@ int main(int argc, char **argv) {
     serverSocket.sin_port = htons(atoi(argv[1]));
     serverSocket.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    const int fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd == -1) {
-        perror("socket");
-        exit(1);
-    }
+    syscall(fd = socket(AF_INET, SOCK_STREAM, 0), "socket");
     syscall(bind(fd, (struct sockaddr *)&serverSocket, socklen), "bind");
     syscall(listen(fd, 5), "listen");
     syscall(epfd = epoll_create1(0), "epoll_create1");
     struct epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = STDIN_FILENO;
-    if (epoll_ctl(epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev) == -1) {
-        perror("epoll_ctl");
-        exit(1);
-    }
+    syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev), "epoll_ctl");
     ev.data.fd = fd;
-    if (epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
-        perror("epoll_ctl");
-        exit(1);
-    }
+    syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev), "epoll_ctl");
 
-    std::cout << "👂 Listening on port " << argv[1] << ". 👂\n";
+    std::cout << "Listening on port " << argv[1] << ". 👂\n";
 
     while (true) {
-        const int nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1);
-        if (nfds == -1) {
-            perror("epoll_wait");
-            exit(1);
-        }
-
+        syscall(nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1), "epoll_wait");
         for (int i = 0; i < nfds; ++i) {
-            char buf[BUFFER_SIZE_IRC];
             if (evlist[i].data.fd == STDIN_FILENO) {
-                fgets(buf, BUFFER_SIZE_IRC - 1, stdin);
-                if (!strcmp(buf, "quit") || !strcmp(buf, "exit")) {
-                    close(fd);
-                    exit(0);
-                }
+                syscall(buflen = read(STDIN_FILENO, buf, BUFFER_SIZE_IRC - 1),
+                        "read");
+                buf[buflen] = '\0';
+                if (!strcmp(buf, "quit\n"))
+                    goodBye();
             } else if (evlist[i].data.fd == fd) {
                 cfd = accept(fd, (struct sockaddr *)&clientSocket, &socklen);
                 if (cfd == -1) {
@@ -97,21 +88,15 @@ int main(int argc, char **argv) {
                 }
             } else {
                 cfd = evlist[i].data.fd;
-                int buflen = read(cfd, buf, BUFFER_SIZE_IRC - 1);
+                syscall(buflen = read(cfd, buf, BUFFER_SIZE_IRC - 1), "read");
                 if (buflen == 0) {
-                    printf("\x1b[0;31m[*] close\x1b[0m\n");
-                    if (epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]) == -1) {
-                        perror("epoll_ctl");
-                        exit(1);
-                    }
-                    if (close(cfd) == -1) {
-                        perror("close");
-                        exit(1);
-                    }
+                    std::cout << "\x1b[0;31m[*] close\x1b[0m\n";
+                    syscall(epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]),
+                            "epoll_ctl");
+                    close(cfd);
                 } else {
                     buf[buflen] = '\0';
-                    std::string msg = buf;
-                    std::cout << msg << std::endl;
+                    std::cout << buf << std::endl;
                 }
             }
         }
