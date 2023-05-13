@@ -11,8 +11,8 @@
 #include <thread>
 
 #define BACKLOG 128
-#define BUFFER_SIZE_IRC 1024
 #define MAX_CLIENTS 1024
+#define BUFFER_SIZE_IRC 1024
 
 int fd;
 struct epoll_event evlist[MAX_CLIENTS];
@@ -45,6 +45,7 @@ static void syscall(int returnValue, const char *funcName) {
 static std::string fullRead(int fd) {
     std::string message;
     char buf[BUFFER_SIZE_IRC];
+
     while (true) {
         int buflen;
         syscall(buflen = read(fd, buf, BUFFER_SIZE_IRC - 1), "read");
@@ -90,7 +91,8 @@ int main(int argc, char **argv) {
                 if (input == "quit\n")
                     goodBye();
             } else if (evlist[i].data.fd == fd) {
-                syscall(accept(fd, (struct sockaddr *)&clientSocket, &socklen),
+                syscall(cfd = accept(fd, (struct sockaddr *)&clientSocket,
+                                     &socklen),
                         "accept");
                 std::cout << "\x1b[0;32m[*] accept\x1b[0m\n";
                 ev.events = EPOLLIN;
