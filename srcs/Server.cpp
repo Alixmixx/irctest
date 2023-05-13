@@ -1,112 +1,83 @@
 #include "Server.hpp"
 
-	// Constructeur
+// Constructeur
 
 Server::Server(std::string serverName, std::string serverInfo,
-	std::string serverVersion, std::string serverEnvironment,
-	std::string port)
-	:_serverName(serverName),
-	_serverInfo(serverInfo),
-	_serverVersion(serverVersion),
-	_serverEnvironment(serverEnvironment),
-	_port(std::atoi(port.c_str()))
-{}
+               std::string serverVersion, std::string serverEnvironment,
+               std::string port)
+    : _serverName(serverName), _serverInfo(serverInfo),
+      _serverVersion(serverVersion), _serverEnvironment(serverEnvironment),
+      _port(std::atoi(port.c_str())) {}
 
-	// Destructeur
+// Destructeur
 
 Server::~Server() {}
 
-	// Setters
+// Setters
 
-void Server::setServerName(std::string serverName)
-{
-	_serverName = serverName;
+void Server::setServerName(std::string serverName) { _serverName = serverName; }
+
+void Server::setServerInfo(std::string serverInfo) { _serverInfo = serverInfo; }
+
+void Server::setServerVersion(std::string serverVersion) {
+    _serverVersion = serverVersion;
 }
 
-void Server::setServerInfo(std::string serverInfo)
-{
-	_serverInfo = serverInfo;
+void Server::setServerEnvironment(std::string serverEnvironment) {
+    _serverEnvironment = serverEnvironment;
 }
 
-void Server::setServerVersion(std::string serverVersion)
-{
-	_serverVersion = serverVersion;
+// Getters
+
+std::string Server::getServerName() const { return (_serverName); }
+
+std::string Server::getServerInfo() const { return (_serverInfo); }
+
+std::string Server::getServerVersion() const { return (_serverVersion); }
+
+std::string Server::getServerEnvironment() const {
+    return (_serverEnvironment);
 }
 
-void Server::setServerEnvironment(std::string serverEnvironment)
-{
-	_serverEnvironment = serverEnvironment;
-}
-
-	// Getters
-
-std::string Server::getServerName() const
-{
-	return (_serverName);
-}
-
-std::string Server::getServerInfo() const
-{
-	return (_serverInfo);
-}
-
-std::string Server::getServerVersion() const
-{
-	return (_serverVersion);
-}
-
-std::string Server::getServerEnvironment() const
-{
-	return (_serverEnvironment);
-}
-
-std::vector<Client> Server::getClients() const
-{
-	return (_clients);
-}
+std::vector<Client> Server::getClients() const { return (_clients); }
 
 // std::vector<Channel> Server::getChannels() const
 // {
 // 	return (_channels);
 // }
 
-	// Statics
+// Statics
 
-void Server::clean()
-{
-	std::cout << "Cleaning..." << std::endl;
-	for (int i = 0; i < MAX_CLIENTS; ++i)
+void Server::clean() {
+    std::cout << "Cleaning..." << std::endl;
+    for (int i = 0; i < MAX_CLIENTS; ++i)
         close(_evlist[i].data.fd);
     close(_socketFd);
     close(_epollFd);
 }
 
-void Server::goodBye()
-{
-	std::cout << "\rGood bye. 💞\n";
+void Server::goodBye() {
+    std::cout << "\rGood bye. 💞\n";
     clean();
     exit(EXIT_SUCCESS);
 }
 
-void Server::handleSigint(int signum)
-{
-	std::cout << "SIGINT received !" << std::endl;
-	(void)signum;
-    //goodBye();
+void Server::handleSigint(int signum) {
+    std::cout << "SIGINT received !" << std::endl;
+    (void)signum;
+    // goodBye();
 }
 
-void Server::syscall(int returnValue, const char *funcName)
-{
-	if (returnValue == -1) {
+void Server::syscall(int returnValue, const char *funcName) {
+    if (returnValue == -1) {
         std::perror(funcName);
         clean();
         exit(EXIT_FAILURE);
     }
 }
 
-std::string Server::fullRead(int fd)
-{
-	std::string message;
+std::string Server::fullRead(int fd) {
+    std::string message;
     char buf[BUFFER_SIZE_IRC];
 
     while (true) {
@@ -119,18 +90,16 @@ std::string Server::fullRead(int fd)
     }
 }
 
-void Server::addEvent(int epollFd, int eventFd)
-{
-	struct epoll_event evStdin;
+void Server::addEvent(int epollFd, int eventFd) {
+    struct epoll_event evStdin;
 
     evStdin.events = EPOLLIN;
     evStdin.data.fd = eventFd;
     syscall(epoll_ctl(epollFd, EPOLL_CTL_ADD, eventFd, &evStdin), "epoll_ctl");
 }
 
-void Server::initEpoll(char *port)
-{
-	struct sockaddr_in serverSocket;
+void Server::initEpoll(char *port) {
+    struct sockaddr_in serverSocket;
     bzero(&serverSocket, sizeof(serverSocket));
     serverSocket.sin_family = AF_INET;
     serverSocket.sin_port = htons(atoi(port));
@@ -146,9 +115,8 @@ void Server::initEpoll(char *port)
     addEvent(_epollFd, _socketFd);
 }
 
-void Server::loop()
-{
-	int clientFd, numFds;
+void Server::loop() {
+    int clientFd, numFds;
     while (true) {
         syscall(numFds = epoll_wait(_epollFd, _evlist, MAX_CLIENTS, -1),
                 "epoll_wait");
@@ -176,9 +144,9 @@ void Server::loop()
                 std::string msg = fullRead(clientFd);
                 if (msg == "") {
                     std::cout << "\x1b[0;31m[*] close\x1b[0m\n";
-                    syscall(
-                        epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientFd, &_evlist[i]),
-                        "epoll_ctl");
+                    syscall(epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientFd,
+                                      &_evlist[i]),
+                            "epoll_ctl");
                     close(clientFd);
                 } else {
                     std::cout << msg << std::endl;

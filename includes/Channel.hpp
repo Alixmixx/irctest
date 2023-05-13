@@ -3,14 +3,12 @@
 
 #include <iostream>
 
-class Channel
-{
-	public:
-		Channel(void);
-		~Channel(void);
+class Channel {
+  public:
+    Channel(void);
+    ~Channel(void);
 
-	private:
-
+  private:
 };
 
 #endif

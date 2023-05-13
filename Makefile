@@ -24,7 +24,7 @@ DEPS	= $(SRCS:$S%=$D%.d)
 
 RM		= /bin/rm -rf
 
-END=\033[0m
+END = \033[0m
 GRAY = \033[0;90m
 RED = \033[0;91m
 GREEN = \033[0;92m
