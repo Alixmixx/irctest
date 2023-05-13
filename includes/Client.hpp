@@ -1,5 +1,10 @@
-#include "Client.hpp"
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
+
 #include "Server.hpp"
+#include <string>
+
+class Server;
 
 class Client
 {
@@ -29,3 +34,5 @@ private:
 	std::string _hostname;
 	Server *_server;
 };
+
+#endif
