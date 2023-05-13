@@ -1,4 +1,6 @@
 #include <arpa/inet.h>
+#include <cstring>
+#include <iostream>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,9 +8,6 @@
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <unistd.h>
-
-#include <iostream>
-#include <thread>
 
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
@@ -56,62 +55,70 @@ static std::string fullRead(int fd) {
     }
 }
 
-// static void init() {}
+int main(int argc, char *argv[]) {
+    int clientFd, epollFd, numFds;
 
-int main(int argc, char **argv) {
-    static socklen_t socklen = sizeof(struct sockaddr);
-    int cfd, epfd, nfds;
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " port\n";
         return EXIT_FAILURE;
     }
     signal(SIGINT, handleSigint);
-    struct sockaddr_in serverSocket, clientSocket;
-    memset(&serverSocket, 0, socklen);
+
+    struct sockaddr_in serverSocket;
+    bzero(&serverSocket, sizeof(serverSocket));
     serverSocket.sin_family = AF_INET;
     serverSocket.sin_port = htons(atoi(argv[1]));
     serverSocket.sin_addr.s_addr = htonl(INADDR_ANY);
 
     syscall(fd = socket(AF_INET, SOCK_STREAM, 0), "socket");
-    syscall(bind(fd, (struct sockaddr *)&serverSocket, socklen), "bind");
+    syscall(bind(fd, (struct sockaddr *)&serverSocket, sizeof(serverSocket)),
+            "bind");
     syscall(listen(fd, BACKLOG), "listen");
-    syscall(epfd = epoll_create1(0), "epoll_create1");
+    syscall(epollFd = epoll_create1(0), "epoll_create1");
+
     struct epoll_event ev;
     ev.events = EPOLLIN;
     ev.data.fd = STDIN_FILENO;
-    syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, STDIN_FILENO, &ev), "epoll_ctl");
+    syscall(epoll_ctl(epollFd, EPOLL_CTL_ADD, STDIN_FILENO, &ev), "epoll_ctl");
     ev.data.fd = fd;
-    syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev), "epoll_ctl");
+    syscall(epoll_ctl(epollFd, EPOLL_CTL_ADD, fd, &ev), "epoll_ctl");
 
     std::cout << "Listening on port " << argv[1] << ". 👂\n";
 
     while (true) {
-        syscall(nfds = epoll_wait(epfd, evlist, MAX_CLIENTS, -1), "epoll_wait");
-        for (int i = 0; i < nfds; ++i) {
+        syscall(numFds = epoll_wait(epollFd, evlist, MAX_CLIENTS, -1),
+                "epoll_wait");
+        for (int i = 0; i < numFds; ++i) {
             if (evlist[i].data.fd == STDIN_FILENO) {
                 std::string input = fullRead(STDIN_FILENO);
                 if (input == "quit\n")
                     goodBye();
             } else if (evlist[i].data.fd == fd) {
-                syscall(cfd = accept(fd, (struct sockaddr *)&clientSocket,
-                                     &socklen),
+                struct sockaddr_in clientSocket;
+                socklen_t socklen;
+                syscall(clientFd = accept(fd, (struct sockaddr *)&clientSocket,
+                                          &socklen),
                         "accept");
                 std::cout << "\x1b[0;32m[*] accept\x1b[0m\n";
                 ev.events = EPOLLIN;
-                ev.data.fd = cfd;
-                syscall(epoll_ctl(epfd, EPOLL_CTL_ADD, cfd, &ev), "epoll_ctl");
+                ev.data.fd = clientFd;
+                syscall(epoll_ctl(epollFd, EPOLL_CTL_ADD, clientFd, &ev),
+                        "epoll_ctl");
             } else {
-                cfd = evlist[i].data.fd;
-                std::string msg = fullRead(cfd);
+                clientFd = evlist[i].data.fd;
+                std::string msg = fullRead(clientFd);
                 if (msg == "") {
                     std::cout << "\x1b[0;31m[*] close\x1b[0m\n";
-                    syscall(epoll_ctl(epfd, EPOLL_CTL_DEL, cfd, &evlist[i]),
-                            "epoll_ctl");
-                    close(cfd);
+                    syscall(
+                        epoll_ctl(epollFd, EPOLL_CTL_DEL, clientFd, &evlist[i]),
+                        "epoll_ctl");
+                    close(clientFd);
                 } else {
                     std::cout << msg << std::endl;
                 }
             }
         }
     }
+
+    return 0;
 }

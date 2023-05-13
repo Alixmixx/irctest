@@ -1,5 +1,5 @@
 all:
-	c++ -Wall -Wextra -Werror -std=c++11 -o server -pthread server.cpp
+	c++ -Wall -Wextra -Werror -std=c++98 -o server server.cpp
 
 clean:
 	rm server
