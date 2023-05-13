@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #define BACKLOG 128
-#define MAX_CLIENTS 1024
+#define MAX_CLIENTS 2048
 #define BUFFER_SIZE_IRC 1024
 
 int epollFd, socketFd;
