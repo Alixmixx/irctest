@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	msg := fmt.Sprintf("TESTING")
+	msg := fmt.Sprintf("LOLOL")
 	
 	c, _ := net.Dial("tcp", "127.0.0.1:7779")
 	for i := 0; i < 3; i++ {
