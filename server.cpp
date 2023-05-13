@@ -1,16 +1,14 @@
 #include <arpa/inet.h>
 #include <csignal>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
-#include <unistd.h>
 
 #define BACKLOG 128
-#define MAX_CLIENTS 2048
+#define MAX_CLIENTS 1024
 #define BUFFER_SIZE_IRC 1024
 
 int epollFd, socketFd;
