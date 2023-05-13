@@ -95,7 +95,8 @@ int main(int argc, char *argv[]) {
                     goodBye();
             } else if (evlist[i].data.fd == fd) {
                 struct sockaddr_in clientSocket;
-                socklen_t socklen;
+                bzero(&clientSocket, sizeof(clientSocket));
+                socklen_t socklen = sizeof(clientSocket);
                 syscall(clientFd = accept(fd, (struct sockaddr *)&clientSocket,
                                           &socklen),
                         "accept");
