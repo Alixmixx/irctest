@@ -56,6 +56,8 @@ static std::string fullRead(int fd) {
     }
 }
 
+// static void init() {}
+
 int main(int argc, char **argv) {
     static socklen_t socklen = sizeof(struct sockaddr);
     int cfd, epfd, nfds;
