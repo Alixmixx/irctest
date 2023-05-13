@@ -1,5 +1,4 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
 #include "Client.hpp"
 
@@ -73,5 +72,3 @@ class Server {
     const std::string _serverCreationDate;
     const std::string _serverCreationTime;
 };
-
-#endif

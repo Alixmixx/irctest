@@ -1,12 +1,11 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include "Server.hpp"
 #include <string>
 
 class Server;
 
-class Client {
+class Client{
   public:
     Client(int socket, std::string nickname, std::string username,
            std::string realname, std::string hostname);
@@ -34,5 +33,3 @@ class Client {
     std::string _hostname;
     Server *_server;
 };
-
-#endif
