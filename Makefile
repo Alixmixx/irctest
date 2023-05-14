@@ -9,6 +9,10 @@ D		= deps/
 NAME	= ircserv
 
 SRCS	= main.cpp Server.cpp Client.cpp Channel.cpp
+SRCS	+= Init/InitCommandHandlerMap.cpp Init/InitReplyMap.cpp Message/ParseMessage.cpp Message/ReplyMessage.cpp Commands/ConnectionCommands/HandleNick.cpp Commands/ConnectionCommands/HandleCap.cpp Commands/ConnectionCommands/HandleUser.cpp # ls */*/* pour l'instant, apres faudra faire automatique?
+SRCS	+= Commands/ConnectionCommands/HandleMode.cpp Commands/ConnectionCommands/HandlePing.cpp Commands/ConnectionCommands/HandleWhois.cpp
+
+FOLDERS = $(sort $(dir $(SRCS)))
 
 CC		= c++
 
@@ -24,7 +28,7 @@ DEPS	= $(SRCS:$S%=$D%.d)
 
 RM		= /bin/rm -rf
 
-END = \033[0m
+END=\033[0m
 GRAY = \033[0;90m
 RED = \033[0;91m
 GREEN = \033[0;92m
@@ -39,7 +43,7 @@ WHITE = \033[0;97m
 all: $(NAME)
 
 $O:
-	@mkdir $@
+	mkdir -p $@ $(FOLDERS:$(S)%=$(O)%)
 
 $(OBJS): | $O
 
@@ -49,7 +53,7 @@ $(OBJS): $O%.o: $S%
 	@echo "$(GREEN)✓$(END)"
 
 $D:
-	@mkdir $@
+	mkdir -p $@ $(FOLDERS:$(S)%=$(D)%)
 
 $(DEPS): | $D
 

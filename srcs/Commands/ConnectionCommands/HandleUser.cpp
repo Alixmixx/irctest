@@ -4,22 +4,22 @@ static void welcomeMessage(Client *client)
 {
 	Server *server = client->getServer();
 
-	server->sendReplyMessage(client, "RPL_WELCOME");
-	server->sendReplyMessage(client, "RPL_YOURHOST");
-	server->sendReplyMessage(client, "RPL_CREATED");
-	server->sendReplyMessage(client, "RPL_MYINFO");
+	server->replyMessage(client, "RPL_WELCOME");
+	server->replyMessage(client, "RPL_YOURHOST");
+	server->replyMessage(client, "RPL_CREATED");
+	server->replyMessage(client, "RPL_MYINFO");
 }
 
 void Server::handleUser(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments.size() < 4)
 	{
-		sendErrorMessage(client, "ERR_NEEDMOREPARAMS");
+		replyMessage(client, "ERR_NEEDMOREPARAMS", "USER");
 		return;
 	}
 	if (client->getIsRegistered())
 	{
-		sendErrorMessage(client, "ERR_ALREADYREGISTERED");
+		replyMessage(client, "ERR_ALREADYREGISTERED");
 		return;
 	}
 

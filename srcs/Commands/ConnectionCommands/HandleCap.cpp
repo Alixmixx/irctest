@@ -5,7 +5,7 @@ void Server::handleCap(Client *client, std::vector<std::string> arguments)
 	(void)client;
 	if (arguments.size() == 0)
 	{
-		// ERR_NEEDMOREPARAMS faire l'erreur plus tard
+		replyMessage(client, "ERR_NEEDMOREPARAMS", "CAP");
 		return;
 	}
 	else if (arguments[0] == "LS")
@@ -16,6 +16,6 @@ void Server::handleCap(Client *client, std::vector<std::string> arguments)
 	}
 	else
 	{
-		// ERR_INVALIDCAPCMD same
+		// ERR_INVALIDCAPCMD
 	}
 }

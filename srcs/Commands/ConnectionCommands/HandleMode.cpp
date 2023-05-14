@@ -4,19 +4,19 @@ void Server::handleMode(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() == 0)
 	{
-		sendErrorMessage(client, "ERR_NEEDMOREPARAMS");
+		replyMessage(client, "ERR_NEEDMOREPARAMS", "MODE");
 		return ;
 	}
 
 	if (client->getServer()->getClient(arguments[0]) == NULL)
 	{
-		sendErrorMessage(client, "ERR_NOSUCHNICK");
+		replyMessage(client, "ERR_NOSUCHNICK", arguments[0]);
 		return ;
 	}
 
 	if (client->getNickname() != arguments[0])
 	{
-		sendErrorMessage(client, "ERR_USERSDONTMATCH");
+		replyMessage(client, "ERR_USERSDONTMATCH");
 		return ;
 	}
 
@@ -30,7 +30,7 @@ void Server::handleMode(Client *client, std::vector<std::string> arguments)
 	}
 	else
 	{
-		sendErrorMessage(client, "ERR_NEEDMOREPARAMS");
+		replyMessage(client, "ERR_NEEDMOREPARAMS", "MODE");
 		return ;
 	}
 }
