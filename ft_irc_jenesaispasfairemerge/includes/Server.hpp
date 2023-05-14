@@ -77,6 +77,7 @@ class Server
 		void handleCap(Client *client, std::vector<std::string> arguments);
 		void handleMode(Client *client, std::vector<std::string> arguments);
 		void handleNick(Client *client, std::vector<std::string> arguments);
+		void handlePing(Client *client, std::vector<std::string> arguments);
 		void handleUser(Client *client, std::vector<std::string> arguments);
 
 

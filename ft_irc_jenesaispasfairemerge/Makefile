@@ -10,6 +10,7 @@ NAME	= ircserv
 
 SRCS	= main.cpp Server.cpp Client.cpp Channel.cpp
 SRCS	+= Init/InitCommandHandlerMap.cpp  Init/InitErrorMap.cpp Init/InitReplyMap.cpp Message/ErrorMessage.cpp  Message/ParseMessage.cpp Message/ReplyMessage.cpp Commands/ClientCommands/HandleNick.cpp Commands/ClientCommands/HandleCap.cpp Commands/ClientCommands/HandleUser.cpp # ls */*/* pour l'instant, apres faudra faire automatique?
+SRCS	+= Commands/ClientCommands/HandleMode.cpp
 
 FOLDERS = $(sort $(dir $(SRCS)))
 
@@ -17,7 +18,7 @@ CC		= c++
 
 CFLAGS	+= -Wall -Wextra -Werror -std=c++98
 
-LDFLAGS	+= 
+LDFLAGS	+=
 
 CFLAGS	+= -I$I
 
