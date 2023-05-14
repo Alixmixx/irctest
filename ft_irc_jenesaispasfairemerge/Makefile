@@ -17,7 +17,7 @@ CC		= c++
 
 CFLAGS	+= -Wall -Wextra -Werror -std=c++98
 
-LDFLAGS	+=
+LDFLAGS	+= 
 
 CFLAGS	+= -I$I
 

@@ -6,12 +6,11 @@
 Client::Client(Server *server, int socketFd, std::string hostname)
 	: _socketFd(socketFd),
 	  _isRegistered(false),
+	  _nickname(""),
 	  _hostname(hostname),
 	  _server(server)
 {
-	// est-ce que il faut mettre a zero les autres attributs ?
 }
-
 // Destructeur
 Client::~Client()
 {

@@ -9,7 +9,10 @@ Server::Server(std::string serverName, std::string serverInfo,
 	  _serverInfo(serverInfo),
 	  _serverVersion(serverVersion),
 	  _serverEnvironment(serverEnvironment),
-	  _port(std::atoi(port.c_str()))
+	  _port(std::atoi(port.c_str())),
+	  _serverPassword("miao"),
+	  _serverCreationDate("2023-05-14"),
+	  _serverCreationTime("12:00:00")
 {
 	initCommandHandlerMap();
 	initReplyMap();
@@ -128,7 +131,7 @@ void Server::addClient(int socketFd)
 {
 	Client *client = new Client(this, socketFd, "localhost");
 	_clients.push_back(client);
-	// addEvent(_epollFd, socketFd);
+	//addEvent(_epollFd, socketFd);
 }
 
 void Server::initEpoll(char *port)

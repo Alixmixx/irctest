@@ -23,7 +23,7 @@
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
 #define BUFFER_SIZE_IRC 1024
-#define DEBUG false
+#define DEBUG true
 
 class Client;
 

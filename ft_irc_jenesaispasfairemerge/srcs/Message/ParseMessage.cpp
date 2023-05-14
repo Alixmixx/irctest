@@ -36,7 +36,8 @@ void Server::parseMessageFromClient(Client *client, std::string message)
 	}
 	else
 	{
-		std::cout << iss << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
+		std::cout << "Command not found: " << command << std::endl;
+		//std::cout << iss << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
 	}
 }
 

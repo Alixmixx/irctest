@@ -8,7 +8,6 @@ static void welcomeMessage(Client *client)
 	server->sendReplyMessage(client, "RPL_YOURHOST");
 	server->sendReplyMessage(client, "RPL_CREATED");
 	server->sendReplyMessage(client, "RPL_MYINFO");
-	server->sendReplyMessage(client, "RPL_ISUPPORT");
 }
 
 void Server::handleUser(Client *client, std::vector<std::string> arguments)

@@ -37,5 +37,5 @@ void Server::sendErrorMessage(Client *client, std::string errorCode)
 	}
 
 	std::string fullMessage = _serverName + " " + errorMessage + "\r\n"; // on ajoute le nom du serveur au debut du message d'erreur et on ajoute le \r\n a la fin pour que le client sache que c'est la fin du message
-	send(2, fullMessage.c_str(), fullMessage.length(), 0);
+	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
