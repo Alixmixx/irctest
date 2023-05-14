@@ -92,7 +92,8 @@ class Server
 		void handleInfo(Client *client, std::vector<std::string> arguments);
 		void handleTime(Client *client, std::vector<std::string> arguments);
 		void handleVersion(Client *client, std::vector<std::string> arguments); */
-
+		// 4. SendingMessage
+		void handlePrivateMessage(Client *client, std::vector<std::string> arguments);
 
 		// Message (server to client)
 		void replyMessage(Client *client, std::string replyCode);

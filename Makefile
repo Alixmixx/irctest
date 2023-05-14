@@ -8,9 +8,21 @@ D		= deps/
 
 NAME	= ircserv
 
-SRCS	= main.cpp Server.cpp Client.cpp Channel.cpp
-SRCS	+= Init/InitCommandHandlerMap.cpp Init/InitReplyMap.cpp Message/ParseMessage.cpp Message/ReplyMessage.cpp Commands/ConnectionCommands/HandleNick.cpp Commands/ConnectionCommands/HandleCap.cpp Commands/ConnectionCommands/HandleUser.cpp # ls */*/* pour l'instant, apres faudra faire automatique?
-SRCS	+= Commands/ConnectionCommands/HandleMode.cpp Commands/ConnectionCommands/HandlePing.cpp Commands/ConnectionCommands/HandleWhois.cpp
+SRCS	= 	main.cpp\
+			Server.cpp\
+			Client.cpp\
+			Channel.cpp\
+			Init/InitCommandHandlerMap.cpp\
+			Init/InitReplyMap.cpp\
+			Message/ParseMessage.cpp\
+			Message/ReplyMessage.cpp\
+			Commands/ConnectionCommands/HandleNick.cpp\
+			Commands/ConnectionCommands/HandleCap.cpp\
+			Commands/ConnectionCommands/HandleUser.cpp\
+			Commands/ConnectionCommands/HandleMode.cpp\
+			Commands/ConnectionCommands/HandlePing.cpp\
+			Commands/ConnectionCommands/HandleWhois.cpp\
+			Commands/SendingCommands/HandlePrivateMessage.cpp\
 
 FOLDERS = $(sort $(dir $(SRCS)))
 
