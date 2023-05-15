@@ -13,7 +13,7 @@ static bool isNicknameValid(std::string nickname)
 {
 	if (nickname.length() > 9)
 		return false;
-	if (nickname.find_first_of(" ,?!@\0") != std::string::npos)
+	if (nickname.find_first_of(" ,?!@\0") != std::string::npos) // TODO tester si NULL character dans username fait planter le serveur
 		return false;
 	if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#' || nickname[0] == '&')
 		return false;
@@ -49,7 +49,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 			replyMessage(client, "RPL_NICKCHANGE", client->getNickname(), arguments[0]);
 		}
 		client->setNickname(arguments[0]);
-		//broadcast nick change a tous les channels
+		// TODO broadcast nick change a tous les channels
 		return;
 	}
 	else

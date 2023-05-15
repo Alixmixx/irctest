@@ -133,13 +133,9 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	int rplCode = 1;
 
 	if (replyCode == "PRIVMSG" && rplCode--)
-	{
 		replyMessage = ":" + arg1 + " PRIVMSG " + arg2;
-	}
 	if (replyCode == "RPL_NICKCHANGE" && rplCode--)
-	{
 		replyMessage = ":" + arg1 + " NICK :" + arg2;
-	}
 	else if (replyCode == "ERR_FILEERROR")
 		replyMessage += "424 :File error doing " + arg1 + " on " + arg2;
 	else if (replyCode == "ERR_USERNOTINCHANNEL")

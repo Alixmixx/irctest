@@ -22,11 +22,11 @@ void Server::handleMode(Client *client, std::vector<std::string> arguments)
 
 	if (arguments.size() == 1)
 	{
-		//send modes
+		//send modes TODO
 	}
 	else if (arguments.size() == 2)
 	{
-		//aplly arguments[1] mode
+		//aplly arguments[1] mode  TODO
 	}
 	else
 	{

@@ -11,6 +11,5 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
-	// _commandHandlers["QUIT"] = &Server::handleQuit;
 	// _commandHandlers["JOIN"] = &Server::handleJoin;
 }

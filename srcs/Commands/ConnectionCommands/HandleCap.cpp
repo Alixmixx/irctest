@@ -8,14 +8,13 @@ void Server::handleCap(Client *client, std::vector<std::string> arguments)
 		replyMessage(client, "ERR_NEEDMOREPARAMS", "CAP");
 		return;
 	}
-	else if (arguments[0] == "LS")
+	else if (arguments[0] == "LS") // TODO comprendre c'est quoi le LS
 	{
-		if (DEBUG)
-			std::cout << "LS ça marche" << std::endl;
+		if (DEBUG) std::cout << "LS ça marche" << std::endl;
 		return;
 	}
 	else
 	{
-		// ERR_INVALIDCAPCMD
+		// TODO ERR_INVALIDCAPCMD
 	}
 }

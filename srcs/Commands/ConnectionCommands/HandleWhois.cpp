@@ -11,13 +11,11 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 	if (arguments.size() == 1)
 	{
 		Client *target = getClient(arguments[0]);
-
 		if (!target)
 		{
 			replyMessage(client, "ERR_NOSUCHNICK", arguments[0]);
 			return;
 		}
-
 		replyMessage(client, "RPL_WHOISUSER", target->getNickname(), target->getUsername(), target->getRealname());
 	}
 
@@ -30,13 +28,11 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 		}
 
 		Client *target = getClient(arguments[1]);
-
 		if (!target)
 		{
 			replyMessage(client, "ERR_NOSUCHNICK", arguments[1]);
 			return;
 		}
-
-		//replyMessage(client, "RPL_WHOISSERVER"); // TODO
+		// replyMessage(client, "RPL_WHOISSERVER"); // TODO
 	}
 }
