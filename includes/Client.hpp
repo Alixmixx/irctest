@@ -36,7 +36,7 @@ class Client
 		bool			_isRegistered;
 
 		struct sockaddr_in		_clientAddress;
-
+		
 		std::string 	_nickname;
 		std::string 	_username;
 		std::string 	_realname;

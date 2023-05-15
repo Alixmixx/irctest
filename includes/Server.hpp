@@ -114,6 +114,7 @@ class Server
 		void replyMessage(Client *client, std::string replyCode, std::string arg1);
 		void replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2);
 		void replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2, std::string arg3);
+		void broadcastAll(std::string message);
 
 		// Init
 		void initServer();

@@ -16,6 +16,7 @@ SRCS	= 	main.cpp\
 			Init/InitReplyMap.cpp\
 			Message/ParseMessage.cpp\
 			Message/ReplyMessage.cpp\
+			Message/BroadcastAll.cpp\
 			Commands/ConnectionCommands/HandleCap.cpp\
 			Commands/ConnectionCommands/HandleMode.cpp\
 			Commands/ConnectionCommands/HandleNick.cpp\

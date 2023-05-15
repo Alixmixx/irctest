@@ -93,7 +93,6 @@ void Server::removeClient(Client *client)
 			return;
 		}
 	}
-	close(clientSocketFd);
 	std::cout << "Client disconnected" << std::endl;
 }
 
@@ -264,7 +263,9 @@ void Server::start()
 				}
 				else
 				{
-					removeClient(client);
+					std::vector<std::string> args;
+					args[0] = "connection lost with client";
+					handleQuit(client, args);
 					continue;
 				}
 			}
