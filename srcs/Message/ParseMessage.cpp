@@ -30,6 +30,7 @@ void Server::readFromClient(Client *client)
 {
 	std::string message = fullRead(client->getSocket());
 
+	//std::cout << "Message from client: " << message << std::endl;
 	while (message.find("\r\n") != std::string::npos)
 	{
 		std::string line = message.substr(0, message.find("\r\n"));

@@ -55,7 +55,8 @@ void Server::replyMessage(Client *client, std::string replyCode)
 	fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "\n\n" << fullMessage << std::endl;
+		std::cout << "\n\n"
+				  << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
@@ -120,39 +121,41 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 		fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "\n\n" << fullMessage << std::endl;
+		std::cout << "\n\n"
+				  << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
 
 void Server::replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2)
 {
-	std::string fullMessage = ":" + _serverHostname + " ";
-	std::string replyMessage = "";
+	std::string replyMessage = ":" + _serverHostname + " ";
+	int rplCode = 1;
 
-	if (replyCode == "RPL_NICKCHANGE")
+	if (replyCode == "PRIVMSG" && rplCode--)
 	{
-		fullMessage = "";
+		replyMessage = ":" + arg1 + " PRIVMSG " + arg2;
+	}
+	if (replyCode == "RPL_NICKCHANGE" && rplCode--)
+	{
 		replyMessage = ":" + arg1 + " NICK :" + arg2;
 	}
 	else if (replyCode == "ERR_FILEERROR")
-		replyMessage = "424 :File error doing " + arg1 + " on " + arg2;
+		replyMessage += "424 :File error doing " + arg1 + " on " + arg2;
 	else if (replyCode == "ERR_USERNOTINCHANNEL")
-		replyMessage = "441 :" + arg1 + " " + arg2 + " :They aren't on that channel";
+		replyMessage += "441 :" + arg1 + " " + arg2 + " :They aren't on that channel";
 	else if (replyCode == "ERR_USERONCHANNEL")
-		replyMessage = "443 :" + arg1 + " " + arg2 + " :is already on channel";
+		replyMessage += "443 :" + arg1 + " " + arg2 + " :is already on channel";
 
-	if (replyMessage.empty())
-		fullMessage += replyCode + " " + arg1 + " " + arg2 + "\r\n"; // commande sans code RPL
-	else if (!fullMessage.empty())
-		fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n"; // commande avec code RPL
-	else																			 // cas limite, où on veut pas l'header du serveur.
-		fullMessage = replyMessage + "\r\n";										 // Par example pour la commande NICK (:nickname NICK :newNickname)
+	if (rplCode)
+		replyMessage = replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
+	else
+		replyMessage += "\r\n";
 
 	if (DEBUG)
-		std::cout << "\n\n" << fullMessage << std::endl;
+		std::cout << "\n\n"<< replyMessage << std::endl;
 
-	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
+	send(client->getSocket(), replyMessage.c_str(), replyMessage.length(), 0);
 }
 
 void Server::replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2, std::string arg3)
@@ -169,7 +172,8 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 		fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "\n\n" << fullMessage << std::endl;
+		std::cout << "\n\n"
+				  << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
