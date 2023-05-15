@@ -24,9 +24,9 @@ void Server::handleUser(Client *client, std::vector<std::string> arguments)
 	}
 
 	client->setUsername(arguments[0]);
-	// arguments[1] j'ai pas capté a quoi ca sert, a investiguer
+	// arguments[1] j'ai pas capté a quoi ca sert, a investiguer TODO
 	client->setHostname(arguments[2]);
-	client->setRealname(arguments[3]); // attention real name peut contenir des espaces, donc faut faire un iterateur tant que y'a pas de : et ajouter les arguments dans le realname
+	client->setRealname(arguments[3]); // TODO attention real name peut contenir des espaces, donc faut faire un iterateur tant que y'a pas de : et ajouter les arguments dans le realname
 
 	if (DEBUG)
 	{

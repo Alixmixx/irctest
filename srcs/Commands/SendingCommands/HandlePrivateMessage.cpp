@@ -7,6 +7,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		replyMessage(client, "ERR_NORECIPIENT", "PRIVMSG");
 		return;
 	}
+
 	if (arguments.size() < 2)
 	{
 		replyMessage(client, "ERR_NOTEXTTOSEND");

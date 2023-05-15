@@ -2,7 +2,7 @@
 
 void Server::handleMotd(Client *client, std::vector<std::string> arguments)
 {
-	if (arguments.size() > 0)
+	if (arguments.size() > 0)  // TODO VERIFIER SI TOUT MARCHE
 	{
 		if (arguments[0] != _serverName)
 		{
