@@ -5,8 +5,8 @@
 
 Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
-	  _clientAddress(clientAddress),
 	  _isRegistered(false),
+	  _clientAddress(clientAddress),
 	  _nickname(""),
 	  _username(""),
 	  _realname(""),
