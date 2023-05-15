@@ -25,6 +25,7 @@
 #define MAX_CLIENTS 1024
 #define BUFFER_SIZE_IRC 1024
 #define DEBUG true
+#define NETWORK_NAME "Outstanding"
 
 class Client;
 
