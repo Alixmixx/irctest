@@ -41,6 +41,7 @@ class Server
 		const std::string getServerInfo() const;
 		const std::string getServerVersion() const;
 		const std::string getServerEnvironment() const;
+		const std::string getServerMotd() const;
 		// 2. Client
 		Client *getClient(int socketFd) const;
 		Client *getClient(std::string nickname) const;
@@ -49,6 +50,9 @@ class Server
 		// 4. Vectors
 		std::vector<Client *> getClients() const;
 		// std::vector<Channel *> getChannels() const;
+
+		// Setters
+		void setServerMotd(std::string motd);
 
 		// Statics
 		void clean();
@@ -78,6 +82,7 @@ class Server
 		void handleMode(Client *client, std::vector<std::string> arguments);
 		void handleNick(Client *client, std::vector<std::string> arguments);  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
 		void handlePing(Client *client, std::vector<std::string> arguments);
+		void handleQuit(Client *client, std::vector<std::string> arguments);
 		void handleUser(Client *client, std::vector<std::string> arguments);
 		void handleWhois(Client *client, std::vector<std::string> arguments);
 		// 2. ChannelCommands
@@ -94,6 +99,7 @@ class Server
 		void handleVersion(Client *client, std::vector<std::string> arguments); */
 		// 4. SendingMessage
 		void handlePrivateMessage(Client *client, std::vector<std::string> arguments);
+		void handleMotd(Client *client, std::vector<std::string> arguments);
 
 		// Message (server to client)
 		void replyMessage(Client *client, std::string replyCode);
@@ -121,9 +127,10 @@ class Server
 		std::map<std::string, ReplyCode> _replyCodeMap;
 
 		// Server infos
-		const std::string _serverPassword;
-		const std::string _serverCreationDate;
-		const std::string _serverCreationTime;
+		const std::string	_serverPassword;
+		const std::string	_serverCreationDate;
+		const std::string	_serverCreationTime;
+		std::string    	 	_serverMotd;	// Message of the day
 
 		// Server vector and map
 		std::vector<Client *> _clients;

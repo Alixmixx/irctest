@@ -6,8 +6,10 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["MODE"] = &Server::handleMode;
 	_commandHandlers["NICK"] = &Server::handleNick;
 	_commandHandlers["PING"] = &Server::handlePing;  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
+	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
 	// _commandHandlers["QUIT"] = &Server::handleQuit;
 	// _commandHandlers["JOIN"] = &Server::handleJoin;
+	_commandHandlers["MOTD"] = &Server::handleMotd;
 }

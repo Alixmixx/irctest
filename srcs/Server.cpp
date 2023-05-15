@@ -13,7 +13,8 @@ Server::Server(std::string serverName, std::string serverInfo,
 	  _port(std::atoi(port.c_str())),
 	  _serverPassword("miao"),
 	  _serverCreationDate("2023-05-14"),
-	  _serverCreationTime("12:00:00")
+	  _serverCreationTime("12:00:00"),
+	  _serverMotd("Welcome to the IRC server")
 {
 	initCommandHandlerMap();
 	initReplyMap();
@@ -35,7 +36,13 @@ const std::string Server::getServerVersion() const { return (_serverVersion); }
 
 const std::string Server::getServerEnvironment() const { return (_serverEnvironment); }
 
+const std::string Server::getServerMotd() const { return (_serverMotd); }
+
 std::vector<Client *> Server::getClients() const { return (_clients); }
+
+// Setters
+
+void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
 
 Client *Server::getClient(int socketFd) const
 {
