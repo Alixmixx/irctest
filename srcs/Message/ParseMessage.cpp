@@ -22,19 +22,47 @@ void Server::parseMessageFromClient(Client *client, std::string message)
 	}
 	else
 	{
-		std::cout << "Command not found: " << command << std::endl;	// si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
+		std::cout << "Command not found: " << command << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
 	}
 }
 
 void Server::readFromClient(Client *client)
 {
-	std::string message = fullRead(client->getSocket());
+	std::string message = client->getMessage();
 
-	//std::cout << "Message from client: " << message << std::endl;
+	char buffer[BUFFER_SIZE];
+	std::memset(buffer, 0, BUFFER_SIZE);
+
+	int recvSize;
+	do
+	{
+		recvSize = recv(client->getSocket(), buffer, BUFFER_SIZE - 1, 0);
+		if (recvSize < 0)
+		{
+			std::cerr << "Error: recv() failed" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		else if (recvSize == 0)
+		{
+			std::cout << "Client disconnected" << std::endl;
+			removeClient(client);
+		}
+		else
+		{
+			buffer[recvSize] = '\0';
+			message += buffer;
+			std::memset(buffer, 0, BUFFER_SIZE);
+		}
+	} while (recvSize == BUFFER_SIZE - 1);
+
+	if (DEBUG)
+		std::cout << "\nMessage from client: " << message << std::endl;
+
 	while (message.find("\r\n") != std::string::npos)
 	{
 		std::string line = message.substr(0, message.find("\r\n"));
-		message = message.substr(message.find("\n") + 1);
+		message = message.substr(message.find("\r\n") + 1);
+		client->setMessage(message);
 		parseMessageFromClient(client, line);
 	}
 }

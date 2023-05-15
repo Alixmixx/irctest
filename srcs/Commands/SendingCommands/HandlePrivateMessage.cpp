@@ -18,7 +18,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 	if (targetClient == NULL)
 	{
 		// get channel
-		replyMessage(client, "ERR_NOSUCHNICK", targetClient->getNickname());
+		replyMessage(client, "ERR_NOSUCHNICK", arguments[0]);
 		return;
 	}
 
