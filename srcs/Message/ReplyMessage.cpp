@@ -55,8 +55,7 @@ void Server::replyMessage(Client *client, std::string replyCode)
 	fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "\n\n"
-				  << fullMessage << std::endl;
+		std::cout << std::endl << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
