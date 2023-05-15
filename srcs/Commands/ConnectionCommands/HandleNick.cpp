@@ -54,7 +54,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	}
 	else
 	{
-		replyMessage(client, "ERR_ERRONEUSNICKNAME");
+		replyMessage(client, "ERR_ERRONEUSNICKNAME", arguments[0]);
 		return;
 	}
 }

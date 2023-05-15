@@ -55,7 +55,7 @@ void Server::replyMessage(Client *client, std::string replyCode)
 	fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "replyMessage: " << fullMessage << std::endl;
+		std::cout << "\n\n" << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
@@ -66,17 +66,17 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	std::string replyMessage = "";
 
 	if (replyCode == "ERR_NOSUCHNICK")
-		replyMessage = "401 :" + arg1 + " :No such nick/channel";
+		replyMessage = "401 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHSERVER")
-		replyMessage = "402 :" + arg1 + " :No such server";
+		replyMessage = "402 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHCHANNEL")
-		replyMessage = "403 :" + arg1 + " :No such channel";
+		replyMessage = "403 :" + arg1;
 	else if (replyCode == "ERR_CANNOTSENDTOCHAN")
-		replyMessage = "404 :" + arg1 + " :Cannot send to channel";
+		replyMessage = "404 :" + arg1;
 	else if (replyCode == "ERR_TOOMANYCHANNELS")
-		replyMessage = "405 :" + arg1 + " :You have joined too many channels";
+		replyMessage = "405 :" + arg1;
 	else if (replyCode == "ERR_WASNOSUCHNICK")
-		replyMessage = "406 :" + arg1 + " :There was no such nickname";
+		replyMessage = "406 :" + arg1;
 	else if (replyCode == "ERR_NORECIPIENT")
 		replyMessage = "411 :No recipient given (" + arg1 + ")";
 	else if (replyCode == "ERR_NOTOPLEVEL")
@@ -90,7 +90,7 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	else if (replyCode == "ERR_ERRONEUSNICKNAME")
 		replyMessage = "432 :" + arg1 + " :Erroneus nickname";
 	else if (replyCode == "ERR_NICKNAMEINUSE")
-		replyMessage = "433 :" + arg1 + " :Nickname is already in use";
+		replyMessage = "433 :" + arg1;
 	else if (replyCode == "ERR_NICKCOLLISION")
 		replyMessage = "436 :" + arg1 + " :Nickname collision KILL";
 	else if (replyCode == "ERR_NOTONCHANNEL")
@@ -120,7 +120,7 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 		fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "replyMessage: " << fullMessage << std::endl;
+		std::cout << "\n\n" << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
@@ -150,7 +150,7 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 		fullMessage = replyMessage + "\r\n";										 // Par example pour la commande NICK (:nickname NICK :newNickname)
 
 	if (DEBUG)
-		std::cout << "replyMessage: " << fullMessage << std::endl;
+		std::cout << "\n\n" << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
@@ -161,7 +161,7 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	std::string replyMessage = "";
 
 	if (replyCode == "RPL_WHOISUSER")
-		replyMessage = "311 :" + client->getNickname() + " " + arg1 + " " + arg2 + " * :" + arg3;
+		replyMessage = "311 :" + client->getNickname() + " " + arg1 + " " + arg2 + arg3;
 
 	if (replyMessage.empty())
 		fullMessage += replyCode + " " + arg1 + " " + arg2 + " " + arg3 + "\r\n";
@@ -169,7 +169,7 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 		fullMessage += replyMessage.insert(3, " " + client->getNickname()) + "\r\n";
 
 	if (DEBUG)
-		std::cout << "replyMessage: " << fullMessage << std::endl;
+		std::cout << "\n\n" << fullMessage << std::endl;
 
 	send(client->getSocket(), fullMessage.c_str(), fullMessage.length(), 0);
 }
