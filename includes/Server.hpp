@@ -20,18 +20,29 @@
 #include <iostream>
 #include <sys/epoll.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
-#define BACKLOG 128
+#define SERVERNAME "MiaoRC"
+#define SERVERHOSTNAME "irc.125.outsanding.gov"
+#define SERVERVERSION "0.021a"
+#define INFO "42School"
+#define NETWORKNAME "OustandingNetwork"
+#define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024
-#define BUFFER_SIZE_IRC 1024
+#define MAX_EVENTS 32 // why 10 ?
 #define DEBUG true
+#define BUFFER_SIZE 256
 
 class Client;
 
 class Server
 {
 	public:
-		Server(std::string serverName, std::string serverInfo, std::string serverVersion, std::string serverEnvironment, std::string port);
+		Server(short port, std::string password);
 		~Server();
 
 		// Getters
@@ -54,22 +65,19 @@ class Server
 		// Setters
 		void setServerMotd(std::string motd);
 
-		// Statics
-		void clean();
-		void goodBye();
-		void handleSigint(int signum);
-		void syscall(int returnValue, const char *funcName);
-		std::string fullRead(int fd);
-		void addEvent(int epollFd, int eventFd);
-		void initEpoll(char *port);
-		void loop();
+		// Start
+		void start();
+		int epollWait();
+		int acceptNewClient();
+
+
 
 		// Methods
 		// 1. Server
 		void readFromClient(Client *client);
 		void parseMessageFromClient(Client *client, std::string command);
 		// 2. Client
-		void addClient(int socketFd);
+		void addClient(int clientSocket, struct sockaddr_in clientAddress);
 		void removeClient(Client *client);
 		// 3. Channel
 		// void addChannel(Channel channel);
@@ -108,13 +116,18 @@ class Server
 		void replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2, std::string arg3);
 
 		// Init
+		void initServer();
 		void initCommandHandlerMap();
 		void initReplyMap();
 
 	private:
+		int _serverSocket;
 		int _epollFd;
-		int _socketFd;
-		struct epoll_event _evlist[MAX_CLIENTS];
+		int _newEvents;
+		int _reuseAddr;
+		int _iLastConnect;
+		struct sockaddr_in _serverAddress; // Server address
+		struct epoll_event _eventList[MAX_CLIENTS];
 		const std::string _serverName;
 		const std::string _serverHostname;
 		const std::string _serverInfo;

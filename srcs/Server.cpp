@@ -2,22 +2,20 @@
 
 // Constructeur
 
-Server::Server(std::string serverName, std::string serverInfo,
-			   std::string serverVersion, std::string serverEnvironment,
-			   std::string port)
-	: _serverName(serverName),
-	  _serverHostname("localhost"),
-	  _serverInfo(serverInfo),
-	  _serverVersion(serverVersion),
-	  _serverEnvironment(serverEnvironment),
-	  _port(std::atoi(port.c_str())),
-	  _serverPassword("miao"),
-	  _serverCreationDate("2023-05-14"),
-	  _serverCreationTime("12:00:00"),
+Server::Server(short port, std::string password)
+	: _serverName(SERVERNAME),
+	  _serverHostname(SERVERHOSTNAME),
+	  _serverVersion(SERVERVERSION),
+	  _port(port),
+	  _serverPassword(password),
+	  _serverCreationDate("2023-05-14"), // TODO function qui fait ça
+	  _serverCreationTime("12:00:00"),	 // idem
 	  _serverMotd("Welcome to the IRC server")
 {
+	_iLastConnect = 0;
+	initServer();
 	initCommandHandlerMap();
-	initReplyMap();
+	// initReplyMap();
 }
 
 // Destructeur
@@ -44,6 +42,8 @@ std::vector<Client *> Server::getClients() const { return (_clients); }
 
 void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
 
+// Client getters
+
 Client *Server::getClient(int socketFd) const
 {
 	for (std::vector<Client *>::const_iterator it = _clients.begin();
@@ -65,149 +65,208 @@ Client *Server::getClient(std::string nickname) const
 	return (NULL);
 }
 
-// std::vector<Channel> Server::getChannels() const
-// {
-// 	return (_channels);
-// }
+// Client add and remove
 
-// Statics
-
-void Server::clean()
+void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
 {
-	std::cout << "Cleaning..." << std::endl;
-	for (int i = 0; i < MAX_CLIENTS; ++i)
-		close(_evlist[i].data.fd);
-	close(_socketFd);
-	close(_epollFd);
-}
+	Client *newClient = new Client(this, clientSocket, clientAddress);
 
-void Server::goodBye()
-{
-	std::cout << "\rGood bye. 💞\n";
-	clean();
-	exit(EXIT_SUCCESS);
-}
-
-void Server::handleSigint(int signum)
-{
-	std::cout << "SIGINT received !" << std::endl;
-	(void)signum;
-	// goodBye();
-}
-
-void Server::syscall(int returnValue, const char *funcName)
-{
-	if (returnValue == -1)
+	if (newClient == NULL)
 	{
-		std::perror(funcName);
-		clean();
+		std::cerr << "Error: new client creation failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	_clients.push_back(newClient);
+}
+
+void Server::removeClient(Client *client)
+{
+	int clientSocketFd = client->getSocket();
+	epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientSocketFd, NULL);
+	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if ((*it) == client)
+		{
+			_clients.erase(it);
+			delete client;
+			return;
+		}
+	}
+	close(clientSocketFd);
+	std::cout << "Client disconnected" << std::endl;
+}
+
+// Server initialization
+
+void Server::initServer()
+{
+	// Server address initialization
+	bzero(&_serverAddress, sizeof(_serverAddress));
+
+	_serverAddress.sin_family = AF_INET;
+	_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	_serverAddress.sin_port = htons(_port);
+
+	// Server socket creation
+	if ((_serverSocket = socket(_serverAddress.sin_family, SOCK_STREAM, 0)) < 0)
+	{
+		std::cerr << "Error: socket creation failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// Set the server socket to allow multiple non-blocking connections
+	fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
+
+	// Server socket binding
+	_reuseAddr = 1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)) < 0)
+	{
+		std::cerr << "Error: setsockopt failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	if (bind(_serverSocket, (const struct sockaddr *)&_serverAddress, sizeof(_serverAddress)) < 0)
+	{
+		std::cerr << "Error: socket binding failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// Server socket listening
+
+	if (listen(_serverSocket, BACKLOG) < 0)
+	{
+		std::cerr << "Error: socket listening failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// Server socket epoll creation
+
+	struct epoll_event ev;
+	ev.data.fd = _serverSocket;
+	ev.events = EPOLLIN | EPOLLET;
+
+	if ((_epollFd = epoll_create(MAX_EVENTS)) < 0) // epoll_create1(0) ?
+	{
+		std::cerr << "Error: epoll creation failed" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// Server socket epoll control
+
+	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev) < 0)
+	{
+		std::cerr << "Error: epoll_ctl failed" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 }
 
-std::string Server::fullRead(int fd)
+int Server::epollWait()
 {
-	std::string message;
-	char buf[BUFFER_SIZE_IRC];
+	// Server socket epoll wait
+	_newEvents = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
 
-	while (true)
+	if (_newEvents < 0)
 	{
-		int buflen;
-		syscall(buflen = read(fd, buf, BUFFER_SIZE_IRC - 1), "read");
-		buf[buflen] = '\0';
-		message += buf;
-		if (buflen < BUFFER_SIZE_IRC - 1)
-			return message;
+		std::cerr << "Error: epoll_wait failed" << std::endl;
+		exit(EXIT_FAILURE);
 	}
+
+	return (_newEvents);
 }
 
-void Server::addEvent(int epollFd, int eventFd)
+int Server::acceptNewClient()
 {
-	struct epoll_event evStdin;
+	int newClientSocket;
+	struct sockaddr_in newClientAddress;
+	socklen_t newClientAddressLen = sizeof(newClientAddress);
 
-	evStdin.events = EPOLLIN;
-	evStdin.data.fd = eventFd;
-	syscall(epoll_ctl(epollFd, EPOLL_CTL_ADD, eventFd, &evStdin), "epoll_ctl");
-}
-
-// Methods
-
-void Server::addClient(int socketFd)
-{
-	Client *client = new Client(this, socketFd, "localhost");
-	_clients.push_back(client);
-	// addEvent(_epollFd, socketFd);
-}
-
-void Server::initEpoll(char *port)
-{
-	struct sockaddr_in serverSocket;
-	bzero(&serverSocket, sizeof(serverSocket));
-	serverSocket.sin_family = AF_INET;
-	serverSocket.sin_port = htons(atoi(port));
-	serverSocket.sin_addr.s_addr = htonl(INADDR_ANY);
-
-	syscall(_socketFd = socket(AF_INET, SOCK_STREAM, 0), "socket");
-	syscall(
-		bind(_socketFd, (struct sockaddr *)&serverSocket, sizeof(serverSocket)),
-		"bind");
-	syscall(listen(_socketFd, BACKLOG), "listen");
-	syscall(_epollFd = epoll_create1(0), "epoll_create1");
-	addEvent(_epollFd, STDIN_FILENO);
-	addEvent(_epollFd, _socketFd);
-}
-
-void Server::loop()
-{
-	int clientFd, numFds;
-	while (true)
+	// Accept new client
+	std::cout << "Accepting new client" << std::endl;
+	if ((newClientSocket = accept(_serverSocket, (struct sockaddr *)&newClientAddress, (socklen_t *)&newClientAddressLen)) < 0)
 	{
-		syscall(numFds = epoll_wait(_epollFd, _evlist, MAX_CLIENTS, -1),
-				"epoll_wait");
-		for (int i = 0; i < numFds; ++i)
+		std::cerr << "Error: accept failed - " << strerror(errno) << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	addClient(newClientSocket, newClientAddress);
+
+	return (newClientSocket);
+}
+
+// Loop du serveur
+void Server::start()
+{
+	this->epollWait();
+
+	// Server socket epoll events loop
+	while (42)
+	{
+		if (_newEvents == 0)
 		{
-			if (_evlist[i].data.fd == STDIN_FILENO)
+			this->epollWait();
+		}
+		for (int i = _iLastConnect; i < _newEvents; i++) // maybe store last i and start from it
+		{
+			if (_eventList[i].data.fd == _serverSocket && _newEvents--) // new client
 			{
-				std::string input = fullRead(STDIN_FILENO);
-				if (input == "quit\n")
-					goodBye();
+				int newClientFd = this->acceptNewClient();
+				if (fcntl(newClientFd, F_SETFL, O_NONBLOCK) < 0)
+				{
+					std::cerr << "Error: fnctl failed" << std::endl;
+					// exit(EXIT_FAILURE); à reflechir
+				}
+				else
+				{
+					struct epoll_event ev;
+					ev.data.fd = newClientFd;
+					ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
+					if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)) < 0)
+					{
+						std::cerr << "Error: setsockopt failed" << std::endl;
+						// exit(EXIT_FAILURE); à reflechir
+					}
+
+					if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientFd, &ev) < 0)
+					{
+						std::cerr << "Error: epoll_ctl failed" << std::endl;
+						// exit(EXIT_FAILURE); à reflechir
+					}
+					_iLastConnect = i;
+				}
 			}
-			else if (_evlist[i].data.fd == _socketFd)
+			else if (_eventList[i].events & EPOLLIN && _newEvents--) // read from client
 			{
-				struct sockaddr_in clientSocket;
-				bzero(&clientSocket, sizeof(clientSocket));
-				socklen_t socklen = sizeof(clientSocket);
-				syscall(clientFd =
-							accept(_socketFd, (struct sockaddr *)&clientSocket,
-								   &socklen),
-						"accept");
-				std::cout << "\x1b[0;32m[*] accept\x1b[0m\n";
-				struct epoll_event ev;
-				ev.events = EPOLLIN;
-				ev.data.fd = clientFd;
-				syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, clientFd, &ev),
-						"epoll_ctl");
-				// create client
-				addClient(clientFd);
-				// miao
+				Client *client = getClient(_eventList[i].data.fd);
+				if (client == NULL)
+				{
+					std::cerr << "Error: client not found" << std::endl;
+					// exit(EXIT_FAILURE); à reflechir
+				}
+				else
+				{
+					readFromClient(client);
+				}
 			}
-			else
+			else // unknown event
 			{
-				clientFd = _evlist[i].data.fd;
-				readFromClient(getClient(clientFd));
-				// std::string msg = fullRead(clientFd);
-				/* 				if (msg == "")
-								{
-									std::cout << "\x1b[0;31m[*] close\x1b[0m\n";
-									syscall(
-										epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientFd, &_evlist[i]),
-										"epoll_ctl");
-									close(clientFd);
-								}
-								else
-								{
-									std::cout << msg << std::endl;
-								} */
+				std::cerr << "Error: unknown event" << std::endl;
+				_newEvents--;
+				// exit(EXIT_FAILURE); à reflechir
+			}
+			if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP) && _newEvents--) // client disconnected
+			{
+				Client *client = getClient(_eventList[i].data.fd);
+				if (client == NULL)
+				{
+					std::cerr << "Error: client not found" << std::endl;
+					// exit(EXIT_FAILURE); à reflechir
+				}
+				else
+				{
+					removeClient(client);
+					continue;
+				}
 			}
 		}
 	}

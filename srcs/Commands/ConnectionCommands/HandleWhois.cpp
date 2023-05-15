@@ -17,6 +17,7 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 			return;
 		}
 		replyMessage(client, "RPL_WHOISUSER", target->getNickname(), target->getUsername(), target->getRealname());
+		replyMessage(client, "RPL_ENDOFWHOIS", target->getNickname());
 	}
 
 	if (arguments.size() >= 2)

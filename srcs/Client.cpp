@@ -3,17 +3,20 @@
 
 // Constructeur
 
-Client::Client(Server *server, int socketFd, std::string hostname)
-	: _socketFd(socketFd),
+Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
+	: _clientSocket(socketFd),
+	  _clientAddress(clientAddress),
 	  _isRegistered(false),
 	  _nickname(""),
-	  _hostname(hostname),
+	  _username(""),
+	  _realname(""),
+	  _hostname(""),
 	  _server(server)
-{
-}
+{}
 // Destructeur
 Client::~Client()
 {
+	close(_clientSocket);
 }
 
 // Setters
@@ -28,9 +31,11 @@ void Client::setRealname(std::string realname) { _realname = realname; }
 
 void Client::setHostname(std::string hostname) { _hostname = hostname; }
 
+void Client::setMessage(std::string message) { _message = message; }
+
 // Getters
 
-int Client::getSocket() const { return (_socketFd); }
+int Client::getSocket() const { return (_clientSocket); }
 
 bool Client::getIsRegistered() const { return (_isRegistered); }
 
@@ -41,5 +46,7 @@ std::string Client::getUsername() const { return (_username); }
 std::string Client::getRealname() const { return (_realname); }
 
 std::string Client::getHostname() const { return (_hostname); }
+
+std::string Client::getMessage() const { return (_message); }
 
 Server *Client::getServer() const { return (_server); }
