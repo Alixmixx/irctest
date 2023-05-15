@@ -16,13 +16,15 @@ SRCS	= 	main.cpp\
 			Init/InitReplyMap.cpp\
 			Message/ParseMessage.cpp\
 			Message/ReplyMessage.cpp\
-			Commands/ConnectionCommands/HandleNick.cpp\
 			Commands/ConnectionCommands/HandleCap.cpp\
-			Commands/ConnectionCommands/HandleUser.cpp\
 			Commands/ConnectionCommands/HandleMode.cpp\
+			Commands/ConnectionCommands/HandleNick.cpp\
 			Commands/ConnectionCommands/HandlePing.cpp\
+			Commands/ConnectionCommands/HandleQuit.cpp\
+			Commands/ConnectionCommands/HandleUser.cpp\
 			Commands/ConnectionCommands/HandleWhois.cpp\
 			Commands/SendingCommands/HandlePrivateMessage.cpp\
+			Commands/SendingCommands/HandleMotd.cpp\
 
 FOLDERS = $(sort $(dir $(SRCS)))
 
