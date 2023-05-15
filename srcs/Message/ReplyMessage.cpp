@@ -6,7 +6,7 @@ void Server::replyMessage(Client *client, std::string replyCode)
 	std::string replyMessage;
 
 	if (replyCode == "RPL_WELCOME")
-		replyMessage = "001 :Welcome to the " + NETWORK_NAME + " Network, " + client->getNickname() + "[!" + client->getUsername() + "@" + client->getHostname() + "]";
+		replyMessage = "001 :Welcome to the " + std::string(NETWORK_NAME) + " Network, " + client->getNickname() + "[!" + client->getUsername() + "@" + client->getHostname() + "]";
 	else if (replyCode == "RPL_YOURHOST")
 		replyMessage = "002 :Your host is " + _serverName + ", running version " + _serverVersion;
 	else if (replyCode == "RPL_CREATED")
