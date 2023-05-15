@@ -9,7 +9,7 @@ void Server::handleMotd(Client *client, std::vector<std::string> arguments)
 			replyMessage(client, "ERR_NOSUCHSERVER");
 		}
 	}
-	if (client->getServer().getMotd() == "")
+	if (_serverMotd == "")
 	{
 		replyMessage(client, "ERR_NOMOTD");
 	}
