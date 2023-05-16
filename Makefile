@@ -14,9 +14,10 @@ SRCS	= 	main.cpp\
 			Channel.cpp\
 			Init/InitCommandHandlerMap.cpp\
 			Init/InitReplyMap.cpp\
+			Init/InitServerDateAndTime.cpp\
 			Message/ParseMessage.cpp\
-			Message/ReplyMessage.cpp\
-			Message/BroadcastAll.cpp\
+			Message/Reply.cpp\
+			Message/Broadcast.cpp\
 			Commands/ConnectionCommands/HandleCap.cpp\
 			Commands/ConnectionCommands/HandleMode.cpp\
 			Commands/ConnectionCommands/HandleNick.cpp\

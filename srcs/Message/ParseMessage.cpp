@@ -56,7 +56,7 @@ void Server::readFromClient(Client *client)
 	} while (recvSize == BUFFER_SIZE - 1);
 
 	if (DEBUG)
-		std::cout << "\nMessage from client: " << message << std::endl;
+		std::cout << "\033[31mMessage from client: " << client->getSocket() << message << "\033[0m";
 
 	while (message.find("\r\n") != std::string::npos)
 	{

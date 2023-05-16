@@ -6,30 +6,31 @@
 #include "ReplyCode.hpp"
 
 #include <algorithm>
-#include <cctype>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <map>
-#include <vector>
 #include <arpa/inet.h>
-#include <csignal>
+#include <cctype>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <csignal>
+#include <ctime>
+#include <fcntl.h>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <map>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sstream>
+#include <string>
 #include <sys/epoll.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <netinet/in.h>
+#include <vector>
 
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
-#define SERVERVERSION "0.021a"
+#define SERVERVERSION "0.042a"
 #define INFO "42School"
 #define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024
@@ -56,6 +57,9 @@ class Server
 		const std::string getServerInfo() const;
 		const std::string getServerVersion() const;
 		const std::string getServerEnvironment() const;
+		const std::string getServerPassword() const;
+		const std::string getServerCreationDate() const;
+		const std::string getServerCreationTime() const;
 		const std::string getServerMotd() const;
 		// 2. Client
 		Client *getClient(int socketFd) const;
@@ -114,16 +118,15 @@ class Server
 		void handleMotd(Client *client, std::vector<std::string> arguments);
 
 		// Message (server to client)
-		void replyMessage(Client *client, std::string replyCode);
-		void replyMessage(Client *client, std::string replyCode, std::string arg1);
-		void replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2);
-		void replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2, std::string arg3);
-		void broadcastAll(std::string message);
+		void broadcast(std::vector<Client *> recipients, std::string message);
+		void broadcast(std::vector<Client *> recipients, std::string message, Client *except);
+		void broadcast(std::vector<Client *> recipients, std::string message, std::vector<Client *> except);
 
 		// Init
 		void initServer();
 		void initCommandHandlerMap();
 		void initReplyMap();
+		void initServerDateAndTime();
 
 	private:
 		int _serverSocket;
@@ -131,7 +134,7 @@ class Server
 		int _newEvents;
 		int _reuseAddr;
 		int _iLastConnect;
-		struct sockaddr_in _serverAddress; // Server address
+		struct sockaddr_in _serverAddress;
 		struct epoll_event _eventList[MAX_CLIENTS];
 		const std::string _serverName;
 		const std::string _serverHostname;
@@ -146,9 +149,9 @@ class Server
 
 		// Server infos
 		const std::string	_serverPassword;
-		const std::string	_serverCreationDate;
-		const std::string	_serverCreationTime;
-		std::string    	 	_serverMotd;	// Message of the day
+		std::string	_serverCreationDate;
+		std::string _serverCreationTime;
+		std::string	_serverMotd;	// Message of the day
 
 		// Server vector and map
 		std::vector<Client *>	_clients;

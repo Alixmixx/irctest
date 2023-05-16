@@ -8,11 +8,10 @@ Server::Server(short port, std::string password)
 	  _serverVersion(SERVERVERSION),
 	  _port(port),
 	  _serverPassword(password),
-	  _serverCreationDate("2023-05-14"), // TODO function qui fait ça
-	  _serverCreationTime("12:00:00"),	 // idem
 	  _serverMotd("Welcome to the IRC server")
 {
 	_iLastConnect = 0;
+	initServerDateAndTime();
 	initServer();
 	initCommandHandlerMap();
 	// initReplyMap();
@@ -33,6 +32,12 @@ const std::string Server::getServerInfo() const { return (_serverInfo); }
 const std::string Server::getServerVersion() const { return (_serverVersion); }
 
 const std::string Server::getServerEnvironment() const { return (_serverEnvironment); }
+
+const std::string Server::getServerPassword() const { return (_serverPassword); }
+
+const std::string Server::getServerCreationDate() const { return (_serverCreationDate); }
+
+const std::string Server::getServerCreationTime() const { return (_serverCreationTime); }
 
 const std::string Server::getServerMotd() const { return (_serverMotd); }
 

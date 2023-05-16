@@ -4,13 +4,13 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 {
 	if (arguments.size() < 1)
 	{
-		replyMessage(client, "ERR_NORECIPIENT", "PRIVMSG");
+		client->reply("ERR_NORECIPIENT", "PRIVMSG");
 		return;
 	}
 
 	if (arguments.size() < 2)
 	{
-		replyMessage(client, "ERR_NOTEXTTOSEND");
+		client->reply("ERR_NOTEXTTOSEND");
 		return;
 	}
 
@@ -18,7 +18,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 	if (targetClient == NULL)
 	{
 		// get channel
-		replyMessage(client, "ERR_NOSUCHNICK", arguments[0]);
+		client->reply("ERR_NOSUCHNICK", arguments[0]);
 		return;
 	}
 
@@ -32,5 +32,5 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		}
 	}
 
-	replyMessage(targetClient, "PRIVMSG", client->getNickname(), message);
+	targetClient->reply("PRIVMSG", client->getNickname(), message);
 }
