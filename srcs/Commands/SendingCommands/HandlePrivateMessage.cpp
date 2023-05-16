@@ -25,11 +25,11 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		}
 
 		// check if client has modes to send message
-		// if (targetChannel->isInChannel(client) == false)
-		// {
-		// 	client->reply("ERR_CANNOTSENDTOCHAN", arguments[0]);
-		// 	return;
-		// }
+		if (targetChannel->isOnChannel(client) == false)
+		{
+			client->reply("ERR_CANNOTSENDTOCHAN", arguments[0]);
+			return;
+		}
 
 		// send message to all clients in channel
 

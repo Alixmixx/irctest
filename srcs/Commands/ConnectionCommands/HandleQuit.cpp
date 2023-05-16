@@ -19,5 +19,5 @@ void Server::handleQuit(Client *client, std::vector<std::string> arguments)
 			clientMessage += " ";
 	}
 
-	broadcast(_clients, ":" + clientNickname + " QUIT :" + clientMessage);
+	broadcast(_clients, ":" + clientNickname + " QUIT " + clientMessage);
 }

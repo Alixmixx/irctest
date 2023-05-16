@@ -118,7 +118,7 @@ void Client::reply(std::string replyCode, std::string arg1)
 	else if (replyCode == "ERR_BANNEDFROMCHAN")
 		replyMessage += "474 :" + arg1 + " :Cannot join channel (+b)";
 	else if (replyCode == "ERR_BADCHANNELKEY")
-		replyMessage += "475 :" + arg1 + " :Cannot join channel (+k)";
+		replyMessage += "475 :" + arg1;
 	else if (replyCode == "ERR_CHANOPRIVSNEEDED")
 		replyMessage += "482 :" + arg1 + " :You're not channel operator";
 
