@@ -20,9 +20,11 @@ class Client
 		void setRealname(std::string realname);
 		void setHostname(std::string hostname);
 		void setMessage(std::string message);
+		void setChannelCount(int channelCount);
 
 		// Getters
 		int			getSocket() const;
+		int			getChannelCount() const;
 		bool		getIsRegistered() const;
 		std::string getNickname() const;
 		std::string getUsername() const;
@@ -33,10 +35,11 @@ class Client
 
 	private:
 		int				_clientSocket;
+		int				_channelCount;
 		bool			_isRegistered;
 
 		struct sockaddr_in		_clientAddress;
-		
+
 		std::string 	_nickname;
 		std::string 	_username;
 		std::string 	_realname;

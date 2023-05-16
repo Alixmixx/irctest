@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "ReplyCode.hpp"
 
 #include <algorithm>
@@ -35,8 +36,12 @@
 #define MAX_EVENTS 32 // why 10 ?
 #define DEBUG true
 #define BUFFER_SIZE 256
+#define MAX_CHANNELS_PER_CLIENT 10
+#define MAX_USERS_PER_CHANNEL 10
 
 class Client;
+
+class Channel;
 
 class Server
 {
@@ -56,10 +61,12 @@ class Server
 		Client *getClient(int socketFd) const;
 		Client *getClient(std::string nickname) const;
 		// 3. Channel
-		// std::vector<Channel> *getChannel() const;
+		std::vector<Channel> *getChannel() const;
+		Channel *getChannel(std::string channelName) const;
+		bool isChannel(std::string channelName) const;
 		// 4. Vectors
 		std::vector<Client *> getClients() const;
-		// std::vector<Channel *> getChannels() const;
+		std::vector<Channel *> getChannels() const;
 
 		// Setters
 		void setServerMotd(std::string motd);
@@ -69,8 +76,6 @@ class Server
 		int epollWait();
 		int acceptNewClient();
 
-
-
 		// Methods
 		// 1. Server
 		void readFromClient(Client *client);
@@ -79,8 +84,8 @@ class Server
 		void addClient(int clientSocket, struct sockaddr_in clientAddress);
 		void removeClient(Client *client);
 		// 3. Channel
-		// void addChannel(Channel channel);
-		// void removeChannel(Channel channel);
+		void addChannel(Channel *channel);
+		void removeChannel(Channel *channel);
 
 		// Commands
 
@@ -93,7 +98,7 @@ class Server
 		void handleUser(Client *client, std::vector<std::string> arguments);
 		void handleWhois(Client *client, std::vector<std::string> arguments);
 		// 2. ChannelCommands
-		// void handleJoin(Client *client, std::vector<std::string> arguments);
+		void handleJoin(Client *client, std::vector<std::string> arguments);
 		// void handleKick(Client *client, std::vector<std::string> arguments);
 		// void handleList(Client *client, std::vector<std::string> arguments);
 		// void handleNames(Client *client, std::vector<std::string> arguments);
@@ -146,8 +151,8 @@ class Server
 		std::string    	 	_serverMotd;	// Message of the day
 
 		// Server vector and map
-		std::vector<Client *> _clients;
-		// std::vector<Channel>	_channels;
+		std::vector<Client *>	_clients;
+		std::vector<Channel *>	_channels;
 };
 
 #endif

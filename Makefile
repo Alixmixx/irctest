@@ -26,6 +26,7 @@ SRCS	= 	main.cpp\
 			Commands/ConnectionCommands/HandleWhois.cpp\
 			Commands/ConnectionCommands/HandleMotd.cpp\
 			Commands/SendingCommands/HandlePrivateMessage.cpp\
+			Commands/ChannelCommands/HandleJoin.cpp\
 
 FOLDERS = $(sort $(dir $(SRCS)))
 

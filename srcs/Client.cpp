@@ -36,9 +36,13 @@ void Client::setHostname(std::string hostname) { _hostname = hostname; }
 
 void Client::setMessage(std::string message) { _message = message; }
 
+void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
+
 // Getters
 
 int Client::getSocket() const { return (_clientSocket); }
+
+int Client::getChannelCount() const { return (_channelCount); }
 
 bool Client::getIsRegistered() const { return (_isRegistered); }
 

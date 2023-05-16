@@ -38,6 +38,28 @@ const std::string Server::getServerMotd() const { return (_serverMotd); }
 
 std::vector<Client *> Server::getClients() const { return (_clients); }
 
+std::vector<Channel *> Server::getChannels() const { return (_channels); }
+
+bool Server::isChannel(std::string channelName) const
+{
+	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it)->getName() == channelName)
+			return (true);
+	}
+	return (false);
+}
+
+Channel *Server::getChannel(std::string channelName) const
+{
+	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it)->getName() == channelName)
+			return (*it);
+	}
+	return (NULL);
+}
+
 // Setters
 
 void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
@@ -94,6 +116,26 @@ void Server::removeClient(Client *client)
 		}
 	}
 	std::cout << "Client disconnected" << std::endl;
+}
+
+// Channel add and remove
+
+void Server::addChannel(Channel *channel)
+{
+	_channels.push_back(channel);
+}
+
+void Server::removeChannel(Channel *channel)
+{
+	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if ((*it) == channel)
+		{
+			_channels.erase(it);
+			delete channel;
+			return;
+		}
+	}
 }
 
 // Server initialization
