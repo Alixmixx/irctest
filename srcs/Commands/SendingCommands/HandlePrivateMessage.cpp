@@ -33,7 +33,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 
 		// send message to all clients in channel
 
-		broadcast(targetChannel->getChannelUsers(), "PRIVMSG " + arguments[0] + " " + client->getNickname() + " " + concatenateArguments(arguments, 1), client);
+		broadcast(targetChannel->getChannelUsers(), ":" + client->getNickname() + " PRIVMSG " + arguments[0] + " " + concatenateArguments(arguments, 1), client);
 		return;
 	}
 

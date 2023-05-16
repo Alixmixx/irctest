@@ -44,12 +44,12 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 
 	if (channel->isOnChannel(target) == false)
 	{
-		client->reply("ERR_USERNOTINCHANNEL", arguments[1]);
+		client->reply("ERR_USERNOTINCHANNEL", arguments[1], arguments[0]);
 		return;
 	}
 
 	std::string reason = concatenateArguments(arguments, 2);
-	broadcast(channel->getChannelUsers(), "KICK " + arguments[0] + " " + arguments[1] + " " + client->getNickname() + " " + (reason.empty() ? "" : " :" + reason));
+	broadcast(channel->getChannelUsers(), ":" + client->getNickname() + " KICK " + arguments[0] + " " + arguments[1] + (reason == ":" ? "" : " " + reason));
 	channel->removeClientFromChannel(target);
 	channel->addChannelBan(target);
 	// MAYBE ADD A REPLY TO THE TARGET

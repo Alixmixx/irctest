@@ -72,7 +72,7 @@ void Client::reply(std::string replyCode, std::string arg1)
 	else if (replyCode == "RPL_NICKCHANGE" && rplCode--)
 		replyMessage += "NICK " + arg1;
 	else if (replyCode == "RPL_ENDOFWHOIS")
-		replyMessage += "318 :" + arg1 + " : End of WHOIS list";
+		replyMessage += "318 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHNICK")
 		replyMessage += "401 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHSERVER")
@@ -88,39 +88,39 @@ void Client::reply(std::string replyCode, std::string arg1)
 	else if (replyCode == "ERR_NORECIPIENT")
 		replyMessage += "411 :No recipient given (" + arg1 + ")";
 	else if (replyCode == "ERR_NOTOPLEVEL")
-		replyMessage += "413 :" + arg1 + " :No toplevel domain specified";
+		replyMessage += "413 :" + arg1;
 	else if (replyCode == "ERR_WILDTOPLEVEL")
-		replyMessage += "414 :" + arg1 + " :Wildcard in toplevel domain";
+		replyMessage += "414 :" + arg1;
 	else if (replyCode == "ERR_UNKNOWNCOMMAND")
-		replyMessage += "421 :" + arg1 + " :Unknown command";
+		replyMessage += "421 :" + arg1;
 	else if (replyCode == "ERR_NOADMININFO")
-		replyMessage += "423 :" + arg1 + " :No administrative info available";
+		replyMessage += "423 :" + arg1;
 	else if (replyCode == "ERR_ERRONEUSNICKNAME")
-		replyMessage += "432 :" + arg1 + " :Erroneus nickname";
+		replyMessage += "432 :" + arg1;
 	else if (replyCode == "ERR_NICKNAMEINUSE")
 		replyMessage += "433 :" + arg1;
 	else if (replyCode == "ERR_NICKCOLLISION")
-		replyMessage += "436 :" + arg1 + " :Nickname collision KILL";
+		replyMessage += "436 :" + arg1;
 	else if (replyCode == "ERR_NOTONCHANNEL")
-		replyMessage += "442 :" + arg1 + " :You're not on that channel";
+		replyMessage += "442 :" + arg1;
 	else if (replyCode == "ERR_NOLOGIN")
-		replyMessage += "444 :" + arg1 + " :User not logged in";
+		replyMessage += "444 :" + arg1;
 	else if (replyCode == "ERR_NEEDMOREPARAMS")
-		replyMessage += "461 :" + arg1 + " :Not enough parameters";
+		replyMessage += "461 :" + arg1;
 	else if (replyCode == "ERR_KEYSET")
-		replyMessage += "467 :" + arg1 + " :Channel key already set";
+		replyMessage += "467 :" + arg1;
 	else if (replyCode == "ERR_CHANNELISFULL")
-		replyMessage += "471 :" + arg1 + " :Cannot join channel (+l)";
+		replyMessage += "471 :" + arg1;
 	else if (replyCode == "ERR_UNKNOWNMODE")
-		replyMessage += "472 :" + arg1 + " :is unknown mode char to me";
+		replyMessage += "472 :" + arg1;
 	else if (replyCode == "ERR_INVITEONLYCHAN")
-		replyMessage += "473 :" + arg1 + " :Cannot join channel (+i)";
+		replyMessage += "473 :" + arg1;
 	else if (replyCode == "ERR_BANNEDFROMCHAN")
-		replyMessage += "474 :" + arg1 + " :Cannot join channel (+b)";
+		replyMessage += "474 :" + arg1;
 	else if (replyCode == "ERR_BADCHANNELKEY")
 		replyMessage += "475 :" + arg1;
 	else if (replyCode == "ERR_CHANOPRIVSNEEDED")
-		replyMessage += "482 :" + arg1 + " :You're not channel operator";
+		replyMessage += "482 :" + arg1;
 
 	replyMessage += "\r\n";
 
@@ -166,7 +166,7 @@ void Client::reply(std::string replyCode, std::string arg1, std::string arg2, st
 	int rplCode = 1;
 
 	if (replyCode == "RPL_WHOISUSER")
-		replyMessage += "311 :" + _nickname + " " + arg1 + " " + arg2 + arg3; //TODO VERIFIER
+		replyMessage += "311 :" + _nickname + " " + arg1 + " " + arg2 + arg3; // TODO VERIFIER
 
 	replyMessage += "\r\n";
 
