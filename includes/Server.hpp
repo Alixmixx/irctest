@@ -27,10 +27,9 @@
 #include <netinet/in.h>
 
 #define SERVERNAME "MiaoRC"
-#define SERVERHOSTNAME "irc.125.outsanding.gov"
+#define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERVERSION "0.021a"
 #define INFO "42School"
-#define NETWORKNAME "OustandingNetwork"
 #define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024
 #define MAX_EVENTS 32 // why 10 ?

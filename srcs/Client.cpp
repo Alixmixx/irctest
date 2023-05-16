@@ -12,7 +12,10 @@ Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
 	  _realname(""),
 	  _hostname(""),
 	  _server(server)
-{}
+{
+	(void)_clientAddress;
+}
+
 // Destructeur
 Client::~Client()
 {
