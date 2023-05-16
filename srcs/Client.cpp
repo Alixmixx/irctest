@@ -5,6 +5,7 @@
 
 Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
+	  _channelCount(0),
 	  _isRegistered(false),
 	  _clientAddress(clientAddress),
 	  _nickname(""),
@@ -19,6 +20,12 @@ Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
 // Destructeur
 Client::~Client()
 {
+	std::vector<Channel *>::iterator it = _channels.begin();
+	for (; it != _channels.end(); ++it)
+	{
+		(*it)->removeClientFromChannel(this);
+	}
+
 	close(_clientSocket);
 }
 
@@ -37,6 +44,8 @@ void Client::setHostname(std::string hostname) { _hostname = hostname; }
 void Client::setMessage(std::string message) { _message = message; }
 
 void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
+
+void Client::addChannel(Channel *channel) { _channels.push_back(channel); }
 
 // Getters
 

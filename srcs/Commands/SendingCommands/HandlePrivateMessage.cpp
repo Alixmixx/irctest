@@ -14,6 +14,29 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		return;
 	}
 
+	if (arguments[0][0] == '#' || arguments[0][0] == '&')
+	{
+		// get channel
+		Channel *targetChannel = getChannel(arguments[0]);
+		if (targetChannel == NULL)
+		{
+			client->reply("ERR_NOSUCHCHANNEL", arguments[0]);
+			return;
+		}
+
+		// check if client has modes to send message
+		// if (targetChannel->isInChannel(client) == false)
+		// {
+		// 	client->reply("ERR_CANNOTSENDTOCHAN", arguments[0]);
+		// 	return;
+		// }
+
+		// send message to all clients in channel
+
+		broadcast(targetChannel->getChannelUsers(), "PRIVMSG " + arguments[0] + " " + client->getNickname() + " " + concatenateArguments(arguments, 1), client);
+		return;
+	}
+
 	Client *targetClient = getClient(arguments[0]);
 	if (targetClient == NULL)
 	{

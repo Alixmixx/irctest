@@ -3,6 +3,8 @@
 void Server::initCommandHandlerMap()
 {
 	_commandHandlers["CAP"] = &Server::handleCap;
+	_commandHandlers["JOIN"] = &Server::handleJoin;
+	_commandHandlers["KICK"] = &Server::handleKick;
 	_commandHandlers["MODE"] = &Server::handleMode;
 	_commandHandlers["MOTD"] = &Server::handleMotd;
 	_commandHandlers["NICK"] = &Server::handleNick;
@@ -11,5 +13,4 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
-	// _commandHandlers["JOIN"] = &Server::handleJoin;
 }

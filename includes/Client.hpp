@@ -2,10 +2,14 @@
 #define CLIENT_HPP
 
 #include "Server.hpp"
+#include "Channel.hpp"
 #include <string>
+#include <vector>
 #include <netinet/in.h>
 
 class Server;
+
+class Channel;
 
 class Client
 {
@@ -21,6 +25,7 @@ class Client
 		void setHostname(std::string hostname);
 		void setMessage(std::string message);
 		void setChannelCount(int channelCount);
+		void addChannel(Channel *channel);
 
 		// Getters
 		int			getSocket() const;
@@ -53,8 +58,7 @@ class Client
 
 		std::string 	_message;
 
-		//std::vector<Channel *> _channels;
-
+		std::vector<Channel *> _channels;
 		Server *_server;
 };
 

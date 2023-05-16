@@ -28,12 +28,14 @@ SRCS	= 	main.cpp\
 			Commands/ConnectionCommands/HandleMotd.cpp\
 			Commands/SendingCommands/HandlePrivateMessage.cpp\
 			Commands/ChannelCommands/HandleJoin.cpp\
+			Commands/ChannelCommands/HandleKick.cpp\
+			Utils/Utils.cpp\
 
 FOLDERS = $(sort $(dir $(SRCS)))
 
 CC		= c++
 
-CFLAGS	+= -Wall -Wextra -Werror -std=c++98
+CFLAGS	+= -g -Wall -Wextra -Werror -std=c++98
 
 LDFLAGS	+=
 

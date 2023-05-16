@@ -34,6 +34,8 @@ public:
 	void setMode(const std::string &mode);
 	void setKey(const std::string &key);
 
+	void removeClientFromChannel(Client *client);
+
 	void addChannelUser(Client *client);
 	void removeChannelUser(Client *client);
 

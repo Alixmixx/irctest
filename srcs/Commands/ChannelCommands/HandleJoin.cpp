@@ -14,6 +14,7 @@ static void newChannel(Client *client, std::string channelName, std::string chan
 	channel->setPassword(channelPassword);
 	channel->addChannelOperator(client);
 	channel->addChannelUser(client);
+	client->setChannelCount(client->getChannelCount() + 1);
 	server->addChannel(channel);
 }
 
@@ -51,11 +52,12 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 
 	if (channel->isOnChannel(client))
 	{
-		client->reply("ERR_ALREADYONCHANNEL", channel->getName());
+		//client->reply("ERR_USERONCHANNEL", client->getNickname(), channel->getName());
 		return;
 	}
 
 	channel->addChannelUser(client);
+	client->setChannelCount(client->getChannelCount() + 1);
 }
 
 static std::string extractFromArgument(std::string &arguments)
@@ -75,7 +77,7 @@ static std::string extractFromArgument(std::string &arguments)
 	return (name);
 }
 
-static bool checkChanelName(std::string &channelName)
+static bool checkChannelName(std::string &channelName)
 {
 	if (channelName[0] != '#' && channelName[0] != '&')
 	{
@@ -99,7 +101,7 @@ void Server::handleJoin(Client *client, std::vector<std::string> arguments)
 	{
 		channelName = extractFromArgument(arguments[0]);
 
-		if (checkChanelName(channelName) == false)
+		if (checkChannelName(channelName) == false)
 		{
 			client->reply("ERR_NEEDMOREPARAMS", "JOIN");
 			return; // maybe continue ?

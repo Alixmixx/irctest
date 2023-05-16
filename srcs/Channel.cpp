@@ -93,7 +93,16 @@ void Channel::setKey(const std::string &key) { _key = key; }
 
 // Methods
 
-void Channel::addChannelUser(Client *client) { _channelUsers.push_back(client); }
+void Channel::addChannelUser(Client *client) {
+	_channelUsers.push_back(client);
+	client->addChannel(this);
+}
+
+void Channel::removeClientFromChannel(Client *client)
+{
+	removeChannelUser(client);
+	removeChannelOperator(client);
+}
 
 void Channel::removeChannelUser(Client *client)
 {

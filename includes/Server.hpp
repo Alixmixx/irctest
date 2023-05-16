@@ -103,7 +103,7 @@ class Server
 		void handleWhois(Client *client, std::vector<std::string> arguments);
 		// 2. ChannelCommands
 		void handleJoin(Client *client, std::vector<std::string> arguments);
-		// void handleKick(Client *client, std::vector<std::string> arguments);
+		void handleKick(Client *client, std::vector<std::string> arguments);
 		// void handleList(Client *client, std::vector<std::string> arguments);
 		// void handleNames(Client *client, std::vector<std::string> arguments);
 		// void handlePart(Client *client, std::vector<std::string> arguments);
@@ -157,5 +157,7 @@ class Server
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
 };
+
+std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 
 #endif
