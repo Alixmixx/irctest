@@ -18,7 +18,7 @@ void Server::parseMessageFromClient(Client *client, std::string message)
 			arguments.push_back(argument);
 		}
 		CommandHandler handler = it->second;
-		(this->*handler)(client, arguments);
+			(this->*handler)(client, arguments);
 	}
 	else
 	{
@@ -55,13 +55,13 @@ void Server::readFromClient(Client *client)
 		}
 	} while (recvSize == BUFFER_SIZE - 1);
 
-	if (DEBUG)
-		std::cout << "\033[31mMessage from client: " << client->getSocket() << message << "\033[0m";
+	if (DEBUG && message.find("PING") == std::string::npos)
+		std::cout << "\033[31mMessage from client: " << client->getSocket() << "\n" << message << "\033[0m";
 
 	while (message.find("\r\n") != std::string::npos)
 	{
 		std::string line = message.substr(0, message.find("\r\n"));
-		message = message.substr(message.find("\r\n") + 1);
+		message = message.substr(message.find("\r\n") + 2);
 		client->setMessage(message);
 		parseMessageFromClient(client, line);
 	}
