@@ -34,27 +34,28 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
 	{
-		replyMessage(client, "ERR_NONICKNAMEGIVEN");
+		client->reply("ERR_NONICKNAMEGIVEN");
 		return;
 	}
 	if (isNicknameValid(arguments[0]))
 	{
 		if (isNicknameAlreadyTaken(this->getClients(), arguments[0]))
 		{
-			replyMessage(client, "ERR_NICKNAMEINUSE", arguments[0]);
+			client->reply("ERR_NICKNAMEINUSE", arguments[0]);
+			// TODO donner au user un nickname random
 			return;
 		}
 		if (!client->getNickname().empty())
 		{
-			replyMessage(client, "RPL_NICKCHANGE", client->getNickname(), arguments[0]);
+			//client->reply("RPL_NICKCHANGE", arguments[0]);
+			broadcast(_clients, ":" + client->getNickname() + " NICK :" + arguments[0]);
 		}
 		client->setNickname(arguments[0]);
-		// TODO broadcast nick change a tous les channels
 		return;
 	}
 	else
 	{
-		replyMessage(client, "ERR_ERRONEUSNICKNAME", arguments[0]);
+		client->reply("ERR_ERRONEUSNICKNAME", arguments[0]);
 		return;
 	}
 }

@@ -7,7 +7,10 @@ void Server::handleQuit(Client *client, std::vector<std::string> arguments)
 	removeClient(client);
 
 	if (arguments.size() == 0)
-		broadcastAll(":" + clientNickname + " QUIT\r\n");
+	{
+		broadcast(_clients, ":" + clientNickname + " QUIT");
+		return;
+	}
 
 	for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); it++)
 	{
@@ -16,5 +19,5 @@ void Server::handleQuit(Client *client, std::vector<std::string> arguments)
 			clientMessage += " ";
 	}
 
-	broadcastAll(":" + clientNickname + " QUIT :" + clientMessage + "\r\n");
+	broadcast(_clients, ":" + clientNickname + " QUIT :" + clientMessage);
 }

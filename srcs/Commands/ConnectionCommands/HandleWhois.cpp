@@ -4,7 +4,7 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
-		replyMessage(client, "ERR_NEEDMOREPARAMS", "WHOIS");
+		client->reply("ERR_NEEDMOREPARAMS", "WHOIS");
 		return;
 	}
 
@@ -13,27 +13,27 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 		Client *target = getClient(arguments[0]);
 		if (!target)
 		{
-			replyMessage(client, "ERR_NOSUCHNICK", arguments[0]);
+			client->reply("ERR_NOSUCHNICK", arguments[0]);
 			return;
 		}
-		replyMessage(client, "RPL_WHOISUSER", target->getNickname(), target->getUsername(), target->getRealname());
-		replyMessage(client, "RPL_ENDOFWHOIS", target->getNickname());
+		client->reply("RPL_WHOISUSER", target->getNickname(), target->getUsername(), target->getRealname());
+		client->reply("RPL_ENDOFWHOIS", target->getNickname());
 	}
 
 	if (arguments.size() >= 2)
 	{
 		if (arguments[0] != client->getServer()->getServerName())
 		{
-			replyMessage(client, "ERR_NOSUCHSERVER", arguments[0]);
+			client->reply("ERR_NOSUCHSERVER", arguments[0]);
 			return;
 		}
 
 		Client *target = getClient(arguments[1]);
 		if (!target)
 		{
-			replyMessage(client, "ERR_NOSUCHNICK", arguments[1]);
+			client->reply("ERR_NOSUCHNICK", arguments[1]);
 			return;
 		}
-		// replyMessage(client, "RPL_WHOISSERVER"); // TODO
+		// client->reply("RPL_WHOISSERVER"); // TODO
 	}
 }

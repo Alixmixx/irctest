@@ -1,17 +1,17 @@
-#include "Server.hpp"
+#include "Client.hpp"
 
-void Server::replyMessage(Client *client, std::string replyCode)
+void Client::reply(std::string replyCode)
 {
-	std::string replyMessage = ":" + _serverHostname + " ";
+	std::string replyMessage = ":" + _server->getServerHostname() + " ";
 
 	if (replyCode == "RPL_WELCOME")
-		replyMessage += "001 : Welcome to the <networkname> Network, " + client->getNickname() + "[!" + client->getUsername() + "@" + client->getHostname() + "]";
+		replyMessage += "001 : Welcome to the <networkname> Network, " + _nickname + "[!" + _username + "@" + _hostname + "]";
 	else if (replyCode == "RPL_YOURHOST")
-		replyMessage += "002 : Your host is " + _serverName + ", running version " + _serverVersion;
+		replyMessage += "002 : Your host is " + _server->getServerName() + ", running version " + _server->getServerVersion();
 	else if (replyCode == "RPL_CREATED")
-		replyMessage += "003 : This server was created " + _serverCreationDate + " at " + _serverCreationTime;
+		replyMessage += "003 : This server was created " + _server->getServerCreationDate() + " at " + _server->getServerCreationTime();
 	else if (replyCode == "RPL_MYINFO")
-		replyMessage += "004 : " + _serverName + " " + _serverVersion + " <available user modes> <available channel modes>";
+		replyMessage += "004 : " + _server->getServerName() + " " + _server->getServerVersion() + " <available user modes> <available channel modes>";
 	else if (replyCode == "RPL_ISUPPORT")
 		replyMessage += "005 : "; //"005 :<1-13 tokens>  :are supported by this server";
 	else if (replyCode == "RPL_UMODEIS")
@@ -53,24 +53,27 @@ void Server::replyMessage(Client *client, std::string replyCode)
 
 	replyMessage += "\r\n";
 
-	replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), client->getNickname());
+	replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), _nickname);
 
 	if (DEBUG)
-		std::cout << replyMessage << std::endl;
+		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
+				  << replyMessage << "\033[0m" << std::endl;
 
-	send(client->getSocket(), replyMessage.c_str(), replyMessage.length(), 0);
+	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
 }
 
-void Server::replyMessage(Client *client, std::string replyCode, std::string arg1)
+void Client::reply(std::string replyCode, std::string arg1)
 {
-	std::string replyMessage = ":" + _serverHostname + " ";
+	std::string replyMessage = ":" + _server->getServerHostname() + " ";
 	int rplCode = 1;
 
 	if (replyCode == "PONG" && rplCode--)
 		replyMessage = "PONG " + arg1;
-	if (replyCode == "RPL_ENDOFWHOIS")
+	else if (replyCode == "RPL_NICKCHANGE" && rplCode--)
+		replyMessage += "NICK " + arg1;
+	else if (replyCode == "RPL_ENDOFWHOIS")
 		replyMessage += "318 : " + arg1 + " : End of WHOIS list";
-	if (replyCode == "ERR_NOSUCHNICK")
+	else if (replyCode == "ERR_NOSUCHNICK")
 		replyMessage += "401 : " + arg1;
 	else if (replyCode == "ERR_NOSUCHSERVER")
 		replyMessage += "402 : " + arg1;
@@ -122,23 +125,22 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	replyMessage += "\r\n";
 
 	if (rplCode)
-		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), client->getNickname());
+		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), _nickname);
 
 	if (DEBUG)
-		std::cout << replyMessage << std::endl;
+		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
+				  << replyMessage << "\033[0m";
 
-	send(client->getSocket(), replyMessage.c_str(), replyMessage.length(), 0);
+	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
 }
 
-void Server::replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2)
+void Client::reply(std::string replyCode, std::string arg1, std::string arg2)
 {
-	std::string replyMessage = ":" + _serverHostname + " ";
+	std::string replyMessage = ":" + _server->getServerHostname() + " ";
 	int rplCode = 1;
 
 	if (replyCode == "PRIVMSG" && rplCode--)
 		replyMessage = ":" + arg1 + " PRIVMSG " + arg2;
-	if (replyCode == "RPL_NICKCHANGE" && rplCode--)
-		replyMessage = ":" + arg1 + " NICK " + arg2;
 	else if (replyCode == "ERR_FILEERROR")
 		replyMessage += "424 : File error doing " + arg1 + " on " + arg2;
 	else if (replyCode == "ERR_USERNOTINCHANNEL")
@@ -149,29 +151,31 @@ void Server::replyMessage(Client *client, std::string replyCode, std::string arg
 	replyMessage += "\r\n";
 
 	if (rplCode)
-		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), client->getNickname());
+		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), _nickname);
 
 	if (DEBUG)
-		std::cout << replyMessage << std::endl;
+		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
+				  << replyMessage << "\033[0m" << std::endl;
 
-	send(client->getSocket(), replyMessage.c_str(), replyMessage.length(), 0);
+	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
 }
 
-void Server::replyMessage(Client *client, std::string replyCode, std::string arg1, std::string arg2, std::string arg3)
+void Client::reply(std::string replyCode, std::string arg1, std::string arg2, std::string arg3)
 {
-	std::string replyMessage = ":" + _serverHostname + " ";
+	std::string replyMessage = ":" + _server->getServerHostname() + " ";
 	int rplCode = 1;
 
 	if (replyCode == "RPL_WHOISUSER")
-		replyMessage += "311 : " + client->getNickname() + " " + arg1 + " " + arg2 + arg3;
+		replyMessage += "311 : " + _nickname + " " + arg1 + " " + arg2 + arg3;
 
 	replyMessage += "\r\n";
 
 	if (rplCode)
-		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), client->getNickname());
+		replyMessage.insert(replyMessage.find(':', replyMessage.find(':') + 1), _nickname);
 
 	if (DEBUG)
-		std::cout << replyMessage << std::endl;
+		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
+				  << replyMessage << "\033[0m" << std::endl;
 
-	send(client->getSocket(), replyMessage.c_str(), replyMessage.length(), 0);
+	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
 }

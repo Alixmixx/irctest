@@ -31,12 +31,18 @@ class Client
 		std::string getMessage() const;
 		Server		*getServer() const;
 
+		// Reply
+		void reply(std::string replyCode);
+		void reply(std::string replyCode, std::string arg1);
+		void reply(std::string replyCode, std::string arg1, std::string arg2);
+		void reply(std::string replyCode, std::string arg1, std::string arg2, std::string arg3);
+
 	private:
 		int				_clientSocket;
 		bool			_isRegistered;
 
 		struct sockaddr_in		_clientAddress;
-		
+
 		std::string 	_nickname;
 		std::string 	_username;
 		std::string 	_realname;

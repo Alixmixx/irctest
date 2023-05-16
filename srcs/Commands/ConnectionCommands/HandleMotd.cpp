@@ -6,14 +6,14 @@ void Server::handleMotd(Client *client, std::vector<std::string> arguments)
 	{
 		if (arguments[0] != _serverName)
 		{
-			replyMessage(client, "ERR_NOSUCHSERVER");
+			client->reply("ERR_NOSUCHSERVER");
 		}
 	}
 	if (_serverMotd == "")
 	{
-		replyMessage(client, "ERR_NOMOTD");
+		client->reply("ERR_NOMOTD");
 	}
-	replyMessage(client, "RPL_MOTDSTART");
-	replyMessage(client, "RPL_MOTD");
-	replyMessage(client, "RPL_ENDOFMOTD");
+	client->reply("RPL_MOTDSTART");
+	client->reply("RPL_MOTD");
+	client->reply("RPL_ENDOFMOTD");
 }
