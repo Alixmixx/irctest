@@ -6,6 +6,10 @@
 #include <iostream>
 #include <vector>
 
+class Server;
+
+class Client;
+
 class Channel
 {
 public:

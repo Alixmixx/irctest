@@ -49,7 +49,7 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 		return;
 	}
 
-	if (client->isOnChannel(channel))
+	if (channel->isOnChannel(client))
 	{
 		client->reply("ERR_ALREADYONCHANNEL", channel->getName());
 		return;
