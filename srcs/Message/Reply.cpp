@@ -18,6 +18,10 @@ void Client::reply(std::string replyCode)
 		replyMessage += "221 :<user modes>"; // Client.getMode(); <<-- creer une fonction getMode dans client apres avoir lu la doc
 	else if (replyCode == "RPL_STATSUPTIME")
 		replyMessage += "242 :Server Up <days> days <hours>:<minutes>:<seconds>"; // + getServerUptime(); <<-- creer une fonction getServerUptime qui retourne le temps depuis le lancement du serv
+	else if (replyCode == "RPL_LISTSTART")
+		replyMessage += "321 :Channel :Users Name";
+	else if (replyCode == "RPL_LISTEND")
+		replyMessage += "323 :End of /LIST";
 	else if (replyCode == "ERR_NOMOTD")
 		replyMessage += "422 :MOTD File is missing";
 	else if (replyCode == "ERR_NOORIGIN")
@@ -121,6 +125,8 @@ void Client::reply(std::string replyCode, std::string arg1)
 		replyMessage += "474 :" + arg1;
 	else if (replyCode == "ERR_BADCHANNELKEY")
 		replyMessage += "475 :" + arg1;
+	else if (replyCode == "ERR_BADCHANMASK")
+		replyMessage += "476 :" + arg1;
 	else if (replyCode == "ERR_CHANOPRIVSNEEDED" && rplCode--)
 		replyMessage += "482 " + _nickname + " :" + arg1 + " :You're not channel operator";
 
@@ -169,11 +175,10 @@ void Client::reply(std::string replyCode, std::string arg1, std::string arg2, st
 
 	if (replyCode == "RPL_WHOISUSER")
 		replyMessage += "311 :" + _nickname + " " + arg1 + " " + arg2 + arg3; // TODO VERIFIER
+	else if (replyCode == "RPL_LIST")
+		replyMessage += "322 :" + arg1 + " " + arg2 + " :" + arg3;
 	else if (replyCode == "RPL_NAMREPLY")
 		replyMessage += "353 :" + arg1 + " " + arg2 + " :" + arg3;
-
-	
-
 
 	replyMessage += "\r\n";
 

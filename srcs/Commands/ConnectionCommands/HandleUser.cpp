@@ -10,7 +10,7 @@ static void welcomeMessage(Client *client)
 
 void Server::handleUser(Client *client, std::vector<std::string> arguments)
 {
-	if (arguments.empty() || arguments.size() < 4)
+	if (arguments.size() < 4)
 	{
 		client->reply("ERR_NEEDMOREPARAMS", "USER");
 		return;

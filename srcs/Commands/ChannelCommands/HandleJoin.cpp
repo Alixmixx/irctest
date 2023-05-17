@@ -96,7 +96,7 @@ void Server::handleJoin(Client *client, std::vector<std::string> arguments)
 	std::string channelName;
 	std::string channelPassword;
 
-	while (!arguments[0].empty())
+	while (!arguments[0].empty()) // alix > a changer en split
 	{
 		channelName = extractFromArgument(arguments[0]);
 
