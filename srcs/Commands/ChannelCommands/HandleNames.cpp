@@ -42,8 +42,8 @@ static void showChannelUsers(Channel *channel, Client *client, bool showInvisibl
 		it++;
 	}
 
-	//"<client>                   <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
-	client->reply("RPL_NAMREPLY", symbol, channel->getName(), names); // RPL_NAMREPLY lorenzo = #test :@lorenzo +lorenzo
+	//<client>                   <symbol><channel>           :[prefix]<nick>{ [prefix]<nick>}"
+	client->reply("RPL_NAMREPLY", symbol, channel->getName(), names);
 	// "<client> <channel> :End of /NAMES list"
 	client->reply("RPL_ENDOFNAMES", channel->getName());
 }
