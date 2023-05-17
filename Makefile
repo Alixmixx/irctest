@@ -31,7 +31,7 @@ SRCS	+= Commands/ChannelCommands/HandleNames.cpp
 SRCS	+= Utils/ParseArgv.cpp
 SRCS	+= Utils/Utils.cpp
 
-CC		:= c++
+CC		:= clang++
 CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
 
 SRCS	:= $(foreach file,$(SRCS),$S$(file))
