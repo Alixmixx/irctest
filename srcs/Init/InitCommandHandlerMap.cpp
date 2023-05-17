@@ -9,6 +9,7 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["MOTD"] = &Server::handleMotd;
 	_commandHandlers["NAMES"] = &Server::handleNames;
 	_commandHandlers["NICK"] = &Server::handleNick;
+	_commandHandlers["PART"] = &Server::handlePart;
 	_commandHandlers["PING"] = &Server::handlePing;  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;

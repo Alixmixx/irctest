@@ -16,3 +16,17 @@ std::string concatenateArguments(std::vector<std::string> arguments, unsigned in
 	}
 	return (message);
 }
+
+std::vector<std::string> split(const std::string &str, char delim)
+{
+	std::vector<std::string> result;
+	std::stringstream ss(str);
+	std::string token;
+
+	while (std::getline(ss, token, delim))
+	{
+		if (token != "")
+			result.push_back(token);
+	}
+	return result;
+}

@@ -49,6 +49,19 @@ void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
 void Client::addChannel(Channel *channel) { _channels.push_back(channel); }
 
+void Client::leaveChannel(Channel *channel)
+{
+	std::vector<Channel *>::iterator it = _channels.begin();
+	for (; it != _channels.end(); ++it)
+	{
+		if ((*it) == channel)
+		{
+			_channels.erase(it);
+			break;
+		}
+	}
+}
+
 // Getters
 
 int Client::getSocket() const { return (_clientSocket); }
