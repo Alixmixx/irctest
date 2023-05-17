@@ -1,5 +1,4 @@
-#ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+#pragma once
 
 #include "Server.hpp"
 #include "Client.hpp"
@@ -63,5 +62,3 @@ private:
 	std::vector<Client *> _channelBans;
 	std::vector<Client *> _channelInvites;
 };
-
-#endif

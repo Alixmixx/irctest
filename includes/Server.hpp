@@ -1,5 +1,4 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
 #include "Client.hpp"
 #include "Channel.hpp"
@@ -159,5 +158,3 @@ class Server
 };
 
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
-
-#endif

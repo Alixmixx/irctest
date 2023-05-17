@@ -1,5 +1,4 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
 #include "Server.hpp"
 #include "Channel.hpp"
@@ -61,5 +60,3 @@ class Client
 		std::vector<Channel *> _channels;
 		Server *_server;
 };
-
-#endif

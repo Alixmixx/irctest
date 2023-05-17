@@ -1,5 +1,4 @@
-#ifndef REPLYCODE_HPP
-#define REPLYCODE_HPP
+#pragma once
 
 enum ReplyCode
 {
@@ -93,6 +92,3 @@ enum ReplyCode
 	ERR_ALREADYBAN,
 	ERR_KILLDENY
 };
-
-
-#endif
