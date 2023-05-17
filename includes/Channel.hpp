@@ -1,12 +1,9 @@
 #pragma once
 
-#include "Server.hpp"
-#include "Client.hpp"
 #include "ft_irc.hpp"
 
-class Server;
-
 class Client;
+class Server;
 
 class Channel
 {

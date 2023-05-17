@@ -116,6 +116,20 @@ typedef enum ReplyCode
 	ERR_KILLDENY
 }	ReplyCode;
 
+#define SERVERNAME "MiaoRC"
+#define SERVERHOSTNAME "irc.125.outstanding.gov"
+#define SERVERVERSION "0.042a"
+#define INFO "42School"
+#define BACKLOG 128 // why 128 ?
+#define MAX_CLIENTS 1024
+#define MAX_EVENTS 32 // why 10 ?
+#define BUFFER_SIZE 256
+#define MAX_CHANNELS_PER_CLIENT 10
+#define MAX_USERS_PER_CHANNEL 10
+#define DEBUG true
+
+#include "Channel.hpp"
+#include "Client.hpp"
 #include "Server.hpp"
 
 bool isPortNumberCorrect(std::string port);
