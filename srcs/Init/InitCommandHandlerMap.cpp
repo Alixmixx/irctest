@@ -3,6 +3,7 @@
 void Server::initCommandHandlerMap()
 {
 	_commandHandlers["CAP"] = &Server::handleCap;
+	_commandHandlers["INVITE"] = &Server::handleInvite;
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;
 	_commandHandlers["LIST"] = &Server::handleList;

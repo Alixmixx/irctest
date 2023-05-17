@@ -68,6 +68,7 @@ public:
 	void handleNames(Client *client, std::vector<std::string> arguments);
 	void handlePart(Client *client, std::vector<std::string> arguments);
 	void handleTopic(Client *client, std::vector<std::string> arguments);
+	void handleInvite(Client *client, std::vector<std::string> arguments);
 	// 3. ServerCommands
 	/* void handleAdmin(Client *client, std::vector<std::string> arguments);
 	void handleInfo(Client *client, std::vector<std::string> arguments);
