@@ -5,6 +5,7 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["CAP"] = &Server::handleCap;
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;
+	_commandHandlers["LIST"] = &Server::handleList;
 	_commandHandlers["MODE"] = &Server::handleMode;
 	_commandHandlers["MOTD"] = &Server::handleMotd;
 	_commandHandlers["NAMES"] = &Server::handleNames;
