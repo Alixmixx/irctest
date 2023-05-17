@@ -45,6 +45,8 @@ void Client::setMessage(std::string message) { _message = message; }
 
 void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
 
+void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
+
 void Client::addChannel(Channel *channel) { _channels.push_back(channel); }
 
 // Getters
@@ -53,7 +55,7 @@ int Client::getSocket() const { return (_clientSocket); }
 
 int Client::getChannelCount() const { return (_channelCount); }
 
-bool Client::getIsRegistered() const { return (_isRegistered); }
+bool Client::IsRegistered() const { return (_isRegistered); }
 
 std::string Client::getNickname() const { return (_nickname); }
 
@@ -64,5 +66,7 @@ std::string Client::getRealname() const { return (_realname); }
 std::string Client::getHostname() const { return (_hostname); }
 
 std::string Client::getMessage() const { return (_message); }
+
+bool Client::IsInvisible() const { return (_isInvisible); }
 
 Server *Client::getServer() const { return (_server); }

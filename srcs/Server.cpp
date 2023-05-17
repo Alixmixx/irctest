@@ -2,7 +2,7 @@
 
 // Constructeur
 
-Server::Server(short port, std::string password)
+Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
 	  _serverVersion(SERVERVERSION),

@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "ft_irc.hpp"
 
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start)
 {

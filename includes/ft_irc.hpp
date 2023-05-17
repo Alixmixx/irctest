@@ -1,7 +1,29 @@
-#ifndef REPLYCODE_HPP
-#define REPLYCODE_HPP
+#pragma once
 
-enum ReplyCode
+#include <algorithm>
+#include <arpa/inet.h>
+#include <cctype>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <csignal>
+#include <ctime>
+#include <fcntl.h>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sstream>
+#include <string>
+#include <sys/epoll.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <vector>
+
+typedef enum ReplyCode
 {
 	RPL_WELCOME,
 	RPL_YOURHOST,
@@ -92,7 +114,34 @@ enum ReplyCode
 	ERR_USERSDONTMATCH,
 	ERR_ALREADYBAN,
 	ERR_KILLDENY
-};
+}	ReplyCode;
 
+typedef enum Modes
+{
+	USER,
+	MODERATOR,
+	OPERATOR,
+	PROTECTED,
+	FOUNDER
+}	Modes;
 
-#endif
+#define SERVERNAME "MiaoRC"
+#define SERVERHOSTNAME "irc.125.outstanding.gov"
+#define SERVERVERSION "0.042a"
+#define INFO "42School"
+#define BACKLOG 128 // why 128 ?
+#define MAX_CLIENTS 1024
+#define MAX_EVENTS 32 // why 10 ?
+#define BUFFER_SIZE 256
+#define MAX_CHANNELS_PER_CLIENT 10
+#define MAX_USERS_PER_CHANNEL 10
+#define DEBUG true
+
+#include "Channel.hpp"
+#include "Client.hpp"
+#include "Server.hpp"
+
+bool isPortNumberCorrect(std::string port);
+bool isPasswordCorrect(std::string password);
+std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
+std::string getCurrentDateTime();

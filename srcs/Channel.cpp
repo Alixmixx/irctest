@@ -7,7 +7,11 @@ Channel::Channel(Server *server, std::string &name)
 	  _mode(""),
 	  _key(""),
 	  _inviteOnly(false),
-	  _server(server) {}
+	  _isSecret(false),
+	  _server(server)
+{
+	(void)_server;
+}
 
 Channel::~Channel()
 {
@@ -23,13 +27,13 @@ const std::string &Channel::getTopic() const { return _topic; }
 
 const std::string &Channel::getPassword() const { return _password; }
 
-const std::string &Channel::getMode() const { return _mode; }
-
 const std::string &Channel::getKey() const { return _key; }
 
-std::vector<Client *> &Channel::getChannelUsers() { return _channelUsers; }
+const std::string &Channel::getTopicSetter() const { return _topicSetter; }
 
-bool Channel::isPasswordProtected() const { return (_password != ""); }
+const std::string &Channel::getTopicTimestamp() const { return _topicTimestamp; }
+
+std::vector<Client *> &Channel::getChannelUsers() { return _channelUsers; }
 
 bool Channel::isOperator(Client *client) const
 {
@@ -79,15 +83,22 @@ bool Channel::isOnChannel(Client *client) const
 	return (false);
 }
 
+bool Channel::isPasswordProtected() const { return (_password != ""); }
+
+bool Channel::isSecret() const { return (_isSecret); }
+
 bool Channel::isInviteOnly() const { return (_inviteOnly); }
 
 // Setters
 
-void Channel::setTopic(const std::string &topic) { _topic = topic; }
+void Channel::setTopic(Client *client, const std::string &topic)
+{
+	_topic = topic;
+	_topicSetter = client->getNickname();
+	_topicTimestamp = getCurrentDateTime();
+}
 
 void Channel::setPassword(const std::string &password) { _password = password; }
-
-void Channel::setMode(const std::string &mode) { _mode = mode; }
 
 void Channel::setKey(const std::string &key) { _key = key; }
 
