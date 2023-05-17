@@ -38,6 +38,7 @@ OBJS	= $(SRCS:$S%=$O%.o)
 DEPS	= $(SRCS:$S%=$D%.d)
 
 RM		:= rm -rf
+MKDIR	:= mkdir -p
 
 END		:= \033[0m
 GRAY	:= \033[0;90m
@@ -54,21 +55,14 @@ WHITE	:= \033[0;97m
 all: $(NAME)
 
 $O:
-	mkdir -p $@ $(FOLDERS:$(S)%=$(O)%)
+	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): | $O
-
-$(OBJS): $O%.o: $S%
-	@echo "$(YELLOW)Compiling $^: $(END)"
-	$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(GREEN)✓$(END)"
-
-$D:
-	mkdir -p $@ $(FOLDERS:$(S)%=$(D)%)
-
-$(DEPS): | $D
+$(OBJS): $O%.o: $S% | $O
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "$(GREEN)✓ $@$(END)"
 
 $(DEPS): $D%.d: $S%
+	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
 	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
@@ -83,6 +77,7 @@ fclean: clean
 	@echo "$(RED)Removed executable$(END)"
 	@$(RM) $(NAME)
 
-re: fclean all
+re: fclean
+	@$(MAKE) all
 
 -include $(DEPS)
