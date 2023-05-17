@@ -109,8 +109,7 @@ void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
 
 void Server::removeClient(Client *client)
 {
-	int clientSocketFd = client->getSocket();
-	epoll_ctl(_epollFd, EPOLL_CTL_DEL, clientSocketFd, NULL);
+	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
 	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it) == client)
@@ -148,7 +147,7 @@ void Server::removeChannel(Channel *channel)
 void Server::initServer()
 {
 	// Server address initialization
-	bzero(&_serverAddress, sizeof(_serverAddress));
+	std::memset(&_serverAddress, 0, sizeof(_serverAddress));
 
 	_serverAddress.sin_family = AF_INET;
 	_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -246,7 +245,7 @@ void Server::start()
 	this->epollWait();
 
 	// Server socket epoll events loop
-	while (42)
+	while (125)
 	{
 		if (_newEvents == 0)
 		{
