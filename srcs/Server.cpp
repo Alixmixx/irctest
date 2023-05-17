@@ -2,7 +2,7 @@
 
 // Constructeur
 
-Server::Server(short port, std::string password)
+Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
 	  _serverVersion(SERVERVERSION),
@@ -149,7 +149,6 @@ void Server::initServer()
 {
 	// Server address initialization
 	bzero(&_serverAddress, sizeof(_serverAddress));
-
 	_serverAddress.sin_family = AF_INET;
 	_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	_serverAddress.sin_port = htons(_port);

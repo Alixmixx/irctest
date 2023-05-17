@@ -8,7 +8,7 @@ class Client;
 class Server
 {
 public:
-	Server(short port, std::string password);
+	Server(unsigned short port, std::string password);
 	~Server();
 
 	// Getters
@@ -102,7 +102,7 @@ private:
 	const std::string _serverInfo;
 	const std::string _serverVersion;
 	const std::string _serverEnvironment;
-	short _port;
+	unsigned short _port;
 
 	typedef void (Server::*CommandHandler)(Client *client, std::vector<std::string> arguments);
 	std::map<std::string, CommandHandler> _commandHandlers;
