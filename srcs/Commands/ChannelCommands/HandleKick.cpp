@@ -28,7 +28,7 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	if (channel->isOperator(client) == false)
+	if (channel->getChannelUserMode(client) < MODERATOR)
 	{
 		client->reply("ERR_CHANOPRIVSNEEDED", arguments[0]);
 		return;
@@ -48,9 +48,15 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
+	if (channel->getChannelUserMode(client) < channel->getChannelUserMode(target))
+	{
+		client->reply("ERR_CHANOPRIVSNEEDED", arguments[0]);
+		return;
+	}
+
 	std::string reason = concatenateArguments(arguments, 2);
 	broadcast(channel->getChannelUsers(), ":" + client->getNickname() + " KICK " + arguments[0] + " " + arguments[1] + (reason == ":" ? "" : " " + reason));
 	channel->removeClientFromChannel(target);
-	channel->addChannelBan(target);
+	channel->setClientMode(target, BANNED);
 	// MAYBE ADD A REPLY TO THE TARGET
 }

@@ -118,6 +118,9 @@ typedef enum ReplyCode
 
 typedef enum Modes
 {
+	BANNED,
+	NOTINCHANNEL,
+	INVITED,
 	USER,
 	MODERATOR,
 	OPERATOR,

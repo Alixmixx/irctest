@@ -39,7 +39,7 @@ void Server::handleTopic(Client *client, std::vector<std::string> arguments)
 	// Handle TOPIC <channel> <topic>
 	std::string topic = concatenateArguments(arguments, 1);
 
-	if (channel->isOperator(client) == false) // protected topic ?
+	if (channel->getChannelUserMode(client) < OPERATOR) // protected topic ?
 	{
 		client->reply("ERR_CHANOPRIVSNEEDED", channel->getName());
 		return ;

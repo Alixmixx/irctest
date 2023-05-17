@@ -12,8 +12,7 @@ static void newChannel(Client *client, std::string channelName, std::string chan
 	Channel *channel = new Channel(server, channelName);
 
 	channel->setPassword(channelPassword);
-	channel->addChannelOperator(client);
-	channel->addChannelUser(client);
+	channel->addChannelUser(client, FOUNDER);
 	client->setChannelCount(client->getChannelCount() + 1);
 	server->addChannel(channel);
 }
@@ -32,7 +31,7 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 		return;
 	}
 
-	if (channel->isBanned(client))
+	if (channel->getChannelUserMode(client) == BANNED)
 	{
 		client->reply("ERR_BANNEDFROMCHAN", channel->getName());
 		return;
@@ -44,7 +43,7 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 		return;
 	}
 
-	if (channel->isInviteOnly() && !channel->isInvited(client))
+	if (channel->isInviteOnly() && channel->getChannelUserMode(client) != INVITED)
 	{
 		client->reply("ERR_INVITEONLYCHAN", channel->getName());
 		return;

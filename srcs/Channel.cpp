@@ -16,7 +16,7 @@ Channel::Channel(Server *server, std::string &name)
 Channel::~Channel()
 {
 	_channelUsers.clear();
-	_channelOperators.clear();
+	_channelUsersModes.clear();
 }
 
 // Getters
@@ -35,40 +35,14 @@ const std::string &Channel::getTopicTimestamp() const { return _topicTimestamp; 
 
 std::vector<Client *> &Channel::getChannelUsers() { return _channelUsers; }
 
-bool Channel::isOperator(Client *client) const
-{
-	std::vector<Client *>::const_iterator it = _channelOperators.begin();
-	while (it != _channelOperators.end())
-	{
-		if (*it == client)
-			return (true);
-		it++;
-	}
-	return (false);
-}
+std::map<Client *, int> &Channel::getChannelUsersModes() { return _channelUsersModes; }
 
-bool Channel::isBanned(Client *client) const
+int Channel::getChannelUserMode(Client *client) const
 {
-	std::vector<Client *>::const_iterator it = _channelBans.begin();
-	while (it != _channelBans.end())
-	{
-		if (*it == client)
-			return (true);
-		it++;
-	}
-	return (false);
-}
-
-bool Channel::isInvited(Client *client) const
-{
-	std::vector<Client *>::const_iterator it = _channelInvites.begin();
-	while (it != _channelInvites.end())
-	{
-		if (*it == client)
-			return (true);
-		it++;
-	}
-	return (false);
+	std::map<Client *, int>::const_iterator it = _channelUsersModes.find(client);
+	if (it != _channelUsersModes.end())
+		return (it->second);
+	return (NOTINCHANNEL);
 }
 
 bool Channel::isOnChannel(Client *client) const
@@ -102,17 +76,25 @@ void Channel::setPassword(const std::string &password) { _password = password; }
 
 void Channel::setKey(const std::string &key) { _key = key; }
 
+void Channel::setClientMode(Client *client, int mode) { _channelUsersModes[client] = mode; }
+
 // Methods
 
 void Channel::addChannelUser(Client *client) {
 	_channelUsers.push_back(client);
+	_channelUsersModes[client] = USER;
+	client->addChannel(this);
+}
+
+void Channel::addChannelUser(Client *client, int mode) {
+	_channelUsers.push_back(client);
+	_channelUsersModes[client] = mode;
 	client->addChannel(this);
 }
 
 void Channel::removeClientFromChannel(Client *client)
 {
 	removeChannelUser(client);
-	removeChannelOperator(client);
 }
 
 void Channel::removeChannelUser(Client *client)
@@ -127,52 +109,9 @@ void Channel::removeChannelUser(Client *client)
 		}
 		it++;
 	}
+
+	std::map<Client *, int>::iterator it2 = _channelUsersModes.find(client);
+	if (it2 != _channelUsersModes.end())
+		_channelUsersModes.erase(it2);
 }
 
-void Channel::addChannelOperator(Client *client) { _channelOperators.push_back(client); }
-
-void Channel::removeChannelOperator(Client *client)
-{
-	std::vector<Client *>::iterator it = _channelOperators.begin();
-	while (it != _channelOperators.end())
-	{
-		if (*it == client)
-		{
-			_channelOperators.erase(it);
-			break;
-		}
-		it++;
-	}
-}
-
-void Channel::addChannelBan(Client *client) { _channelBans.push_back(client); }
-
-void Channel::removeChannelBan(Client *client)
-{
-	std::vector<Client *>::iterator it = _channelBans.begin();
-	while (it != _channelBans.end())
-	{
-		if (*it == client)
-		{
-			_channelBans.erase(it);
-			break;
-		}
-		it++;
-	}
-}
-
-void Channel::addChannelInvite(Client *client) { _channelInvites.push_back(client); }
-
-void Channel::removeChannelInvite(Client *client)
-{
-	std::vector<Client *>::iterator it = _channelInvites.begin();
-	while (it != _channelInvites.end())
-	{
-		if (*it == client)
-		{
-			_channelInvites.erase(it);
-			break;
-		}
-		it++;
-	}
-}
