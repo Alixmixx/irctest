@@ -34,21 +34,16 @@ CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
 
 SRCS	:= $(foreach file,$(SRCS),$S$(file))
 FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	= $(SRCS:$S%=$O%.o)
-DEPS	= $(SRCS:$S%=$D%.d)
+OBJS	:= $(SRCS:$S%=$O%.o)
+DEPS	:= $(SRCS:$S%=$D%.d)
 
 RM		:= rm -rf
 MKDIR	:= mkdir -p
 
 END		:= \033[0m
-GRAY	:= \033[0;90m
 RED		:= \033[0;91m
 GREEN	:= \033[0;92m
-YELLOW	:= \033[0;93m
-BLUE	:= \033[0;94m
 MAGENTA	:= \033[0;95m
-CYAN	:= \033[0;96m
-WHITE	:= \033[0;97m
 
 .PHONY: all clean fclean re
 
@@ -70,11 +65,11 @@ $(NAME): $(OBJS)
 	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
 
 clean:
-	@echo "$(RED)Removing objs$(END)"
+	@echo "$(RED)Removing $D and $O$(END)"
 	@$(RM) $D $O
 
 fclean: clean
-	@echo "$(RED)Removed executable$(END)"
+	@echo "$(RED)Removing executable$(END)"
 	@$(RM) $(NAME)
 
 re: fclean
