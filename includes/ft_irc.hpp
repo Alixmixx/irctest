@@ -149,3 +149,4 @@ bool isPasswordCorrect(std::string password);
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::vector<std::string> split(const std::string &str, char delim);
 std::string getCurrentDateTime();
+std::string toString(int number);

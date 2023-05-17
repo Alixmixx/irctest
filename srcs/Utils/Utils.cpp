@@ -58,3 +58,10 @@ std::vector<std::string> split(const std::string &str, char delim)
 	}
 	return result;
 }
+
+std::string toString(int number)
+{
+	std::stringstream ss;
+	ss << number;
+	return ss.str();
+}
