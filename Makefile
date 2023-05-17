@@ -11,7 +11,6 @@ SRCS	+= Client.cpp
 SRCS	+= Channel.cpp
 SRCS	+= Init/InitCommandHandlerMap.cpp
 SRCS	+= Init/InitReplyMap.cpp
-SRCS	+= Init/InitServerDateAndTime.cpp
 SRCS	+= Message/ParseMessage.cpp
 SRCS	+= Message/Reply.cpp
 SRCS	+= Message/Broadcast.cpp

@@ -9,7 +9,7 @@ void Client::reply(std::string replyCode)
 	else if (replyCode == "RPL_YOURHOST")
 		replyMessage += "002 :Your host is " + _server->getServerName() + ", running version " + _server->getServerVersion();
 	else if (replyCode == "RPL_CREATED")
-		replyMessage += "003 :This server was created " + _server->getServerCreationDate() + " at " + _server->getServerCreationTime();
+		replyMessage += "003 :This server was created " + _server->getServerCreationDateTime();
 	else if (replyCode == "RPL_MYINFO")
 		replyMessage += "004 :" + _server->getServerName() + " " + _server->getServerVersion() + " <available user modes> <available channel modes>";
 	else if (replyCode == "RPL_ISUPPORT")
@@ -73,6 +73,8 @@ void Client::reply(std::string replyCode, std::string arg1)
 		replyMessage += "NICK " + arg1;
 	else if (replyCode == "RPL_ENDOFWHOIS")
 		replyMessage += "318 :" + arg1;
+	else if (replyCode == "RPL_ENDOFNAMES")
+		replyMessage += "366 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHNICK")
 		replyMessage += "401 :" + arg1;
 	else if (replyCode == "ERR_NOSUCHSERVER")
@@ -167,6 +169,11 @@ void Client::reply(std::string replyCode, std::string arg1, std::string arg2, st
 
 	if (replyCode == "RPL_WHOISUSER")
 		replyMessage += "311 :" + _nickname + " " + arg1 + " " + arg2 + arg3; // TODO VERIFIER
+	else if (replyCode == "RPL_NAMREPLY")
+		replyMessage += "353 :" + arg1 + " " + arg2 + " :" + arg3;
+
+	
+
 
 	replyMessage += "\r\n";
 
