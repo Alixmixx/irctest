@@ -7,7 +7,10 @@ Channel::Channel(Server *server, std::string &name)
 	  _mode(""),
 	  _key(""),
 	  _inviteOnly(false),
-	  _server(server) {}
+	  _server(server)
+{
+	(void)_server;
+}
 
 Channel::~Channel()
 {

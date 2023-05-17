@@ -33,7 +33,7 @@ SRCS	= 	main.cpp\
 
 FOLDERS = $(sort $(dir $(SRCS)))
 
-CC		= c++
+CC		= clang++
 
 CFLAGS	+= -g -Wall -Wextra -Werror -std=c++98
 
