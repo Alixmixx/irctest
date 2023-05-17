@@ -19,17 +19,19 @@ public:
 	void setHostname(std::string hostname);
 	void setMessage(std::string message);
 	void setChannelCount(int channelCount);
+	void setIsInvisible(bool invisible);
 	void addChannel(Channel *channel);
 
 	// Getters
 	int			getSocket() const;
 	int			getChannelCount() const;
-	bool		getIsRegistered() const;
+	bool		IsRegistered() const;
 	std::string getNickname() const;
 	std::string getUsername() const;
 	std::string getRealname() const;
 	std::string getHostname() const;
 	std::string getMessage() const;
+	bool 		IsInvisible() const;
 	Server		*getServer() const;
 
 	// Reply
@@ -42,6 +44,7 @@ private:
 	int				_clientSocket;
 	int				_channelCount;
 	bool			_isRegistered;
+	bool			_isInvisible;
 
 	struct sockaddr_in		_clientAddress;
 

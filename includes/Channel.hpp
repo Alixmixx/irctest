@@ -16,15 +16,18 @@ public:
 	const std::string &getPassword() const;
 	const std::string &getMode() const;
 	const std::string &getKey() const;
+	const std::string &getTopicSetter() const;
+	const std::string &getTopicTimestamp() const;
 	std::vector<Client *> &getChannelUsers();
-	bool isPasswordProtected() const;
 	bool isOperator(Client *client) const;
 	bool isBanned(Client *client) const;
 	bool isInvited(Client *client) const;
 	bool isOnChannel(Client *client) const;
+	bool isPasswordProtected() const;
+	bool isSecret() const;
 	bool isInviteOnly() const;
 
-	void setTopic(const std::string &topic);
+	void setTopic(Client *client, const std::string &topic);
 	void setPassword(const std::string &password);
 	void setMode(const std::string &mode);
 	void setKey(const std::string &key);
@@ -50,9 +53,13 @@ private:
 	std::string _mode;
 	std::string _key;
 
+	std::string _topicSetter;
+	std::string _topicTimestamp;
 	bool _inviteOnly;
+	bool _isSecret;
 
 	Server *_server;
+	//std::map<Client *, int> _channelUsers;
 	std::vector<Client *> _channelOperators;
 	std::vector<Client *> _channelUsers;
 	std::vector<Client *> _channelBans;

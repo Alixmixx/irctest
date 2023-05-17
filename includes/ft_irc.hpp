@@ -116,6 +116,15 @@ typedef enum ReplyCode
 	ERR_KILLDENY
 }	ReplyCode;
 
+typedef enum Modes
+{
+	USER,
+	MODERATOR,
+	OPERATOR,
+	PROTECTED,
+	FOUNDER
+}	Modes;
+
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERVERSION "0.042a"
@@ -135,3 +144,4 @@ typedef enum ReplyCode
 bool isPortNumberCorrect(std::string port);
 bool isPasswordCorrect(std::string password);
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
+std::string getCurrentDateTime();

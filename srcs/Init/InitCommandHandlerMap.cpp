@@ -7,10 +7,12 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["KICK"] = &Server::handleKick;
 	_commandHandlers["MODE"] = &Server::handleMode;
 	_commandHandlers["MOTD"] = &Server::handleMotd;
+	_commandHandlers["NAMES"] = &Server::handleNames;
 	_commandHandlers["NICK"] = &Server::handleNick;
 	_commandHandlers["PING"] = &Server::handlePing;  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
+	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
 }

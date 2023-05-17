@@ -26,10 +26,12 @@ SRCS	+= Commands/ConnectionCommands/HandleMotd.cpp
 SRCS	+= Commands/SendingCommands/HandlePrivateMessage.cpp
 SRCS	+= Commands/ChannelCommands/HandleJoin.cpp
 SRCS	+= Commands/ChannelCommands/HandleKick.cpp
+SRCS	+= Commands/ChannelCommands/HandleTopic.cpp
+SRCS	+= Commands/ChannelCommands/HandleNames.cpp
 SRCS	+= Utils/ParseArgv.cpp
 SRCS	+= Utils/Utils.cpp
 
-CC		:= clang++
+CC		:= c++
 CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
 
 SRCS	:= $(foreach file,$(SRCS),$S$(file))
