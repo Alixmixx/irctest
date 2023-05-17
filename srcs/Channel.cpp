@@ -113,5 +113,7 @@ void Channel::removeChannelUser(Client *client)
 	std::map<Client *, int>::iterator it2 = _channelUsersModes.find(client);
 	if (it2 != _channelUsersModes.end())
 		_channelUsersModes.erase(it2);
+
+	client->leaveChannel(this);
 }
 

@@ -21,6 +21,7 @@ public:
 	void setChannelCount(int channelCount);
 	void setIsInvisible(bool invisible);
 	void addChannel(Channel *channel);
+	void leaveChannel(Channel *channel);
 
 	// Getters
 	int			getSocket() const;
