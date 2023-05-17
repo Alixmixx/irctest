@@ -2,8 +2,7 @@
 
 #include "Server.hpp"
 #include "Client.hpp"
-#include <iostream>
-#include <vector>
+#include "ft_irc.hpp"
 
 class Server;
 

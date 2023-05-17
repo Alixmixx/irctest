@@ -2,30 +2,7 @@
 
 #include "Client.hpp"
 #include "Channel.hpp"
-#include "ReplyCode.hpp"
-
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cctype>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <csignal>
-#include <ctime>
-#include <fcntl.h>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sstream>
-#include <string>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <vector>
+#include "ft_irc.hpp"
 
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
@@ -156,5 +133,3 @@ class Server
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
 };
-
-std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);

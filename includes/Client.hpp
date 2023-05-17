@@ -2,9 +2,7 @@
 
 #include "Server.hpp"
 #include "Channel.hpp"
-#include <string>
-#include <vector>
-#include <netinet/in.h>
+#include "ft_irc.hpp"
 
 class Server;
 
