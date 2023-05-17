@@ -28,6 +28,7 @@ SRCS	+= Commands/ChannelCommands/HandleKick.cpp
 SRCS	+= Commands/ChannelCommands/HandleTopic.cpp
 SRCS	+= Commands/ChannelCommands/HandleNames.cpp
 SRCS	+= Commands/ChannelCommands/HandlePart.cpp
+SRCS	+= Commands/ChannelCommands/HandleList.cpp
 SRCS	+= Utils/ParseArgv.cpp
 SRCS	+= Utils/Utils.cpp
 
