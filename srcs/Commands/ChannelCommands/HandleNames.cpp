@@ -3,7 +3,7 @@
 static void showChannelUsers(Channel *channel, Client *client, bool showInvisible)
 {
 	std::string symbol = "=";
-	std::string names = "";
+	std::string names = ":"; // peut etre pas
 
 	if (channel->isSecret() == true)
 		symbol = "@";
@@ -13,7 +13,8 @@ static void showChannelUsers(Channel *channel, Client *client, bool showInvisibl
 	std::map<Client *, int>::iterator it = channel->getChannelUsersModes().begin();
 	while (it != channel->getChannelUsersModes().end())
 	{
-		names += " ";
+		if (it != channel->getChannelUsersModes().begin())
+			names += " ";
 		if (it->first->IsInvisible() == true && showInvisible == false)
 		{
 			it++;
@@ -41,9 +42,7 @@ static void showChannelUsers(Channel *channel, Client *client, bool showInvisibl
 		it++;
 	}
 
-	std::string argument = ":" + client->getNickname() + " " + symbol + " " + channel->getName() + " :" + names;
-
-	//"<client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
+	//"<client>                   <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 	client->reply("RPL_NAMREPLY", symbol, channel->getName(), names); // RPL_NAMREPLY lorenzo = #test :@lorenzo +lorenzo
 	// "<client> <channel> :End of /NAMES list"
 	client->reply("RPL_ENDOFNAMES", channel->getName());

@@ -19,8 +19,7 @@ public:
 	const std::string getServerVersion() const;
 	const std::string getServerEnvironment() const;
 	const std::string getServerPassword() const;
-	const std::string getServerCreationDate() const;
-	const std::string getServerCreationTime() const;
+	const std::string getServerCreationDateTime() const;
 	const std::string getServerMotd() const;
 	// 2. Client
 	Client *getClient(int socketFd) const;
@@ -110,8 +109,7 @@ private:
 
 	// Server infos
 	const std::string	_serverPassword;
-	std::string	_serverCreationDate;
-	std::string _serverCreationTime;
+	const std::string	_serverCreationDateTime;
 	std::string	_serverMotd;	// Message of the day
 
 	// Server vector and map

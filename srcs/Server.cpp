@@ -8,10 +8,10 @@ Server::Server(unsigned short port, std::string password)
 	  _serverVersion(SERVERVERSION),
 	  _port(port),
 	  _serverPassword(password),
+	  _serverCreationDateTime(getCurrentDateTime()),
 	  _serverMotd("Welcome to the IRC server")
 {
-	_iLastConnect = 0;
-	initServerDateAndTime();
+	//_iLastConnect = 0;
 	initServer();
 	initCommandHandlerMap();
 	// initReplyMap();
@@ -35,9 +35,7 @@ const std::string Server::getServerEnvironment() const { return (_serverEnvironm
 
 const std::string Server::getServerPassword() const { return (_serverPassword); }
 
-const std::string Server::getServerCreationDate() const { return (_serverCreationDate); }
-
-const std::string Server::getServerCreationTime() const { return (_serverCreationTime); }
+const std::string Server::getServerCreationDateTime() const { return (_serverCreationDateTime); }
 
 const std::string Server::getServerMotd() const { return (_serverMotd); }
 
@@ -251,7 +249,7 @@ void Server::start()
 		{
 			this->epollWait();
 		}
-		for (int i = _iLastConnect; i < _newEvents; i++) // maybe store last i and start from it
+		for (int i = 0; i < _newEvents; i++) // maybe store last i and start from it
 		{
 			if (_eventList[i].data.fd == _serverSocket && _newEvents--) // new client
 			{
@@ -277,7 +275,7 @@ void Server::start()
 						std::cerr << "Error: epoll_ctl failed" << std::endl;
 						// exit(EXIT_FAILURE); à reflechir
 					}
-					_iLastConnect = i;
+					//_iLastConnect = i;
 				}
 			}
 			else if (_eventList[i].events & EPOLLIN && _newEvents--) // read from client
