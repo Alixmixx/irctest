@@ -1,14 +1,4 @@
-#include "Server.hpp"
-#include "Client.hpp"
-
-static bool isPortNumberCorrect(std::string port)
-{
-	if (port.find_first_not_of("0123456789") != std::string::npos)
-		return false;
-	if (atoi(port.c_str()) < 0 || atoi(port.c_str()) > 65535)
-		return false;
-	return true;
-}
+#include "ft_irc.hpp"
 
 int main(int argc, char **argv)
 {
@@ -21,7 +11,12 @@ int main(int argc, char **argv)
 	{
 		std::cerr << "Invalid port number: " << argv[1] << std::endl;
 		return EXIT_FAILURE;
-	}  // TODO maybe check if password is valid (por example pas de char bizarres dedans, dev random, env -i, etc etc etc)
+	}
+	else if (!isPasswordCorrect(argv[2]))
+	{
+		std::cerr << "Invalid password: " << argv[2] << std::endl;
+		return EXIT_FAILURE;
+	}
 
 	Server server(atoi(argv[1]), argv[2]);
 	server.start();
