@@ -36,8 +36,8 @@ public:
 
 	// Reply
 	void reply(std::string replyMessage) const;
-	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "") const;
-	void addInfo(std::string replyMessage) const;
+	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "") const;
+	void addInfo(int numeric, std::string replyMessage) const;
 	std::string prefix() const;
 
 private:

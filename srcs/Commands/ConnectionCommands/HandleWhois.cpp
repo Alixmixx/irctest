@@ -16,7 +16,7 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 			client->reply(ERR_NOSUCHNICK, arguments[0]);
 			return;
 		}
-		client->reply(RPL_WHOISUSER, target->getNickname(), target->getUsername(), target->getRealname());
+		client->reply(RPL_WHOISUSER, target->getNickname(), target->getUsername(), target->getHostname(), target->getRealname());
 		client->reply(RPL_ENDOFWHOIS, target->getNickname());
 	}
 
