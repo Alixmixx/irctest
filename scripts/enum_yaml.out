@@ -1,28 +1,3 @@
-#pragma once
-
-#include <algorithm>
-#include <arpa/inet.h>
-#include <cctype>
-#include <csignal>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <fcntl.h>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <map>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sstream>
-#include <string>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <vector>
-
 typedef enum ReplyCode {
 	RPL_WELCOME = 1,
 	RPL_YOURHOST = 2,
@@ -129,40 +104,3 @@ typedef enum ReplyCode {
 	ERR_UMODEUNKNOWNFLAG = 501,
 	ERR_USERSDONTMATCH = 502,
 } ReplyCode;
-
-typedef enum Modes {
-	BANNED,
-	NOTINCHANNEL,
-	INVITED,
-	USER,
-	MODERATOR,
-	OPERATOR,
-	PROTECTED,
-	FOUNDER
-} Modes;
-
-#define SERVERNAME "MiaoRC"
-#define SERVERHOSTNAME "irc.125.outstanding.gov"
-#define SERVERVERSION "0.125.42b"
-#define NETWORKNAME "Oustanding"
-#define INFO "42School"
-#define BACKLOG 128 // why 128 ?
-#define MAX_CLIENTS 1024
-#define MAX_EVENTS 32 // why 10 ?
-#define BUFFER_SIZE 256
-#define MAX_CHANNELS_PER_CLIENT 10
-#define MAX_USERS_PER_CHANNEL 10
-
-#define DEBUG true
-#define OUTSTANDING_ERROR 125
-
-#include "Channel.hpp"
-#include "Client.hpp"
-#include "Server.hpp"
-
-bool isPortNumberCorrect(std::string port);
-bool isStringPrintable(std::string str);
-std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
-std::vector<std::string> split(const std::string& str, char delim);
-std::string toString(long number);
-std::string formatTime(time_t time);

@@ -30,15 +30,15 @@ public:
 	std::string getUsername() const;
 	std::string getRealname() const;
 	std::string getHostname() const;
+	std::string getPrefix() const;
 	std::string getMessage() const;
 	bool IsInvisible() const;
 	Server *getServer() const;
 
 	// Reply
 	void reply(std::string replyMessage) const;
+	void reply(std::string replyMessage, ReplyCode replyCode) const;
 	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "") const;
-	void addInfo(int numeric, std::string replyMessage) const;
-	std::string prefix() const;
 
 private:
 	int _clientSocket;
@@ -52,6 +52,7 @@ private:
 	std::string _username;
 	std::string _realname;
 	std::string _hostname;
+	std::string _prefix;
 
 	std::string _message;
 

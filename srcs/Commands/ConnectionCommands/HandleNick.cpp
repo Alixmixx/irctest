@@ -41,7 +41,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	}
 	if (isNicknameValid(arguments[0]))
 	{
-		unsigned int suffix = 1;
+		unsigned int suffix = 0;
 		std::string nickname = arguments[0];
 		while (isNicknameAlreadyTaken(this->getClients(), nickname))
 		{
@@ -57,9 +57,9 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 		}
 		if (client->IsRegistered())
 		{
-			broadcast(_clients, ":" + client->getNickname() + " NICK :" + nickname);
+			broadcast(_clients, client->getPrefix() + " NICK " + nickname);
 		}
-		else
+		else if (suffix)
 		{
 			 client->reply(":" + arguments[0] + " NICK " + nickname);
 		}

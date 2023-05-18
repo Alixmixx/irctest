@@ -3,16 +3,16 @@
 
 // Constructeur
 
-Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
+Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
-	  _channelCount(0),
-	  _isRegistered(false),
-	  _clientAddress(clientAddress),
-	  _nickname(""),
-	  _username(""),
-	  _realname(""),
-	  _hostname(""),
-	  _server(server)
+	_channelCount(0),
+	_isRegistered(false),
+	_clientAddress(clientAddress),
+	_nickname(""),
+	_username(""),
+	_realname(""),
+	_hostname(""),
+	_server(server)
 {
 	(void)_clientAddress;
 }
@@ -20,7 +20,7 @@ Client::Client(Server *server, int socketFd, struct sockaddr_in clientAddress)
 // Destructeur
 Client::~Client()
 {
-	std::vector<Channel *>::iterator it = _channels.begin();
+	std::vector<Channel*>::iterator it = _channels.begin();
 	for (; it != _channels.end(); ++it)
 	{
 		(*it)->removeClientFromChannel(this);
@@ -31,7 +31,7 @@ Client::~Client()
 
 // Setters
 
-void Client::setNickname(std::string nickname) { _nickname = nickname; }
+void Client::setNickname(std::string nickname) { _nickname = nickname; _prefix = ":" + _nickname + "!" + _username + "@" + _hostname; }
 
 void Client::setIsRegistered(bool isRegistered) { _isRegistered = isRegistered; }
 
@@ -47,11 +47,11 @@ void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
 
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
-void Client::addChannel(Channel *channel) { _channels.push_back(channel); }
+void Client::addChannel(Channel* channel) { _channels.push_back(channel); }
 
-void Client::leaveChannel(Channel *channel)
+void Client::leaveChannel(Channel* channel)
 {
-	std::vector<Channel *>::iterator it = _channels.begin();
+	std::vector<Channel*>::iterator it = _channels.begin();
 	for (; it != _channels.end(); ++it)
 	{
 		if ((*it) == channel)
@@ -78,8 +78,10 @@ std::string Client::getRealname() const { return (_realname); }
 
 std::string Client::getHostname() const { return (_hostname); }
 
+std::string Client::getPrefix() const { return (_prefix); }
+
 std::string Client::getMessage() const { return (_message); }
 
 bool Client::IsInvisible() const { return (_isInvisible); }
 
-Server *Client::getServer() const { return (_server); }
+Server* Client::getServer() const { return (_server); }

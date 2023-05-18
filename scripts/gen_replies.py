@@ -9,11 +9,11 @@ with open("scripts/reply_codes.yaml") as f:
 TOP = """void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3, std::string arg4) const
 {
 	switch (replyCode)
-		{"""
+	{"""
 
-BOTTOM = """		default:
-			exit(OUTSTANDING_ERROR);
-		}
+BOTTOM = """	default:
+		exit(OUTSTANDING_ERROR);
+	}
 }"""
 
 
@@ -36,12 +36,19 @@ def transform(reply):
     return " + ".join(reply)
 
 
-with open("scripts/reply_codes.out", "w") as f:
-    print(TOP, file=f)
-    for code, response in sorted(data.items()):
-        print(f"\t\tcase {response['name']}:", file=f)
-        print(
-            f"\t\t\treturn addInfo({code}, {transform(response['reply'])});",
-            file=f,
-        )
-    print(BOTTOM, file=f)
+fr = open("scripts/reply_codes.out", "w")
+fe = open("scripts/enum_yaml.out", "w")
+print(TOP, file=fr)
+print("typedef enum ReplyCode {", file=fe)
+for code, response in sorted(data.items()):
+    print(f"\tcase {response['name']}:", file=fr)
+    print(
+        f"\t\treturn reply(replyCode, {transform(response['reply'])});",
+        file=fr,
+    )
+    print(f"\t{response['name']} = {code},", file=fe)
+print(BOTTOM, file=fr)
+print("} ReplyCode;", file=fe)
+
+fr.close()
+fe.close()

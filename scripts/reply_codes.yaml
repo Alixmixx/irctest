@@ -61,12 +61,6 @@
 256:
   name: RPL_ADMINME
   reply: <server> :Administrative info
-257:
-  name: RPL_ADMINLOC1
-  reply: :<admin info>
-258:
-  name: RPL_ADMINLOC2
-  reply: :<admin info>
 259:
   name: RPL_ADMINEMAIL
   reply: :<admin info>
@@ -214,9 +208,6 @@
 412:
   name: ERR_NOTEXTTOSEND
   reply: :No text to send
-413:
-  name: ERR_NOTTOPLEVEL
-  reply: <mask> :No toplevel domain specified
 414:
   name: ERR_WILDTOPLEVEL
   reply: <mask> :Wildcard in toplevel domain
@@ -269,7 +260,7 @@
   name: ERR_NEEDMOREPARAMS
   reply: <command> :Not enough parameters
 462:
-  name: ERR_ALREADYREGISTERED
+  name: ERR_ALREADYREGISTRED
   reply: :You may not reregister
 463:
   name: ERR_NOPERMFORHOST
@@ -298,6 +289,9 @@
 475:
   name: ERR_BADCHANNELKEY
   reply: <channel> :Cannot join channel (+k)
+476:
+  name: ERR_BADCHANMASK
+  reply: <channel> :Bad Channel Mask
 481:
   name: ERR_NOPRIVILEGES
   reply: :Permission Denied- You're not an IRC operator

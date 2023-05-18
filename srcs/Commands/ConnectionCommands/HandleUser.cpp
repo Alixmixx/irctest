@@ -1,14 +1,6 @@
 #include "Server.hpp"
 
-static void welcomeMessage(Client *client)
-{
-	client->reply(RPL_WELCOME);
-	client->reply(RPL_YOURHOST);
-	client->reply(RPL_CREATED);
-	client->reply(RPL_MYINFO);
-}
-
-void Server::handleUser(Client *client, std::vector<std::string> arguments)
+void Server::handleUser(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 4)
 	{
@@ -17,7 +9,7 @@ void Server::handleUser(Client *client, std::vector<std::string> arguments)
 	}
 	if (client->IsRegistered())
 	{
-		client->reply(ERR_ALREADYREGISTERED);
+		client->reply(ERR_ALREADYREGISTRED);
 		return;
 	}
 
@@ -29,18 +21,23 @@ void Server::handleUser(Client *client, std::vector<std::string> arguments)
 	if (DEBUG)
 	{
 		std::cout << "Nickname: " << client->getNickname() << " "
-				  << "Username: " << client->getUsername() << " "
-				  << "Hostname: " << client->getHostname() << " "
-				  << "Realname: " << client->getRealname() << std::endl;
+			<< "Username: " << client->getUsername() << " "
+			<< "Hostname: " << client->getHostname() << " "
+			<< "Realname: " << client->getRealname() << std::endl;
 	}
 
 	if (client->getUsername() != "" && client->getNickname() != "")
 	{
 		client->setIsRegistered(true);
-		welcomeMessage(client);
+		client->setNickname(client->getNickname());
+		client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
+		client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
+		client->reply(RPL_CREATED, formatTime(_serverCreationTime));
+		//client->reply(RPL_MYINFO); // TODO apres avoir lu la doc
+		// 05 TODO pour axel
 	}
 	else
 	{
-		client->reply(ERR_ALREADYREGISTERED);
+		client->reply(ERR_ALREADYREGISTRED);
 	}
 }
