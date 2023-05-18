@@ -31,7 +31,7 @@ const std::string &Channel::getKey() const { return _key; }
 
 const std::string &Channel::getTopicSetter() const { return _topicSetter; }
 
-const std::string &Channel::getTopicTimestamp() const { return _topicTimestamp; }
+time_t Channel::getTopicTimestamp() const { return _topicTimestamp; }
 
 std::vector<Client *> &Channel::getChannelUsers() { return _channelUsers; }
 
@@ -69,7 +69,7 @@ void Channel::setTopic(Client *client, const std::string &topic)
 {
 	_topic = topic;
 	_topicSetter = client->getNickname();
-	_topicTimestamp = getCurrentDateTime();
+	_topicTimestamp = std::time(NULL);
 }
 
 void Channel::setPassword(const std::string &password) { _password = password; }

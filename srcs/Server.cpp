@@ -8,13 +8,12 @@ Server::Server(unsigned short port, std::string password)
 	  _serverVersion(SERVERVERSION),
 	  _port(port),
 	  _serverPassword(password),
-	  _serverCreationDateTime(getCurrentDateTime()),
+	  _serverCreationTime(std::time(NULL)),
 	  _serverMotd("Welcome to the IRC server")
 {
 	//_iLastConnect = 0;
 	initServer();
 	initCommandHandlerMap();
-	// initReplyMap();
 }
 
 // Destructeur
@@ -35,7 +34,7 @@ const std::string Server::getServerEnvironment() const { return (_serverEnvironm
 
 const std::string Server::getServerPassword() const { return (_serverPassword); }
 
-const std::string Server::getServerCreationDateTime() const { return (_serverCreationDateTime); }
+time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
 const std::string Server::getServerMotd() const { return (_serverMotd); }
 
@@ -207,15 +206,15 @@ void Server::initServer()
 int Server::epollWait()
 {
 	// Server socket epoll wait
-	_newEvents = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
+	int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
 
-	if (_newEvents < 0)
+	if (nfds < 0)
 	{
 		std::cerr << "Error: epoll_wait failed" << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
-	return (_newEvents);
+	return (nfds);
 }
 
 int Server::acceptNewClient()
@@ -240,18 +239,14 @@ int Server::acceptNewClient()
 // Loop du serveur
 void Server::start()
 {
-	this->epollWait();
 
 	// Server socket epoll events loop
 	while (125)
 	{
-		if (_newEvents == 0)
+		int nfds = this->epollWait();
+		for (int i = 0; i < nfds; i++) // maybe store last i and start from it
 		{
-			this->epollWait();
-		}
-		for (int i = 0; i < _newEvents; i++) // maybe store last i and start from it
-		{
-			if (_eventList[i].data.fd == _serverSocket && _newEvents--) // new client
+			if (_eventList[i].data.fd == _serverSocket) // new client
 			{
 				int newClientFd = this->acceptNewClient();
 				if (fcntl(newClientFd, F_SETFL, O_NONBLOCK) < 0)
@@ -278,7 +273,7 @@ void Server::start()
 					//_iLastConnect = i;
 				}
 			}
-			else if (_eventList[i].events & EPOLLIN && _newEvents--) // read from client
+			else if (_eventList[i].events & EPOLLIN) // read from client
 			{
 				Client *client = getClient(_eventList[i].data.fd);
 				if (client == NULL)
@@ -294,10 +289,9 @@ void Server::start()
 			else // unknown event
 			{
 				std::cerr << "Error: unknown event" << std::endl;
-				_newEvents--;
 				// exit(EXIT_FAILURE); à reflechir
 			}
-			if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP) && _newEvents--) // client disconnected
+			if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP)) // client disconnected
 			{
 				Client *client = getClient(_eventList[i].data.fd);
 				if (client == NULL)

@@ -9,22 +9,31 @@ from termcolor import colored
 BUFFER_SIZE = 1024
 BACKLOG = 128
 
+
 def is_valid_address(s):
     return re.fullmatch(r".*:\d{4,5}", s)
+
 
 def parse_address(s):
     host, port = s.split(":")
     return host, int(port)
 
-if len(sys.argv) != 3 or not re.fullmatch(r".*:\d{4,5}", sys.argv[1]) or not re.fullmatch(r"\d{4,5}", sys.argv[2]):
+
+if (
+    len(sys.argv) != 3
+    or not re.fullmatch(r".*:\d{4,5}", sys.argv[1])
+    or not re.fullmatch(r"\d{4,5}", sys.argv[2])
+):
     print(f"Usage: python3 {sys.argv[0]} server_host:server_port proxy_port")
     print(f"Example: python3 {sys.argv[0]} localhost:6669 5555")
     sys.exit(1)
 SERVER_ADDRESS = SERVER_HOST, SERVER_PORT = parse_address(sys.argv[1])
 PROXY_ADDRESS = PROXY_HOST, PROXY_PORT = "localhost", int(sys.argv[2])
 
+
 def print_info(message):
     print(colored(message, "blue"), end="\n\n")
+
 
 def tryclose(sock):
     try:
@@ -32,17 +41,19 @@ def tryclose(sock):
     except:
         print_info(f"Could not close socket {sock}")
 
+
 def parent_sigint(sig, frame):
-    print
     print_info("\rGood bye.")
     tryclose(server_socket)
     tryclose(proxy_socket)
     sys.exit(0)
 
+
 def child_sigint(sig, frame):
     tryclose(server_socket)
     tryclose(client_socket)
     sys.exit(0)
+
 
 def grim_reaper(signum, frame):
     while True:
@@ -53,20 +64,30 @@ def grim_reaper(signum, frame):
         if pid == 0:
             return
 
+
 def parent_signals():
     signal.signal(signal.SIGINT, parent_sigint)
     signal.signal(signal.SIGCHLD, grim_reaper)
+
 
 def child_signals():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
+
 def forward_data(sender, receiver, color):
     data = sender.recv(BUFFER_SIZE)
-    if data:
-        print(colored(f"{sender.getsockname()[1]} to {receiver.getsockname()[1]}:", color))
+    if (
+        data
+        and not data.decode().startswith("PING")
+        and not data.decode().startswith("PONG")
+    ):
+        print(
+            colored(f"{sender.getsockname()[1]} to {receiver.getsockname()[1]}:", color)
+        )
         print(colored(data.decode(), color))
         receiver.sendall(data)
+
 
 server_socket = proxy_socket = client_socket = None
 parent_signals()

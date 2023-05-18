@@ -9,7 +9,7 @@ void Client::reply(std::string replyCode)
 	else if (replyCode == "RPL_YOURHOST")
 		replyMessage += "002 :Your host is " + _server->getServerName() + ", running version " + _server->getServerVersion();
 	else if (replyCode == "RPL_CREATED")
-		replyMessage += "003 :This server was created " + _server->getServerCreationDateTime();
+		replyMessage += "003 :This server was created " + toString(_server->getServerCreationTime());
 	else if (replyCode == "RPL_MYINFO")
 		replyMessage += "004 :" + _server->getServerName() + " " + _server->getServerVersion() + " <available user modes> <available channel modes>";
 	else if (replyCode == "RPL_ISUPPORT")
@@ -103,8 +103,8 @@ void Client::reply(std::string replyCode, std::string arg1)
 		replyMessage += "423 :" + arg1;
 	else if (replyCode == "ERR_ERRONEUSNICKNAME")
 		replyMessage += "432 :" + arg1;
-	else if (replyCode == "ERR_NICKNAMEINUSE")
-		replyMessage += "433 :" + arg1;
+	else if (replyCode == "ERR_NICKNAMEINUSE" && rplCode--)
+		replyMessage += "433 " + arg1;
 	else if (replyCode == "ERR_NICKCOLLISION")
 		replyMessage += "436 :" + arg1;
 	else if (replyCode == "ERR_NOTONCHANNEL")

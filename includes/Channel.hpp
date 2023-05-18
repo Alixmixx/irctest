@@ -17,7 +17,7 @@ public:
 	const std::string &getMode() const;
 	const std::string &getKey() const;
 	const std::string &getTopicSetter() const;
-	const std::string &getTopicTimestamp() const;
+	time_t getTopicTimestamp() const;
 
 	std::vector<Client *> &getChannelUsers();
 	std::map<Client *, int> &getChannelUsersModes();
@@ -59,7 +59,7 @@ private:
 	std::string _key;
 
 	std::string _topicSetter;
-	std::string _topicTimestamp;
+	time_t _topicTimestamp;
 	bool _inviteOnly;
 	bool _isSecret;
 

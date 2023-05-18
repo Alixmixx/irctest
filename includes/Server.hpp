@@ -19,7 +19,7 @@ public:
 	const std::string getServerVersion() const;
 	const std::string getServerEnvironment() const;
 	const std::string getServerPassword() const;
-	const std::string getServerCreationDateTime() const;
+	time_t getServerCreationTime() const;
 	const std::string getServerMotd() const;
 	// 2. Client
 	Client *getClient(int socketFd) const;
@@ -86,13 +86,11 @@ public:
 	// Init
 	void initServer();
 	void initCommandHandlerMap();
-	void initReplyMap();
-	void initServerDateAndTime();
 
 private:
 	int _serverSocket;
 	int _epollFd;
-	int _newEvents;
+	// int _newEvents;
 	int _reuseAddr;
 	int _iLastConnect;
 	struct sockaddr_in _serverAddress;
@@ -110,7 +108,7 @@ private:
 
 	// Server infos
 	const std::string	_serverPassword;
-	const std::string	_serverCreationDateTime;
+	const time_t	_serverCreationTime;
 	std::string	_serverMotd;	// Message of the day
 
 	// Server vector and map
