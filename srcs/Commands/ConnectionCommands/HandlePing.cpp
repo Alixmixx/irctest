@@ -4,8 +4,10 @@ void Server::handlePing(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "PING");
+		std::string asd;
+		client->reply(ERR_NEEDMOREPARAMS, "PING");
 		return ;
 	}
-	client->reply("PONG", arguments[0]);
+	std::string pong = "PONG " + arguments[0] + "\r\n";
+	send(client->getSocket(), pong.c_str(), pong.length(), 0);
 }

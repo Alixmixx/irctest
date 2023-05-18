@@ -4,19 +4,19 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "KICK");
+		client->reply(ERR_NEEDMOREPARAMS, "KICK");
 		return;
 	}
 
 	if (arguments[0].find(',') != std::string::npos)
 	{
-		client->reply("ERR_BADCHANMASK", arguments[0]);
+		client->reply(ERR_BADCHANMASK, arguments[0]);
 		return;
 	}
 
 	if (isChannel(arguments[0]) == false)
 	{
-		client->reply("ERR_NOSUCHCHANNEL", arguments[0]);
+		client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 		return;
 	}
 
@@ -24,13 +24,13 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 
 	if (channel->isOnChannel(client) == false)
 	{
-		client->reply("ERR_NOTONCHANNEL", arguments[0]);
+		client->reply(ERR_NOTONCHANNEL, arguments[0]);
 		return;
 	}
 
 	if (channel->getChannelUserMode(client) < MODERATOR)
 	{
-		client->reply("ERR_CHANOPRIVSNEEDED", arguments[0]);
+		client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
 		return;
 	}
 
@@ -38,19 +38,19 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 
 	if (target == NULL)
 	{
-		client->reply("ERR_NOSUCHNICK", arguments[1]);
+		client->reply(ERR_NOSUCHNICK, arguments[1]);
 		return;
 	}
 
 	if (channel->isOnChannel(target) == false)
 	{
-		client->reply("ERR_USERNOTINCHANNEL", arguments[1], arguments[0]);
+		client->reply(ERR_USERNOTINCHANNEL, arguments[1], arguments[0]);
 		return;
 	}
 
 	if (channel->getChannelUserMode(client) < channel->getChannelUserMode(target))
 	{
-		client->reply("ERR_CHANOPRIVSNEEDED", arguments[0]);
+		client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
 		return;
 	}
 

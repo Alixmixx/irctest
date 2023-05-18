@@ -4,13 +4,13 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 {
 	if (arguments.size() < 1)
 	{
-		client->reply("ERR_NORECIPIENT", "PRIVMSG");
+		client->reply(ERR_NORECIPIENT, "PRIVMSG");
 		return;
 	}
 
 	if (arguments.size() < 2)
 	{
-		client->reply("ERR_NOTEXTTOSEND");
+		client->reply(ERR_NOTEXTTOSEND);
 		return;
 	}
 
@@ -20,14 +20,14 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		Channel *targetChannel = getChannel(arguments[0]);
 		if (targetChannel == NULL)
 		{
-			client->reply("ERR_NOSUCHCHANNEL", arguments[0]);
+			client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 			return;
 		}
 
 		// check if client has modes to send message
 		if (targetChannel->isOnChannel(client) == false)
 		{
-			client->reply("ERR_CANNOTSENDTOCHAN", arguments[0]);
+			client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
 			return;
 		}
 
@@ -41,7 +41,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 	if (targetClient == NULL)
 	{
 		// get channel
-		client->reply("ERR_NOSUCHNICK", arguments[0]);
+		client->reply(ERR_NOSUCHNICK, arguments[0]);
 		return;
 	}
 
@@ -55,5 +55,5 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		}
 	}
 
-	targetClient->reply("PRIVMSG", client->getNickname(), message);
+	// TODO targetClient->reply("PRIVMSG", client->getNickname(), message);
 }

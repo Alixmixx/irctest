@@ -4,7 +4,7 @@ static void newChannel(Client *client, std::string channelName, std::string chan
 {
 	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
 	{
-		client->reply("ERR_TOOMANYCHANNELS", channelName);
+		client->reply(ERR_TOOMANYCHANNELS, channelName);
 		return;
 	}
 
@@ -21,31 +21,31 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 {
 	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
 	{
-		client->reply("ERR_TOOMANYCHANNELS", channel->getName());
+		client->reply(ERR_TOOMANYCHANNELS, channel->getName());
 		return;
 	}
 
 	if (channel->isPasswordProtected() && channel->getPassword() != channelPassword)
 	{
-		client->reply("ERR_BADCHANNELKEY", channel->getName());
+		client->reply(ERR_BADCHANNELKEY, channel->getName());
 		return;
 	}
 
 	if (channel->getChannelUserMode(client) == BANNED)
 	{
-		client->reply("ERR_BANNEDFROMCHAN", channel->getName());
+		client->reply(ERR_BANNEDFROMCHAN, channel->getName());
 		return;
 	}
 
 	if (channel->getChannelUsers().size() >= MAX_USERS_PER_CHANNEL)
 	{
-		client->reply("ERR_CHANNELISFULL", channel->getName());
+		client->reply(ERR_CHANNELISFULL, channel->getName());
 		return;
 	}
 
 	if (channel->isInviteOnly() && channel->getChannelUserMode(client) != INVITED)
 	{
-		client->reply("ERR_INVITEONLYCHAN", channel->getName());
+		client->reply(ERR_INVITEONLYCHAN, channel->getName());
 		return;
 	}
 
@@ -79,7 +79,7 @@ static bool checkChannelName(std::string &channelName)
 {
 	if (channelName[0] != '#' && channelName[0] != '&')
 	{
-		// client->reply("ERR_NOSUCHCHANNEL", channelName);
+		// client->reply(ERR_NOSUCHCHANNEL, channelName);
 		return (false);
 	}
 	return (true);
@@ -89,7 +89,7 @@ void Server::handleJoin(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() == 0)
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "JOIN");
+		client->reply(ERR_NEEDMOREPARAMS, "JOIN");
 		return;
 	}
 
@@ -102,7 +102,7 @@ void Server::handleJoin(Client *client, std::vector<std::string> arguments)
 
 		if (checkChannelName(channelName) == false)
 		{
-			client->reply("ERR_NOSUCHCHANNEL", channelName);
+			client->reply(ERR_NOSUCHCHANNEL, channelName);
 			return; // maybe continue ?
 		}
 

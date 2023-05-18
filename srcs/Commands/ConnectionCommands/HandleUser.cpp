@@ -2,22 +2,22 @@
 
 static void welcomeMessage(Client *client)
 {
-	client->reply("RPL_WELCOME");
-	client->reply("RPL_YOURHOST");
-	client->reply("RPL_CREATED");
-	client->reply("RPL_MYINFO");
+	client->reply(RPL_WELCOME);
+	client->reply(RPL_YOURHOST);
+	client->reply(RPL_CREATED);
+	client->reply(RPL_MYINFO);
 }
 
 void Server::handleUser(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 4)
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "USER");
+		client->reply(ERR_NEEDMOREPARAMS, "USER");
 		return;
 	}
 	if (client->IsRegistered())
 	{
-		client->reply("ERR_ALREADYREGISTERED");
+		client->reply(ERR_ALREADYREGISTERED);
 		return;
 	}
 
@@ -38,5 +38,9 @@ void Server::handleUser(Client *client, std::vector<std::string> arguments)
 	{
 		client->setIsRegistered(true);
 		welcomeMessage(client);
+	}
+	else
+	{
+		client->reply(ERR_ALREADYREGISTERED);
 	}
 }

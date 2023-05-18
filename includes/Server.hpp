@@ -104,7 +104,6 @@ private:
 
 	typedef void (Server::*CommandHandler)(Client *client, std::vector<std::string> arguments);
 	std::map<std::string, CommandHandler> _commandHandlers;
-	std::map<std::string, ReplyCode> _replyCodeMap;
 
 	// Server infos
 	const std::string	_serverPassword;
