@@ -32,7 +32,7 @@ void Server::handleTopic(Client *client, std::vector<std::string> arguments)
 		}
 
 	//	client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
-		client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), channel->getTopicTimestamp());
+	//	client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), channel->getTopicTimestamp());
 		return ;
 	}
 
