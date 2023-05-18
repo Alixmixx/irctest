@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 		std::cerr << "Invalid port number: " << argv[1] << std::endl;
 		return EXIT_FAILURE;
 	}
-	else if (!isPasswordCorrect(argv[2]))
+	else if (!isStringPrintable(argv[2]))
 	{
 		std::cerr << "Invalid password: " << argv[2] << std::endl;
 		return EXIT_FAILURE;

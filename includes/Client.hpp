@@ -5,8 +5,7 @@
 class Channel;
 class Server;
 
-class Client
-{
+class Client {
 public:
 	Client(Server *server, int socketFd, sockaddr_in clientAddress);
 	~Client();
@@ -24,38 +23,37 @@ public:
 	void leaveChannel(Channel *channel);
 
 	// Getters
-	int			getSocket() const;
-	int			getChannelCount() const;
-	bool		IsRegistered() const;
+	int getSocket() const;
+	int getChannelCount() const;
+	bool IsRegistered() const;
 	std::string getNickname() const;
 	std::string getUsername() const;
 	std::string getRealname() const;
 	std::string getHostname() const;
 	std::string getMessage() const;
-	bool 		IsInvisible() const;
-	Server		*getServer() const;
+	bool IsInvisible() const;
+	Server *getServer() const;
 
 	// Reply
-	void reply(ReplyCode replyCode);
-	void reply(ReplyCode replyCode, std::string arg1);
-	void reply(ReplyCode replyCode, std::string arg1, std::string arg2);
-	void reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3);
-	//void send(std::string n)
+	void reply(std::string replyMessage) const;
+	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "") const;
+	void addInfo(std::string replyMessage) const;
+	std::string prefix() const;
 
 private:
-	int				_clientSocket;
-	int				_channelCount;
-	bool			_isRegistered;
-	bool			_isInvisible;
+	int _clientSocket;
+	int _channelCount;
+	bool _isRegistered;
+	bool _isInvisible;
 
-	struct sockaddr_in		_clientAddress;
+	struct sockaddr_in _clientAddress;
 
-	std::string 	_nickname;
-	std::string 	_username;
-	std::string 	_realname;
-	std::string 	_hostname;
+	std::string _nickname;
+	std::string _username;
+	std::string _realname;
+	std::string _hostname;
 
-	std::string 	_message;
+	std::string _message;
 
 	std::vector<Channel *> _channels;
 	Server *_server;

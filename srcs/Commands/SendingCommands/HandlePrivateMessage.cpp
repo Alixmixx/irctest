@@ -55,5 +55,5 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		}
 	}
 
-	// TODO targetClient->reply("PRIVMSG", client->getNickname(), message);
+	targetClient->reply(":" + client->getNickname() + " PRIVMSG " + message);
 }

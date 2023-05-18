@@ -103,6 +103,7 @@ typedef enum Modes
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERVERSION "0.042a"
+#define NETWORKNAME "Oustanding Network"
 #define INFO "42School"
 #define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024
@@ -110,14 +111,16 @@ typedef enum Modes
 #define BUFFER_SIZE 256
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
+
 #define DEBUG true
+#define OUTSTANDING_ERROR 125
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
 bool isPortNumberCorrect(std::string port);
-bool isPasswordCorrect(std::string password);
+bool isStringPrintable(std::string str);
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::vector<std::string> split(const std::string &str, char delim);
 std::string toString(long number);

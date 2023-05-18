@@ -301,8 +301,8 @@ void Server::start()
 				}
 				else
 				{
-					std::vector<std::string> args;
-					args[0] = "connection lost with client";
+					std::vector<std::string> args; // TODO c'est la merde
+					args.push_back("connection lost with client");
 					handleQuit(client, args);
 					continue;
 				}

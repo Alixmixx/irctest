@@ -13,7 +13,9 @@ static bool isNicknameValid(std::string nickname)
 {
 	if (nickname.length() > 9)
 		return false;
-	if (nickname.find_first_of(" ,?!@\0") != std::string::npos) // TODO tester si NULL character dans username fait planter le serveur
+	if (!isStringPrintable(nickname))
+		return false;
+	if (nickname.find_first_of(" ,?!@") != std::string::npos)
 		return false;
 	if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#' || nickname[0] == '&')
 		return false;
@@ -39,18 +41,29 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	}
 	if (isNicknameValid(arguments[0]))
 	{
-		if (isNicknameAlreadyTaken(this->getClients(), arguments[0]))
+		unsigned int suffix = 1;
+		std::string nickname = arguments[0];
+		while (isNicknameAlreadyTaken(this->getClients(), nickname))
 		{
-			client->reply(ERR_NICKNAMEINUSE, arguments[0]);
-			// TODO donner au user un nickname random
-			return;
+			if (client->IsRegistered())
+			{
+				client->reply(ERR_NICKNAMEINUSE, nickname);
+				return;
+			}
+			else
+			{
+				nickname = arguments[0] + toString(suffix++);
+			}
 		}
-		if (!client->getNickname().empty())
+		if (client->IsRegistered())
 		{
-			//client->reply(RPL_NICKCHANGE, arguments[0]);
-			broadcast(_clients, ":" + client->getNickname() + " NICK :" + arguments[0]);
+			broadcast(_clients, ":" + client->getNickname() + " NICK :" + nickname);
 		}
-		client->setNickname(arguments[0]);
+		else
+		{
+			 client->reply(":" + arguments[0] + " NICK " + nickname);
+		}
+		client->setNickname(nickname);
 		return;
 	}
 	else

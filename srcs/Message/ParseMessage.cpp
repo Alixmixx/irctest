@@ -30,7 +30,7 @@ void Server::parseMessageFromClient(Client *client, std::string message)
 	}
 }
 
-void Server::readFromClient(Client *client)
+void Server::readFromClient(Client *client) // TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
 {
 	std::string message = client->getMessage();
 

@@ -11,10 +11,10 @@ bool isPortNumberCorrect(std::string port)
 	return n >= 0 && n <= 65535;
 }
 
-bool isPasswordCorrect(std::string password)
+bool isStringPrintable(std::string str)
 {
-	for (size_t i = 0; i < password.size(); ++i)
-		if (password[i] < 32 || password[i] > 126)
+	for (size_t i = 0; i < str.size(); ++i)
+		if (!std::isprint(str[i]))
 			return false;
 	return true;
 }
