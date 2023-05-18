@@ -4,7 +4,7 @@ void Server::handlePart(Client *client, std::vector<std::string> argument)
 {
 	if (argument.size() < 1)
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "PART");
+		client->reply(ERR_NEEDMOREPARAMS, "PART");
 		return ;
 	}
 
@@ -18,12 +18,12 @@ void Server::handlePart(Client *client, std::vector<std::string> argument)
 		Channel *channel = getChannel(*it);
 		if (channel == NULL)
 		{
-			client->reply("ERR_NOSUCHCHANNEL", channel->getName());
+			client->reply(ERR_NOSUCHCHANNEL, channel->getName());
 			continue;
 		}
 		if (channel->isOnChannel(client) == false)
 		{
-			client->reply("ERR_NOTONCHANNEL", channel->getName());
+			client->reply(ERR_NOTONCHANNEL, channel->getName());
 			continue;
 		}
 		broadcast(channel->getChannelUsers(), client->getNickname() + " PART " + channel->getName() + reason); //lorenzo miaoo PART #test

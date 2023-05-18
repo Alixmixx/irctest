@@ -43,35 +43,35 @@ static void showChannelUsers(Channel *channel, Client *client, bool showInvisibl
 	}
 
 	//<client>                   <symbol><channel>           :[prefix]<nick>{ [prefix]<nick>}"
-	client->reply("RPL_NAMREPLY", symbol, channel->getName(), names);
+	client->reply(RPL_NAMREPLY, symbol, channel->getName(), names);
 	// "<client> <channel> :End of /NAMES list"
-	client->reply("RPL_ENDOFNAMES", channel->getName());
+	client->reply(RPL_ENDOFNAMES, channel->getName());
 }
 
 void Server::handleNames(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
 	{
-		client->reply("ERR_NEEDMOREPARAMS", "NAMES");
+		client->reply(ERR_NEEDMOREPARAMS, "NAMES");
 		return;
 	}
 
 	if (arguments[0].find(',') != std::string::npos)
 	{
-		client->reply("RPL_ENDOFNAMES", "TARGMAX 1");
+		client->reply(RPL_ENDOFNAMES, "TARGMAX 1");
 		return;
 	}
 
 	Channel *channel = getChannel(arguments[0]);
 	if (channel == NULL || channel->getChannelUsers().size() == 0)
 	{
-		client->reply("RPL_ENDOFNAMES", arguments[0]);
+		client->reply(RPL_ENDOFNAMES, arguments[0]);
 		return;
 	}
 
 	if (channel->isOnChannel(client) == false && (channel->isSecret() == true))
 	{
-		client->reply("RPL_ENDOFNAMES", arguments[0]);
+		client->reply(RPL_ENDOFNAMES, arguments[0]);
 		return;
 	}
 

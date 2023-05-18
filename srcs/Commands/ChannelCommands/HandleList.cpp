@@ -2,7 +2,7 @@
 
 void Server::handleList(Client *client, std::vector<std::string> arguments)
 {
-	client->reply("RPL_LISTSTART");
+	client->reply(RPL_LISTSTART);
 
 	if (arguments.size() == 0)
 	{
@@ -10,9 +10,9 @@ void Server::handleList(Client *client, std::vector<std::string> arguments)
 		{
 			Channel *channel = *it;
 			if (channel->isSecret() == false)
-				client->reply("RPL_LIST", channel->getName(), toString(channel->getChannelUsers().size()), channel->getTopic());
+				client->reply(RPL_LIST, channel->getName(), toString(channel->getChannelUsers().size()), channel->getTopic());
 		}
-		client->reply("RPL_LISTEND");
+		client->reply(RPL_LISTEND);
 		return;
 	}
 
@@ -25,11 +25,11 @@ void Server::handleList(Client *client, std::vector<std::string> arguments)
 		Channel *channel = getChannel(*it);
 		if (channel == NULL)
 		{
-			client->reply("ERR_NOSUCHCHANNEL", channel->getName());
+			client->reply(ERR_NOSUCHCHANNEL, channel->getName());
 			continue;
 		}
 		if (channel->isSecret() == false)
-			client->reply("RPL_LIST", channel->getName(), toString(channel->getChannelUsers().size()), channel->getTopic());
+			client->reply(RPL_LIST, channel->getName(), toString(channel->getChannelUsers().size()), channel->getTopic());
 	}
-	client->reply("RPL_LISTEND");
+	client->reply(RPL_LISTEND);
 }

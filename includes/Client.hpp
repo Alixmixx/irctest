@@ -36,10 +36,11 @@ public:
 	Server		*getServer() const;
 
 	// Reply
-	void reply(std::string replyCode);
-	void reply(std::string replyCode, std::string arg1);
-	void reply(std::string replyCode, std::string arg1, std::string arg2);
-	void reply(std::string replyCode, std::string arg1, std::string arg2, std::string arg3);
+	void reply(ReplyCode replyCode);
+	void reply(ReplyCode replyCode, std::string arg1);
+	void reply(ReplyCode replyCode, std::string arg1, std::string arg2);
+	void reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3);
+	//void send(std::string n)
 
 private:
 	int				_clientSocket;
