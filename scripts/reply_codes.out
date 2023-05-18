@@ -1,28 +1,3 @@
-#include "Client.hpp"
-
-void Client::reply(std::string replyMessage) const
-{
-	replyMessage += "\r\n";
-
-	if (DEBUG)
-		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
-				  << replyMessage << "\033[0m" << std::endl;
-
-	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
-}
-
-std::string Client::prefix() const
-{
-	return ":" + _nickname + "!" + _username + "@" + _hostname;
-}
-
-void Client::addInfo(int numeric, std::string replyMessage) const
-{
-	std::stringstream ss;
-	ss << ":" << _server->getServerHostname() << " " << std::setfill('0') << std::setw(3) << numeric << " " << _nickname << " " << replyMessage;
-	reply(ss.str());
-}
-
 void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3, std::string arg4) const
 {
 	switch (replyCode)

@@ -1,0 +1,318 @@
+001:
+  name: RPL_WELCOME
+  reply: :Welcome to the <networkname> Network, <nick>[!<user>@<host>]
+002:
+  name: RPL_YOURHOST
+  reply: :Your host is <servername>, running version <version>
+003:
+  name: RPL_CREATED
+  reply: :This server was created on <datetime>
+212:
+  name: RPL_STATSCOMMANDS
+  reply: <command> <count>
+213:
+  name: RPL_STATSCLINE
+  reply: C <host> * <name> <port> <class>
+214:
+  name: RPL_STATSNLINE
+  reply: N <host> * <name> <port> <class>
+215:
+  name: RPL_STATSILINE
+  reply: I <host> * <host> <port> <class>
+216:
+  name: RPL_STATSKLINE
+  reply: K <host> * <username> <port> <class>
+218:
+  name: RPL_STATSYLINE
+  reply: Y <class> <ping frequency> <connect frequency> <max sendq>
+219:
+  name: RPL_ENDOFSTATS
+  reply: <stats letter> :End of /STATS report
+221:
+  name: RPL_UMODEIS
+  reply: <user mode string>
+241:
+  name: RPL_STATSLLINE
+  reply: L <hostmask> * <servername> <maxdepth>
+242:
+  name: RPL_STATSUPTIME
+  reply: :Server Up <days> days <hours>:<minutes>:<seconds>
+243:
+  name: RPL_STATSOLINE
+  reply: O <hostmask> * <name>
+244:
+  name: RPL_STATSHLINE
+  reply: H <hostmask> * <servername>
+251:
+  name: RPL_LUSERCLIENT
+  reply: :There are <integer> users and <integer> invisible on <integer> servers
+252:
+  name: RPL_LUSEROP
+  reply: <integer> :operator(s) online
+253:
+  name: RPL_LUSERUNKNOWN
+  reply: <integer> :unknown connection(s)
+254:
+  name: RPL_LUSERCHANNELS
+  reply: <integer> :channels formed
+255:
+  name: RPL_LUSERME
+  reply: :I have <integer> clients and <integer> servers
+256:
+  name: RPL_ADMINME
+  reply: <server> :Administrative info
+257:
+  name: RPL_ADMINLOC1
+  reply: :<admin info>
+258:
+  name: RPL_ADMINLOC2
+  reply: :<admin info>
+259:
+  name: RPL_ADMINEMAIL
+  reply: :<admin info>
+261:
+  name: RPL_TRACELOG
+  reply: File <logfile> <debug level>
+300:
+  name: RPL_NONE
+  reply: n/a
+301:
+  name: RPL_AWAY
+  reply: <nick> :<away message>
+305:
+  name: RPL_UNAWAY
+  reply: :You are no longer marked as being away
+306:
+  name: RPL_NOWAWAY
+  reply: :You have been marked as being away
+311:
+  name: RPL_WHOISUSER
+  reply: <nick> <user> <host> * :<real name>
+312:
+  name: RPL_WHOISSERVER
+  reply: <nick> <server> :<server info>
+313:
+  name: RPL_WHOISOPERATOR
+  reply: <nick> :is an IRC operator
+314:
+  name: RPL_WHOWASUSER
+  reply: <nick> <user> <host> * :<real name>
+315:
+  name: RPL_ENDOFWHO
+  reply: <name> :End of /WHO list
+317:
+  name: RPL_WHOISIDLE
+  reply: <nick> <integer> :seconds idle
+318:
+  name: RPL_ENDOFWHOIS
+  reply: <nick> :End of /WHOIS list
+321:
+  name: RPL_LISTSTART
+  reply: Channel :Users Name
+322:
+  name: RPL_LIST
+  reply: <channel> <client count> :<topic>
+323:
+  name: RPL_LISTEND
+  reply: :End of /LIST
+324:
+  name: RPL_CHANNELMODEIS
+  reply: <channel> <mode> <mode params>
+331:
+  name: RPL_NOTOPIC
+  reply: <channel> :No topic is set
+332:
+  name: RPL_TOPIC
+  reply: <channel> :<topic>
+341:
+  name: RPL_INVITING
+  reply: <channel> <nick>
+342:
+  name: RPL_SUMMONING
+  reply: <user> :Summoning user to IRC
+351:
+  name: RPL_VERSION
+  reply: <version> <server> :<comments>
+364:
+  name: RPL_LINKS
+  reply: <mask> <server> :<hopcount> <server info>
+365:
+  name: RPL_ENDOFLINKS
+  reply: <mask> :End of /LINKS list
+366:
+  name: RPL_ENDOFNAMES
+  reply: <channel> :End of /NAMES list
+367:
+  name: RPL_BANLIST
+  reply: <channel> <banid>
+368:
+  name: RPL_ENDOFBANLIST
+  reply: <channel> :End of channel ban list
+369:
+  name: RPL_ENDOFWHOWAS
+  reply: <nick> :End of WHOWAS
+371:
+  name: RPL_INFO
+  reply: :<string>
+372:
+  name: RPL_MOTD
+  reply: :- <text>
+374:
+  name: RPL_ENDOFINFO
+  reply: :End of /INFO list
+375:
+  name: RPL_MOTDSTART
+  reply: :- <server> Message of the day -
+376:
+  name: RPL_ENDOFMOTD
+  reply: :End of /MOTD command
+381:
+  name: RPL_YOUREOPER
+  reply: :You are now an IRC operator
+382:
+  name: RPL_REHASHING
+  reply: <config file> :Rehashing
+391:
+  name: RPL_TIME
+  reply: <server> :<string showing server's local time>
+392:
+  name: RPL_USERSSTART
+  reply: :UserID Terminal Host
+394:
+  name: RPL_ENDOFUSERS
+  reply: :End of users
+395:
+  name: RPL_NOUSERS
+  reply: :Nobody logged in
+401:
+  name: ERR_NOSUCHNICK
+  reply: <nickname> :No such nick/channel
+402:
+  name: ERR_NOSUCHSERVER
+  reply: <server name> :No such server
+403:
+  name: ERR_NOSUCHCHANNEL
+  reply: <channel name> :No such channel
+404:
+  name: ERR_CANNOTSENDTOCHAN
+  reply: <channel name> :Cannot send to channel
+405:
+  name: ERR_TOOMANYCHANNELS
+  reply: <channel name> :You have joined too many channels
+406:
+  name: ERR_WASNOSUCHNICK
+  reply: <nickname> :There was no such nickname
+407:
+  name: ERR_TOOMANYTARGETS
+  reply: <target> :Duplicate recipients. No message delivered
+409:
+  name: ERR_NOORIGIN
+  reply: :No origin specified
+411:
+  name: ERR_NORECIPIENT
+  reply: :No recipient given (<command>)
+412:
+  name: ERR_NOTEXTTOSEND
+  reply: :No text to send
+413:
+  name: ERR_NOTTOPLEVEL
+  reply: <mask> :No toplevel domain specified
+414:
+  name: ERR_WILDTOPLEVEL
+  reply: <mask> :Wildcard in toplevel domain
+421:
+  name: ERR_UNKNOWNCOMMAND
+  reply: <command> :Unknown command
+422:
+  name: ERR_NOMOTD
+  reply: :MOTD File is missing
+423:
+  name: ERR_NOADMININFO
+  reply: <server> :No administrative info available
+424:
+  name: ERR_FILEERROR
+  reply: :File error doing <file op> on <file>
+431:
+  name: ERR_NONICKNAMEGIVEN
+  reply: :No nickname given
+432:
+  name: ERR_ERRONEUSNICKNAME
+  reply: <nick> :Erroneus nickname
+433:
+  name: ERR_NICKNAMEINUSE
+  reply: <nick> :Nickname is already in use
+436:
+  name: ERR_NICKCOLLISION
+  reply: <nick> :Nickname collision KILL
+441:
+  name: ERR_USERNOTINCHANNEL
+  reply: <nick> <channel> :They aren't on that channel
+442:
+  name: ERR_NOTONCHANNEL
+  reply: <channel> :You're not on that channel
+443:
+  name: ERR_USERONCHANNEL
+  reply: <user> <channel> :is already on channel
+444:
+  name: ERR_NOLOGIN
+  reply: <user> :User not logged in
+445:
+  name: ERR_SUMMONDISABLED
+  reply: :SUMMON has been disabled
+446:
+  name: ERR_USERSDISABLED
+  reply: :USERS has been disabled
+451:
+  name: ERR_NOTREGISTERED
+  reply: :You have not registered
+461:
+  name: ERR_NEEDMOREPARAMS
+  reply: <command> :Not enough parameters
+462:
+  name: ERR_ALREADYREGISTERED
+  reply: :You may not reregister
+463:
+  name: ERR_NOPERMFORHOST
+  reply: :Your host isn't among the privileged
+464:
+  name: ERR_PASSWDMISMATCH
+  reply: :Password incorrect
+465:
+  name: ERR_YOUREBANNEDCREEP
+  reply: :You are banned from this server
+467:
+  name: ERR_KEYSET
+  reply: <channel> :Channel key already set
+471:
+  name: ERR_CHANNELISFULL
+  reply: <channel> :Cannot join channel (+l)
+472:
+  name: ERR_UNKNOWNMODE
+  reply: <char> :is unknown mode char to me
+473:
+  name: ERR_INVITEONLYCHAN
+  reply: <channel> :Cannot join channel (+i)
+474:
+  name: ERR_BANNEDFROMCHAN
+  reply: <channel> :Cannot join channel (+b)
+475:
+  name: ERR_BADCHANNELKEY
+  reply: <channel> :Cannot join channel (+k)
+481:
+  name: ERR_NOPRIVILEGES
+  reply: :Permission Denied- You're not an IRC operator
+482:
+  name: ERR_CHANOPRIVSNEEDED
+  reply: <channel> :You're not channel operator
+483:
+  name: ERR_CANTKILLSERVER
+  reply: :You cant kill a server!
+491:
+  name: ERR_NOOPERHOST
+  reply: :No O-lines for your host
+501:
+  name: ERR_UMODEUNKNOWNFLAG
+  reply: :Unknown MODE flag
+502:
+  name: ERR_USERSDONTMATCH
+  reply: :Cant change mode for other users
