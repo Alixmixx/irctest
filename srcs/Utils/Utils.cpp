@@ -37,3 +37,28 @@ std::string toString(long number)
 	ss << number;
 	return ss.str();
 }
+
+std::string formatTime(time_t time)
+{
+    std::tm* localTime = std::localtime(&time);
+
+    const char* dayNames[] = {
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    };
+
+    const char* monthNames[] = {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    };
+
+    std::stringstream dateTimeStream;
+    dateTimeStream << dayNames[localTime->tm_wday] << " "
+                   << std::setfill('0') << std::setw(2) << localTime->tm_mday << " "
+                   << monthNames[localTime->tm_mon] << " "
+                   << (localTime->tm_year + 1900) << " at "
+                   << std::setw(2) << localTime->tm_hour << ":"
+                   << std::setw(2) << localTime->tm_min << ":"
+                   << std::setw(2) << localTime->tm_sec;
+
+    return dateTimeStream.str();
+}
