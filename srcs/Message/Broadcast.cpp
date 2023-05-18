@@ -2,30 +2,14 @@
 
 void Server::broadcast(std::vector<Client *> recipients, std::string message)
 {
-	message += "\r\n";
-	for (std::vector<Client *>::iterator it = recipients.begin(); it != recipients.end(); it++)
-	{
-		Client *client = *it;
-		send(client->getSocket(), message.c_str(), message.length(), 0);
-		if (DEBUG)
-			std::cout << "\033[1;32mMessage to client: " << client->getSocket() << "\n"
-					  << message << "\033[0m";
-	}
+	this->broadcast(recipients, message, std::vector<Client *>());
 }
 
 void Server::broadcast(std::vector<Client *> recipients, std::string message, Client *except)
 {
-	message += "\r\n";
-	for (std::vector<Client *>::iterator it = recipients.begin(); it != recipients.end(); it++)
-	{
-		Client *client = *it;
-		if (client == except)
-			continue;
-		send(client->getSocket(), message.c_str(), message.length(), 0);
-		if (DEBUG)
-			std::cout << "\033[1;32mMessage to client: " << client->getSocket() << "\n"
-					  << message << "\033[0m";
-	}
+	std::vector<Client *> excepts;
+	excepts.push_back(except);
+	this->broadcast(recipients, message, excepts);
 }
 
 void Server::broadcast(std::vector<Client *> recipients, std::string message, std::vector<Client *> except)
