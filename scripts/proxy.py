@@ -75,16 +75,14 @@ def child_signals():
     signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
 
-def forward_data(sender, receiver, color):
+def forward_data(sender, receiver, direction, color):
     data = sender.recv(BUFFER_SIZE)
     if (
         data
         and not data.decode().startswith("PING")
         and not data.decode().startswith("PONG")
     ):
-        print(
-            colored(f"{sender.getsockname()[1]} to {receiver.getsockname()[1]}:", color)
-        )
+        print(colored(direction, color))
         print(colored(data.decode(), color))
         receiver.sendall(data)
 
@@ -109,10 +107,10 @@ while True:
         proxy_socket.close()
         if os.fork() == 0:
             while True:
-                forward_data(client_socket, server_socket, "green")
+                forward_data(client_socket, server_socket, "Client to Server:", "green")
         elif os.fork() == 0:
             while True:
-                forward_data(server_socket, client_socket, "red")
+                forward_data(server_socket, client_socket, "Server to Client:", "red")
         else:
             os.waitpid(-1, os.WNOHANG)
             os.waitpid(-1, os.WNOHANG)
