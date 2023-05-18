@@ -7,9 +7,9 @@ void Server::broadcast(std::vector<Client *> recipients, std::string message)
 
 void Server::broadcast(std::vector<Client *> recipients, std::string message, Client *except)
 {
-	std::vector<Client *> clients;
-	clients.push_back(except);
-	this->broadcast(recipients, message, clients);
+	std::vector<Client *> excepts;
+	excepts.push_back(except);
+	this->broadcast(recipients, message, excepts);
 }
 
 void Server::broadcast(std::vector<Client *> recipients, std::string message, std::vector<Client *> except)
