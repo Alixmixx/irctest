@@ -1,22 +1,47 @@
 #include "Server.hpp"
 
+static std::vector<std::string> splitMessage(std::string message)
+{
+    std::vector<std::string> arguments;
+    std::string current;
+    std::stringstream iss(message);
+
+    for (size_t i = 0; i < message.size(); ++i) {
+        char c = message[i];
+        if (c == ' ')
+		{
+            if (!current.empty())
+            {
+                arguments.push_back(current);
+                current = "";
+            }
+        }
+        else if (c == ':' && current.empty())
+        {
+            arguments.push_back(message.substr(i + 1));
+            return arguments;
+        }
+        else
+            current += c;
+    }
+    if (!current.empty())
+        arguments.push_back(current);
+    return arguments;
+}
+
 void Server::parseMessageFromClient(Client* client, std::string message)
 {
-	std::string				 command;
-	std::string				 argument;
-	std::vector<std::string> arguments;
-	std::istringstream		 iss(message);
-
-	iss >> command;
-	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command); // find command in map
-
-	if (it != _commandHandlers.end()) // si on trouve la commande dans la map des commandes
+	std::vector<std::string> arguments = splitMessage(message);
+	if (arguments.size() == 0)
 	{
-		std::string argument;
-		while (iss >> argument)
-		{
-			arguments.push_back(argument);
-		}
+		std::cout << BLUE << "Empty line received." << RESET << std::endl;
+		return;
+	}
+	std::string command = arguments[0];
+	arguments.erase(arguments.begin());
+	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command);
+	if (it != _commandHandlers.end())
+	{
 		CommandHandler handler = it->second;
 		(this->*handler)(client, arguments);
 	}
@@ -26,7 +51,8 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 	}
 	else
 	{
-		std::cout << BLUE <<  "Command not found: " << command << RESET << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
+		// TODO si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
+		std::cout << BLUE <<  "Command not found: " << command << RESET << std::endl;
 	}
 }
 
