@@ -2,31 +2,32 @@
 
 static std::vector<std::string> splitMessage(std::string message)
 {
-    std::vector<std::string> arguments;
-    std::string current;
-    std::stringstream iss(message);
+	std::vector<std::string> arguments;
+	std::string				 current;
+	std::stringstream		 iss(message);
 
-    for (size_t i = 0; i < message.size(); ++i) {
-        char c = message[i];
-        if (c == ' ')
+	for (size_t i = 0; i < message.size(); ++i)
+	{
+		char c = message[i];
+		if (c == ' ')
 		{
-            if (!current.empty())
-            {
-                arguments.push_back(current);
-                current = "";
-            }
-        }
-        else if (c == ':' && current.empty())
-        {
-            arguments.push_back(message.substr(i + 1));
-            return arguments;
-        }
-        else
-            current += c;
-    }
-    if (!current.empty())
-        arguments.push_back(current);
-    return arguments;
+			if (!current.empty())
+			{
+				arguments.push_back(current);
+				current = "";
+			}
+		}
+		else if (c == ':' && current.empty())
+		{
+			arguments.push_back(message.substr(i + 1));
+			return arguments;
+		}
+		else
+			current += c;
+	}
+	if (!current.empty())
+		arguments.push_back(current);
+	return arguments;
 }
 
 void Server::parseMessageFromClient(Client* client, std::string message)
@@ -48,16 +49,16 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 	else
 	{
 		// TODO si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
-		std::cout << BLUE <<  "Command not found: " << command << RESET << std::endl;
+		std::cout << BLUE << "Command not found: " << command << RESET << std::endl;
 	}
 }
 
-// TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
+// TODO tres tard ~ reflechir si IRSSI/netcat peut faire exploser le serveur avec des char choulous
 void Server::readFromClient(Client* client)
 {
 	std::string message = client->getMessage();
-	char buffer[BUFFER_SIZE] = {0};
-	int recvSize;
+	char		buffer[BUFFER_SIZE] = {0};
+	int			recvSize;
 
 	do
 	{
@@ -69,12 +70,14 @@ void Server::readFromClient(Client* client)
 
 	if (message.empty())
 	{
-		// TODO call handleQuit instead
-		removeClient(client);
+		std::vector<std::string> args;
+		args.push_back("Empty message from client");
+		handleQuit(client, args);
 		return;
 	}
 
-	std::cout << RED << "Message from client " << client->getSocket() << ":\n" << message << RESET;
+	std::cout << RED << "Message from client " << client->getSocket() << ":\n"
+			  << message << RESET;
 
 	size_t pos;
 	while ((pos = message.find("\r\n")) != std::string::npos)

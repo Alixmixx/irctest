@@ -172,7 +172,7 @@ void Server::loop()
 			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
 			{
 				std::vector<std::string> args;
-				args.push_back("connection lost with client");
+				args.push_back("Connection lost with client");
 				handleQuit(client, args);
 			}
 			else
