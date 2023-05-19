@@ -47,16 +47,6 @@ std::vector<Client*> Server::getClients() const { return (_clients); }
 
 std::vector<Channel*> Server::getChannels() const { return (_channels); }
 
-bool Server::isChannel(std::string channelName) const
-{
-	for (std::vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
-	{
-		if ((*it)->getName() == channelName)
-			return (true);
-	}
-	return (false);
-}
-
 Channel* Server::getChannel(std::string channelName) const
 {
 	for (std::vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
@@ -66,8 +56,6 @@ Channel* Server::getChannel(std::string channelName) const
 	}
 	return (NULL);
 }
-
-void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
 
 Client* Server::getClient(int socketFd) const
 {

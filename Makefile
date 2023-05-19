@@ -12,10 +12,10 @@ CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
 SRCS		:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
-NAMES		:= $(basename $(SRCS))
+FILENAMES	:= $(basename $(SRCS))
 FOLDERS 	:= $(sort $(dir $(SRCS)))
-OBJS		:= $(NAMES:$S%=$O%.o)
-DEPS		:= $(NAMES:$S%=$D%.d)
+OBJS		:= $(FILENAMES:$S%=$O%.o)
+DEPS		:= $(FILENAMES:$S%=$D%.d)
 
 RM			:= rm -rf
 MKDIR		:= mkdir -p
