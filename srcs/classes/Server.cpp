@@ -1,5 +1,7 @@
 #include "Server.hpp"
 
+extern int exitStatus;
+
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
@@ -135,6 +137,7 @@ void Server::init()
 	ev.events = EPOLLIN | EPOLLET;
 	syscall(_epollFd = epoll_create1(0), "epoll_create1");
 	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev), "epoll_ctl");
+
 	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
@@ -157,16 +160,17 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
-	int nfds;
-	while (true)
+	while (exitStatus == OUTSTANDING_ERROR)
 	{
-		syscall(nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1), "epoll_wait");
+		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
+		if (nfds < 0)
+			return;
 		for (int i = 0; i < nfds; ++i)
 		{
 			if (_eventList[i].data.fd == _serverSocket)
 			{
 				this->acceptNewClient();
-				continue ;
+				continue;
 			}
 			Client* client = getClient(_eventList[i].data.fd);
 			if (client == NULL)
