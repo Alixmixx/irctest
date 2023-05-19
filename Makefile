@@ -31,12 +31,12 @@ $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
 $(OBJS): $O%.o: $S%.cpp | $O
-	@$(CXX) $(CXXFLAGS -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
 $(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CXX) $(CXXFLAGS -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
 	@$(CXX) $^ -o $@
