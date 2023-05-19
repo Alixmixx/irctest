@@ -4,12 +4,12 @@
 
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
-	  _serverHostname(SERVERHOSTNAME),
-	  _serverVersion(SERVERVERSION),
-	  _port(port),
-	  _serverPassword(password),
-	  _serverCreationTime(std::time(NULL)),
-	  _serverMotd("Welcome to the IRC server")
+	_serverHostname(SERVERHOSTNAME),
+	_serverVersion(SERVERVERSION),
+	_port(port),
+	_serverPassword(password),
+	_serverCreationTime(std::time(NULL)),
+	_serverMotd("Welcome to the IRC server")
 {
 	//_iLastConnect = 0;
 	initServer();
@@ -38,13 +38,13 @@ time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
 const std::string Server::getServerMotd() const { return (_serverMotd); }
 
-std::vector<Client *> Server::getClients() const { return (_clients); }
+std::vector<Client*> Server::getClients() const { return (_clients); }
 
-std::vector<Channel *> Server::getChannels() const { return (_channels); }
+std::vector<Channel*> Server::getChannels() const { return (_channels); }
 
 bool Server::isChannel(std::string channelName) const
 {
-	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (std::vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		if ((*it)->getName() == channelName)
 			return (true);
@@ -52,9 +52,9 @@ bool Server::isChannel(std::string channelName) const
 	return (false);
 }
 
-Channel *Server::getChannel(std::string channelName) const
+Channel* Server::getChannel(std::string channelName) const
 {
-	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (std::vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		if ((*it)->getName() == channelName)
 			return (*it);
@@ -68,10 +68,10 @@ void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
 
 // Client getters
 
-Client *Server::getClient(int socketFd) const
+Client* Server::getClient(int socketFd) const
 {
-	for (std::vector<Client *>::const_iterator it = _clients.begin();
-		 it != _clients.end(); ++it)
+	for (std::vector<Client*>::const_iterator it = _clients.begin();
+		it != _clients.end(); ++it)
 	{
 		if ((*it)->getSocket() == socketFd)
 			return (*it);
@@ -79,9 +79,9 @@ Client *Server::getClient(int socketFd) const
 	return (NULL);
 }
 
-Client *Server::getClient(std::string nickname) const
+Client* Server::getClient(std::string nickname) const
 {
-	for (std::vector<Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it)->getNickname() == nickname)
 			return (*it);
@@ -93,7 +93,7 @@ Client *Server::getClient(std::string nickname) const
 
 void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
 {
-	Client *newClient = new Client(this, clientSocket, clientAddress);
+	Client* newClient = new Client(this, clientSocket, clientAddress);
 
 	if (newClient == NULL)
 	{
@@ -104,10 +104,10 @@ void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
 	_clients.push_back(newClient);
 }
 
-void Server::removeClient(Client *client)
+void Server::removeClient(Client* client)
 {
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
-	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it) == client)
 		{
@@ -121,14 +121,14 @@ void Server::removeClient(Client *client)
 
 // Channel add and remove
 
-void Server::addChannel(Channel *channel)
+void Server::addChannel(Channel* channel)
 {
 	_channels.push_back(channel);
 }
 
-void Server::removeChannel(Channel *channel)
+void Server::removeChannel(Channel* channel)
 {
-	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		if ((*it) == channel)
 		{
@@ -137,6 +137,26 @@ void Server::removeChannel(Channel *channel)
 			return;
 		}
 	}
+}
+
+void Server::initCommandHandlerMap()
+{
+	_commandHandlers["CAP"] = &Server::handleCap;
+	_commandHandlers["INVITE"] = &Server::handleInvite;
+	_commandHandlers["JOIN"] = &Server::handleJoin;
+	_commandHandlers["KICK"] = &Server::handleKick;
+	_commandHandlers["LIST"] = &Server::handleList;
+	_commandHandlers["MODE"] = &Server::handleMode;
+	_commandHandlers["MOTD"] = &Server::handleMotd;
+	_commandHandlers["NAMES"] = &Server::handleNames;
+	_commandHandlers["NICK"] = &Server::handleNick;
+	_commandHandlers["PART"] = &Server::handlePart;
+	_commandHandlers["PING"] = &Server::handlePing;  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
+	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
+	_commandHandlers["QUIT"] = &Server::handleQuit;
+	_commandHandlers["TOPIC"] = &Server::handleTopic;
+	_commandHandlers["USER"] = &Server::handleUser;
+	_commandHandlers["WHOIS"] = &Server::handleWhois;
 }
 
 // Server initialization
@@ -168,7 +188,7 @@ void Server::initServer()
 		exit(EXIT_FAILURE);
 	}
 
-	if (bind(_serverSocket, (const struct sockaddr *)&_serverAddress, sizeof(_serverAddress)) < 0)
+	if (bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)) < 0)
 	{
 		std::cerr << "Error: socket binding failed" << std::endl;
 		exit(EXIT_FAILURE);
@@ -225,7 +245,7 @@ int Server::acceptNewClient()
 
 	// Accept new client
 	std::cout << "Accepting new client" << std::endl;
-	if ((newClientSocket = accept(_serverSocket, (struct sockaddr *)&newClientAddress, (socklen_t *)&newClientAddressLen)) < 0)
+	if ((newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen)) < 0)
 	{
 		std::cerr << "Error: accept failed - " << strerror(errno) << std::endl;
 		exit(EXIT_FAILURE);
@@ -275,7 +295,7 @@ void Server::start()
 			}
 			else if (_eventList[i].events & EPOLLIN) // read from client
 			{
-				Client *client = getClient(_eventList[i].data.fd);
+				Client* client = getClient(_eventList[i].data.fd);
 				if (client == NULL)
 				{
 					std::cerr << "Error: client not found" << std::endl;
@@ -293,7 +313,7 @@ void Server::start()
 			}
 			if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP)) // client disconnected
 			{
-				Client *client = getClient(_eventList[i].data.fd);
+				Client* client = getClient(_eventList[i].data.fd);
 				if (client == NULL)
 				{
 					std::cerr << "Error: client not found" << std::endl;
