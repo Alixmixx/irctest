@@ -35,17 +35,12 @@ void Server::readFromClient(Client* client)
 {
 	std::string message = client->getMessage();
 	char buffer[BUFFER_SIZE] = {0};
-
 	int recvSize;
+
 	do
 	{
-		recvSize = recv(client->getSocket(), buffer, BUFFER_SIZE - 1, 0);
-		if (recvSize < 0)
-		{
-			std::cerr << "Error: recv() failed" << std::endl;
-			exit(EXIT_FAILURE);
-		}
-		else if (recvSize == 0)
+		syscall(recvSize = recv(client->getSocket(), buffer, BUFFER_SIZE - 1, 0), "recv");
+		if (recvSize == 0)
 		{
 			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
 			removeClient(client);

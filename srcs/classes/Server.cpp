@@ -132,52 +132,21 @@ void Server::init()
 	_serverAddress.sin_port = htons(_port);
 
 	// Server socket creation
-	if ((_serverSocket = socket(_serverAddress.sin_family, SOCK_STREAM, 0)) < 0)
-	{
-		std::cerr << "Error: socket creation failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	// Set the server socket to allow multiple non-blocking connections
+	syscall(_serverSocket = socket(_serverAddress.sin_family, SOCK_STREAM, 0), "socket");
 	fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
 
 	// Server socket binding
 	_reuseAddr = 1;
-	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)) < 0)
-	{
-		std::cerr << "Error: setsockopt failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
+	syscall(bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)), "bind");
+	syscall(listen(_serverSocket, BACKLOG), "listen");
 
-	if (bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)) < 0)
-	{
-		std::cerr << "Error: socket binding failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	// Server socket listening
-	if (listen(_serverSocket, BACKLOG) < 0)
-	{
-		std::cerr << "Error: socket listening failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	// Server socket epoll creation
-	if ((_epollFd = epoll_create(MAX_EVENTS)) < 0) // epoll_create1(0) ?
-	{
-		std::cerr << "Error: epoll creation failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	// Server socket epoll control
+	// Server socket epoll
 	struct epoll_event ev;
 	ev.data.fd = _serverSocket;
 	ev.events = EPOLLIN | EPOLLET;
-	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev) < 0)
-	{
-		std::cerr << "Error: epoll_ctl failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
+	syscall(_epollFd = epoll_create1(0), "epoll_create1");
+	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev), "epoll_ctl");
 	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
@@ -188,12 +157,7 @@ void Server::acceptNewClient()
 	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
 
 	std::cout << BLUE << "Client connected." << RESET << std::endl;
-	if ((newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen)) < 0)
-	{
-		std::cerr << "Error: accept failed - " << strerror(errno) << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
+	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen), "accept");
 	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
 	syscall(fcntl(newClientSocket, F_SETFL, O_NONBLOCK), "fcntl");
 	struct epoll_event ev;
