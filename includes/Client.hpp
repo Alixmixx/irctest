@@ -23,17 +23,17 @@ public:
 	void leaveChannel(Channel* channel);
 
 	// Getters
-	int getSocket() const;
-	int getChannelCount() const;
-	bool IsRegistered() const;
+	int			getSocket() const;
+	int			getChannelCount() const;
+	bool		IsRegistered() const;
 	std::string getNickname() const;
 	std::string getUsername() const;
 	std::string getRealname() const;
 	std::string getHostname() const;
 	std::string getPrefix() const;
 	std::string getMessage() const;
-	bool IsInvisible() const;
-	Server* getServer() const;
+	bool		IsInvisible() const;
+	Server*		getServer() const;
 
 	// Reply
 	void reply(std::string replyMessage) const;
@@ -41,8 +41,8 @@ public:
 	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "") const;
 
 private:
-	int _clientSocket;
-	int _channelCount;
+	int	 _clientSocket;
+	int	 _channelCount;
 	bool _isRegistered;
 	bool _isInvisible;
 
@@ -57,5 +57,5 @@ private:
 	std::string _message;
 
 	std::vector<Channel*> _channels;
-	Server* _server;
+	Server*				  _server;
 };

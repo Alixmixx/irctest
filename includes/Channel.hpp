@@ -5,8 +5,7 @@
 class Client;
 class Server;
 
-class Channel
-{
+class Channel {
 public:
 	Channel(Server* server, std::string& name);
 	~Channel();
@@ -17,9 +16,9 @@ public:
 	const std::string& getMode() const;
 	const std::string& getKey() const;
 	const std::string& getTopicSetter() const;
-	time_t getTopicTimestamp() const;
+	time_t			   getTopicTimestamp() const;
 
-	std::vector<Client*>& getChannelUsers();
+	std::vector<Client*>&	getChannelUsers();
 	std::map<Client*, int>& getChannelUsersModes();
 
 	int getChannelUserMode(Client* client) const;
@@ -59,11 +58,11 @@ private:
 	std::string _key;
 
 	std::string _topicSetter;
-	time_t _topicTimestamp;
-	bool _inviteOnly;
-	bool _isSecret;
+	time_t		_topicTimestamp;
+	bool		_inviteOnly;
+	bool		_isSecret;
 
-	Server* _server;
+	Server*				   _server;
 	std::map<Client*, int> _channelUsersModes;
-	std::vector<Client*> _channelUsers;
+	std::vector<Client*>   _channelUsers;
 };

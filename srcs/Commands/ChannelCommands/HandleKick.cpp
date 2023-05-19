@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleKick(Client *client, std::vector<std::string> arguments)
+void Server::handleKick(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
@@ -20,7 +20,7 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	Channel *channel = getChannel(arguments[0]);
+	Channel* channel = getChannel(arguments[0]);
 
 	if (channel->isOnChannel(client) == false)
 	{
@@ -34,7 +34,7 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	Client *target = getClient(arguments[1]);
+	Client* target = getClient(arguments[1]);
 
 	if (target == NULL)
 	{

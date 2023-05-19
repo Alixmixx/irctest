@@ -1,11 +1,11 @@
 #include "Server.hpp"
 
-void Server::parseMessageFromClient(Client *client, std::string message)
+void Server::parseMessageFromClient(Client* client, std::string message)
 {
-	std::string command;
-	std::string argument;
+	std::string				 command;
+	std::string				 argument;
 	std::vector<std::string> arguments;
-	std::istringstream iss(message);
+	std::istringstream		 iss(message);
 
 	iss >> command;
 	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command); // find command in map
@@ -30,7 +30,7 @@ void Server::parseMessageFromClient(Client *client, std::string message)
 	}
 }
 
-void Server::readFromClient(Client *client) // TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
+void Server::readFromClient(Client* client) // TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
 {
 	std::string message = client->getMessage();
 

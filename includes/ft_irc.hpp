@@ -160,9 +160,9 @@ typedef enum Modes {
 #include "Client.hpp"
 #include "Server.hpp"
 
-bool isPortNumberCorrect(std::string port);
-bool isStringPrintable(std::string str);
-std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
+bool					 isPortNumberCorrect(std::string port);
+bool					 isStringPrintable(std::string str);
+std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::vector<std::string> split(const std::string& str, char delim);
-std::string toString(long number);
-std::string formatTime(time_t time);
+std::string				 toString(long number);
+std::string				 formatTime(time_t time);

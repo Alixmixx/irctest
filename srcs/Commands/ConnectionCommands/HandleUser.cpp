@@ -21,9 +21,9 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 	if (DEBUG)
 	{
 		std::cout << "Nickname: " << client->getNickname() << " "
-			<< "Username: " << client->getUsername() << " "
-			<< "Hostname: " << client->getHostname() << " "
-			<< "Realname: " << client->getRealname() << std::endl;
+				  << "Username: " << client->getUsername() << " "
+				  << "Hostname: " << client->getHostname() << " "
+				  << "Realname: " << client->getRealname() << std::endl;
 	}
 
 	if (client->getUsername() != "" && client->getNickname() != "")
@@ -33,8 +33,8 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
 		client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
 		client->reply(RPL_CREATED, formatTime(_serverCreationTime));
-		//client->reply(RPL_MYINFO); // TODO apres avoir lu la doc
-		// 05 TODO pour axel
+		// client->reply(RPL_MYINFO); // TODO apres avoir lu la doc
+		//  05 TODO pour axel
 	}
 	else
 	{

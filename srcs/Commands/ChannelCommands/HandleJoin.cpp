@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-static void newChannel(Client *client, std::string channelName, std::string channelPassword)
+static void newChannel(Client* client, std::string channelName, std::string channelPassword)
 {
 	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
 	{
@@ -8,8 +8,8 @@ static void newChannel(Client *client, std::string channelName, std::string chan
 		return;
 	}
 
-	Server *server = client->getServer();
-	Channel *channel = new Channel(server, channelName);
+	Server*	 server = client->getServer();
+	Channel* channel = new Channel(server, channelName);
 
 	channel->setPassword(channelPassword);
 	channel->addChannelUser(client, FOUNDER);
@@ -17,7 +17,7 @@ static void newChannel(Client *client, std::string channelName, std::string chan
 	server->addChannel(channel);
 }
 
-static void addToChannel(Client *client, Channel *channel, std::string channelPassword)
+static void addToChannel(Client* client, Channel* channel, std::string channelPassword)
 {
 	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
 	{
@@ -58,10 +58,10 @@ static void addToChannel(Client *client, Channel *channel, std::string channelPa
 	client->setChannelCount(client->getChannelCount() + 1);
 }
 
-static std::string extractFromArgument(std::string &arguments)
+static std::string extractFromArgument(std::string& arguments)
 {
 	std::string name;
-	size_t pos = arguments.find_first_of(',');
+	size_t		pos = arguments.find_first_of(',');
 	if (pos == std::string::npos)
 	{
 		name = arguments;
@@ -75,7 +75,7 @@ static std::string extractFromArgument(std::string &arguments)
 	return (name);
 }
 
-static bool checkChannelName(std::string &channelName)
+static bool checkChannelName(std::string& channelName)
 {
 	if (channelName[0] != '#' && channelName[0] != '&')
 	{
@@ -85,7 +85,7 @@ static bool checkChannelName(std::string &channelName)
 	return (true);
 }
 
-void Server::handleJoin(Client *client, std::vector<std::string> arguments)
+void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -114,8 +114,8 @@ void Server::handleJoin(Client *client, std::vector<std::string> arguments)
 		{
 			channelPassword = "";
 		}
-		
-		Channel *channel = getChannel(channelName);
+
+		Channel* channel = getChannel(channelName);
 		if (channel != NULL)
 		{
 			addToChannel(client, channel, channelPassword);

@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleCap(Client *client, std::vector<std::string> arguments)
+void Server::handleCap(Client* client, std::vector<std::string> arguments)
 {
 	(void)client;
 	if (arguments.size() == 0)

@@ -4,12 +4,12 @@
 
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
-	_serverHostname(SERVERHOSTNAME),
-	_serverVersion(SERVERVERSION),
-	_port(port),
-	_serverPassword(password),
-	_serverCreationTime(std::time(NULL)),
-	_serverMotd("Welcome to the IRC server")
+	  _serverHostname(SERVERHOSTNAME),
+	  _serverVersion(SERVERVERSION),
+	  _port(port),
+	  _serverPassword(password),
+	  _serverCreationTime(std::time(NULL)),
+	  _serverMotd("Welcome to the IRC server")
 {
 	//_iLastConnect = 0;
 	initServer();
@@ -29,8 +29,6 @@ const std::string Server::getServerHostname() const { return (_serverHostname); 
 const std::string Server::getServerInfo() const { return (_serverInfo); }
 
 const std::string Server::getServerVersion() const { return (_serverVersion); }
-
-const std::string Server::getServerEnvironment() const { return (_serverEnvironment); }
 
 const std::string Server::getServerPassword() const { return (_serverPassword); }
 
@@ -71,7 +69,7 @@ void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
 Client* Server::getClient(int socketFd) const
 {
 	for (std::vector<Client*>::const_iterator it = _clients.begin();
-		it != _clients.end(); ++it)
+		 it != _clients.end(); ++it)
 	{
 		if ((*it)->getSocket() == socketFd)
 			return (*it);
@@ -151,7 +149,7 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["NAMES"] = &Server::handleNames;
 	_commandHandlers["NICK"] = &Server::handleNick;
 	_commandHandlers["PART"] = &Server::handlePart;
-	_commandHandlers["PING"] = &Server::handlePing;  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
+	_commandHandlers["PING"] = &Server::handlePing; // A LAISSER EN ORDRE ALPHABETIQUE MERCI
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
@@ -195,7 +193,6 @@ void Server::initServer()
 	}
 
 	// Server socket listening
-
 	if (listen(_serverSocket, BACKLOG) < 0)
 	{
 		std::cerr << "Error: socket listening failed" << std::endl;
@@ -203,11 +200,6 @@ void Server::initServer()
 	}
 
 	// Server socket epoll creation
-
-	struct epoll_event ev;
-	ev.data.fd = _serverSocket;
-	ev.events = EPOLLIN | EPOLLET;
-
 	if ((_epollFd = epoll_create(MAX_EVENTS)) < 0) // epoll_create1(0) ?
 	{
 		std::cerr << "Error: epoll creation failed" << std::endl;
@@ -215,7 +207,9 @@ void Server::initServer()
 	}
 
 	// Server socket epoll control
-
+	struct epoll_event ev;
+	ev.data.fd = _serverSocket;
+	ev.events = EPOLLIN | EPOLLET;
 	if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev) < 0)
 	{
 		std::cerr << "Error: epoll_ctl failed" << std::endl;
@@ -239,9 +233,9 @@ int Server::epollWait()
 
 int Server::acceptNewClient()
 {
-	int newClientSocket;
+	int				   newClientSocket;
 	struct sockaddr_in newClientAddress;
-	socklen_t newClientAddressLen = sizeof(newClientAddress);
+	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
 
 	// Accept new client
 	std::cout << "Accepting new client" << std::endl;

@@ -5,7 +5,10 @@ O		:= objs/
 I		:= includes/
 D		:= deps/
 
+GARBAGE	:= .vscode
+
 SRCS	+= main.cpp
+SRCS	+= utils.cpp
 SRCS	+= Server.cpp
 SRCS	+= Client.cpp
 SRCS	+= Channel.cpp
@@ -28,8 +31,6 @@ SRCS	+= Commands/ChannelCommands/HandleNames.cpp
 SRCS	+= Commands/ChannelCommands/HandlePart.cpp
 SRCS	+= Commands/ChannelCommands/HandleList.cpp
 SRCS	+= Commands/ChannelCommands/HandleInvite.cpp
-SRCS	+= Utils/ParseArgv.cpp
-SRCS	+= Utils/Utils.cpp
 
 CC		:= clang++
 CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
@@ -68,7 +69,7 @@ $(NAME): $(OBJS)
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
-	@$(RM) $D $O
+	@$(RM) $D $O ${GARBAGE}
 
 fclean: clean
 	@echo "$(RED)Removing executable$(END)"

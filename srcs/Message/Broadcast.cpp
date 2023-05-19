@@ -1,23 +1,23 @@
 #include "Server.hpp"
 
-void Server::broadcast(std::vector<Client *> recipients, std::string message)
+void Server::broadcast(std::vector<Client*> recipients, std::string message)
 {
-	this->broadcast(recipients, message, std::vector<Client *>());
+	this->broadcast(recipients, message, std::vector<Client*>());
 }
 
-void Server::broadcast(std::vector<Client *> recipients, std::string message, Client *except)
+void Server::broadcast(std::vector<Client*> recipients, std::string message, Client* except)
 {
-	std::vector<Client *> excepts;
+	std::vector<Client*> excepts;
 	excepts.push_back(except);
 	this->broadcast(recipients, message, excepts);
 }
 
-void Server::broadcast(std::vector<Client *> recipients, std::string message, std::vector<Client *> except)
+void Server::broadcast(std::vector<Client*> recipients, std::string message, std::vector<Client*> except)
 {
 	message += "\r\n";
-	for (std::vector<Client *>::iterator it = recipients.begin(); it != recipients.end(); it++)
+	for (std::vector<Client*>::iterator it = recipients.begin(); it != recipients.end(); it++)
 	{
-		Client *client = *it;
+		Client* client = *it;
 		if (std::find(except.begin(), except.end(), client) != except.end())
 			continue;
 		send(client->getSocket(), message.c_str(), message.length(), 0);

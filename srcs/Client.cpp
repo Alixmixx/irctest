@@ -1,18 +1,18 @@
-#include "Server.hpp"
 #include "Client.hpp"
+#include "Server.hpp"
 
 // Constructeur
 
 Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
-	_channelCount(0),
-	_isRegistered(false),
-	_clientAddress(clientAddress),
-	_nickname(""),
-	_username(""),
-	_realname(""),
-	_hostname(""),
-	_server(server)
+	  _channelCount(0),
+	  _isRegistered(false),
+	  _clientAddress(clientAddress),
+	  _nickname(""),
+	  _username(""),
+	  _realname(""),
+	  _hostname(""),
+	  _server(server)
 {
 	(void)_clientAddress;
 }
@@ -31,7 +31,11 @@ Client::~Client()
 
 // Setters
 
-void Client::setNickname(std::string nickname) { _nickname = nickname; _prefix = ":" + _nickname + "!" + _username + "@" + _hostname; }
+void Client::setNickname(std::string nickname)
+{
+	_nickname = nickname;
+	_prefix = ":" + _nickname + "!" + _username + "@" + _hostname;
+}
 
 void Client::setIsRegistered(bool isRegistered) { _isRegistered = isRegistered; }
 

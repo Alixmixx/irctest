@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleQuit(Client *client, std::vector<std::string> arguments)
+void Server::handleQuit(Client* client, std::vector<std::string> arguments)
 {
 	std::string clientNickname = client->getNickname();
 	std::string clientMessage;

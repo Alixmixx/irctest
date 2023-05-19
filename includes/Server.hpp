@@ -5,8 +5,7 @@
 class Channel;
 class Client;
 
-class Server
-{
+class Server {
 public:
 	Server(unsigned short port, std::string password);
 	~Server();
@@ -17,19 +16,17 @@ public:
 	const std::string getServerHostname() const;
 	const std::string getServerInfo() const;
 	const std::string getServerVersion() const;
-	const std::string getServerEnvironment() const;
 	const std::string getServerPassword() const;
-	time_t getServerCreationTime() const;
 	const std::string getServerMotd() const;
+	time_t			  getServerCreationTime() const;
 	// 2. Client
 	Client* getClient(int socketFd) const;
 	Client* getClient(std::string nickname) const;
 	// 3. Channel
-	std::vector<Channel>* getChannel() const;
 	Channel* getChannel(std::string channelName) const;
-	bool isChannel(std::string channelName) const;
+	bool	 isChannel(std::string channelName) const;
 	// 4. Vectors
-	std::vector<Client*> getClients() const;
+	std::vector<Client*>  getClients() const;
 	std::vector<Channel*> getChannels() const;
 
 	// Setters
@@ -37,8 +34,8 @@ public:
 
 	// Start
 	void start();
-	int epollWait();
-	int acceptNewClient();
+	int	 epollWait();
+	int	 acceptNewClient();
 
 	// Methods
 	// 1. Server
@@ -56,7 +53,7 @@ public:
 	// 1. ConnectionCommands
 	void handleCap(Client* client, std::vector<std::string> arguments);
 	void handleMode(Client* client, std::vector<std::string> arguments);
-	void handleNick(Client* client, std::vector<std::string> arguments);  // A LAISSER EN ORDRE ALPHABETIQUE MERCI
+	void handleNick(Client* client, std::vector<std::string> arguments); // A LAISSER EN ORDRE ALPHABETIQUE MERCI
 	void handlePing(Client* client, std::vector<std::string> arguments);
 	void handleQuit(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
@@ -88,28 +85,27 @@ public:
 	void initCommandHandlerMap();
 
 private:
-	int	_serverSocket;
-	int	_epollFd;
-	int	_reuseAddr;
-	int	_iLastConnect;
-	struct sockaddr_in	_serverAddress;
-	struct epoll_event	_eventList[MAX_CLIENTS];
-	const std::string	_serverName;
-	const std::string	_serverHostname;
-	const std::string	_serverInfo;
-	const std::string	_serverVersion;
-	const std::string	_serverEnvironment;
-	unsigned short		_port;
+	int				   _serverSocket;
+	int				   _epollFd;
+	int				   _reuseAddr;
+	int				   _iLastConnect;
+	struct sockaddr_in _serverAddress;
+	struct epoll_event _eventList[MAX_CLIENTS];
+	const std::string  _serverName;
+	const std::string  _serverHostname;
+	const std::string  _serverInfo;
+	const std::string  _serverVersion;
+	unsigned short	   _port;
 
-	typedef void (Server::* CommandHandler)(Client* client, std::vector<std::string> arguments);
+	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
 	std::map<std::string, CommandHandler> _commandHandlers;
 
 	// Server infos
-	const std::string	_serverPassword;
-	const time_t		_serverCreationTime;
-	std::string			_serverMotd;	// Message of the day
+	const std::string _serverPassword;
+	const time_t	  _serverCreationTime;
+	std::string		  _serverMotd; // Message of the day
 
 	// Server vector and map
-	std::vector<Client*>	_clients;
-	std::vector<Channel*>	_channels;
+	std::vector<Client*>  _clients;
+	std::vector<Channel*> _channels;
 };

@@ -22,9 +22,9 @@ static bool isNicknameValid(std::string nickname)
 	return true;
 }
 
-static bool isNicknameAlreadyTaken(std::vector<Client *> clients, const std::string &nickname)
+static bool isNicknameAlreadyTaken(std::vector<Client*> clients, const std::string& nickname)
 {
-	for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
+	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
 		if (toLowercase((*it)->getNickname()) == toLowercase(nickname))
 			return true;
@@ -32,7 +32,7 @@ static bool isNicknameAlreadyTaken(std::vector<Client *> clients, const std::str
 	return false;
 }
 
-void Server::handleNick(Client *client, std::vector<std::string> arguments)
+void Server::handleNick(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
 	{
@@ -42,7 +42,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	if (isNicknameValid(arguments[0]))
 	{
 		unsigned int suffix = 0;
-		std::string nickname = arguments[0];
+		std::string	 nickname = arguments[0];
 		while (isNicknameAlreadyTaken(this->getClients(), nickname))
 		{
 			if (client->IsRegistered())
@@ -61,7 +61,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 		}
 		else if (suffix)
 		{
-			 client->reply(":" + arguments[0] + " NICK " + nickname);
+			client->reply(":" + arguments[0] + " NICK " + nickname);
 		}
 		client->setNickname(nickname);
 		return;
