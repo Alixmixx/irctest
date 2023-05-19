@@ -9,31 +9,31 @@ GARBAGE	:= .vscode
 
 SRCS	+= main.cpp
 SRCS	+= utils.cpp
-SRCS	+= Server.cpp
-SRCS	+= Client.cpp
-SRCS	+= Channel.cpp
-SRCS	+= Message/ParseMessage.cpp
-SRCS	+= Message/Reply.cpp
-SRCS	+= Message/Broadcast.cpp
-SRCS	+= Commands/ConnectionCommands/HandleCap.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMode.cpp
-SRCS	+= Commands/ConnectionCommands/HandleNick.cpp
-SRCS	+= Commands/ConnectionCommands/HandlePing.cpp
-SRCS	+= Commands/ConnectionCommands/HandleQuit.cpp
-SRCS	+= Commands/ConnectionCommands/HandleUser.cpp
-SRCS	+= Commands/ConnectionCommands/HandleWhois.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMotd.cpp
-SRCS	+= Commands/SendingCommands/HandlePrivateMessage.cpp
-SRCS	+= Commands/ChannelCommands/HandleJoin.cpp
-SRCS	+= Commands/ChannelCommands/HandleKick.cpp
-SRCS	+= Commands/ChannelCommands/HandleTopic.cpp
-SRCS	+= Commands/ChannelCommands/HandleNames.cpp
-SRCS	+= Commands/ChannelCommands/HandlePart.cpp
-SRCS	+= Commands/ChannelCommands/HandleList.cpp
-SRCS	+= Commands/ChannelCommands/HandleInvite.cpp
+SRCS	+= classes/Channel.cpp
+SRCS	+= classes/Client.cpp
+SRCS	+= classes/Server.cpp
+SRCS	+= message/parseMessage.cpp
+SRCS	+= message/reply.cpp
+SRCS	+= message/broadcast.cpp
+SRCS	+= commands/handleCap.cpp
+SRCS	+= commands/handleMode.cpp
+SRCS	+= commands/handleNick.cpp
+SRCS	+= commands/handlePing.cpp
+SRCS	+= commands/handleQuit.cpp
+SRCS	+= commands/handleUser.cpp
+SRCS	+= commands/handleWhois.cpp
+SRCS	+= commands/handleMotd.cpp
+SRCS	+= commands/handlePrivateMessage.cpp
+SRCS	+= commands/handleJoin.cpp
+SRCS	+= commands/handleKick.cpp
+SRCS	+= commands/handleTopic.cpp
+SRCS	+= commands/handleNames.cpp
+SRCS	+= commands/handlePart.cpp
+SRCS	+= commands/handleList.cpp
+SRCS	+= commands/handleInvite.cpp
 
 CC		:= clang++
-CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
+CFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 
 SRCS	:= $(foreach file,$(SRCS),$S$(file))
 FOLDERS := $(sort $(dir $(SRCS)))
