@@ -146,6 +146,7 @@ typedef enum Modes {
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
 #define INFO "42School"
+#define OUTSTANDING_ERROR 125
 #define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024
 #define MAX_EVENTS 32 // why 10 ?
@@ -157,9 +158,6 @@ typedef enum Modes {
 # define RED "\033[31m"
 # define GREEN "\033[32m"
 # define BLUE "\033[34m"
-
-#define DEBUG true
-#define OUTSTANDING_ERROR 125
 
 #include "Channel.hpp"
 #include "Client.hpp"

@@ -32,7 +32,7 @@ SRCS	+= commands/handlePart.cpp
 SRCS	+= commands/handleList.cpp
 SRCS	+= commands/handleInvite.cpp
 
-CC		:= clang++
+CC		:= clang++ # TODO c++
 CFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 
 SRCS	:= $(foreach file,$(SRCS),$S$(file))
@@ -46,9 +46,7 @@ MKDIR	:= mkdir -p
 END		:= \033[0m
 RED		:= \033[0;91m
 GREEN	:= \033[0;92m
-MAGENTA	:= \033[0;95m
-
-.PHONY: all clean fclean re
+BLUE	:= \033[0;94m
 
 all: $(NAME)
 
@@ -65,7 +63,7 @@ $(DEPS): $D%.d: $S%
 
 $(NAME): $(OBJS)
 	@$(CC) $^ -o $@
-	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
+	@echo "$(BLUE)$(NAME) is compiled$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
@@ -77,5 +75,7 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
+
+.PHONY: all clean fclean re
 
 -include $(DEPS)
