@@ -154,18 +154,22 @@ typedef enum Modes {
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
 
-# define RESET "\033[0m"
-# define RED "\033[31m"
-# define GREEN "\033[32m"
-# define BLUE "\033[34m"
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define BLUE "\033[34m"
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
+// utils.cpp
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::vector<std::string> split(const std::string& str, char delim);
 std::string				 toString(long number);
 std::string				 formatTime(time_t time);
+
+// clean.cpp
+void handleSigint(int signum);

@@ -1,7 +1,10 @@
 #include "ft_irc.hpp"
 
+Server *g_server = NULL;
+
 int main(int argc, char** argv)
 {
+	std::signal(SIGINT, handleSigint);
 	if (argc != 3)
 	{
 		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
@@ -17,8 +20,7 @@ int main(int argc, char** argv)
 		std::cerr << "Invalid password: " << argv[2] << std::endl;
 		return EXIT_FAILURE;
 	}
-
-	Server server(atoi(argv[1]), argv[2]);
-	server.start();
-	return EXIT_SUCCESS;
+	g_server = new Server(atoi(argv[1]), argv[2]);
+	g_server->start();
+	return OUTSTANDING_ERROR;
 }

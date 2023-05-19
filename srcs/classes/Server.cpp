@@ -1,7 +1,6 @@
 #include "Server.hpp"
 
 // Constructeur
-
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
@@ -17,7 +16,6 @@ Server::Server(unsigned short port, std::string password)
 }
 
 // Destructeur
-
 Server::~Server() {}
 
 // Getters
@@ -218,20 +216,6 @@ void Server::initServer()
 	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
-int Server::epollWait()
-{
-	// Server socket epoll wait
-	int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
-
-	if (nfds < 0)
-	{
-		std::cerr << "Error: epoll_wait failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	return (nfds);
-}
-
 int Server::acceptNewClient()
 {
 	int				   newClientSocket;
@@ -249,15 +233,17 @@ int Server::acceptNewClient()
 	return (newClientSocket);
 }
 
-// Loop du serveur
 void Server::start()
 {
-
-	// Server socket epoll events loop
-	while (125)
+	while (true)
 	{
-		int nfds = this->epollWait();
-		for (int i = 0; i < nfds; i++) // maybe store last i and start from it
+		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
+		if (nfds < 0)
+		{
+			std::cerr << "Error: epoll_wait failed" << std::endl;
+			exit(EXIT_FAILURE);
+		}
+		for (int i = 0; i < nfds; ++i)
 		{
 			if (_eventList[i].data.fd == _serverSocket) // new client
 			{

@@ -34,7 +34,6 @@ public:
 
 	// Start
 	void start();
-	int	 epollWait();
 	int	 acceptNewClient();
 
 	// Methods

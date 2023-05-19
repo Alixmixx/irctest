@@ -30,12 +30,11 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 	}
 }
 
-void Server::readFromClient(Client* client) // TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
+// TODO tres tard ~ reflechir si IRSSI peut faire exploser le serveur avec des char choulous
+void Server::readFromClient(Client* client)
 {
 	std::string message = client->getMessage();
-
-	char buffer[BUFFER_SIZE];
-	std::memset(buffer, 0, BUFFER_SIZE);
+	char buffer[BUFFER_SIZE] = {0};
 
 	int recvSize;
 	do
