@@ -145,7 +145,7 @@ typedef enum Modes {
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
-#define INFO "42School"
+#define MOTD "Welcome to the IRC server"
 #define OUTSTANDING_ERROR 125
 #define BACKLOG 128 // why 128 ?
 #define MAX_CLIENTS 1024

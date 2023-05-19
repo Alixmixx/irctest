@@ -79,10 +79,6 @@ public:
 	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);
 	void broadcast(std::vector<Client*> recipients, std::string message, std::vector<Client*> except);
 
-	// Init
-	void initServer();
-	void initCommandHandlerMap();
-
 private:
 	int				   _serverSocket;
 	int				   _epollFd;
@@ -107,4 +103,6 @@ private:
 	// Server vector and map
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
+
+	void init();
 };

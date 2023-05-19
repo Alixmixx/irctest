@@ -1,6 +1,5 @@
 #include "Server.hpp"
 
-// Constructeur
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
@@ -8,17 +7,27 @@ Server::Server(unsigned short port, std::string password)
 	  _port(port),
 	  _serverPassword(password),
 	  _serverCreationTime(std::time(NULL)),
-	  _serverMotd("Welcome to the IRC server")
+	  _serverMotd(MOTD)
 {
-	//_iLastConnect = 0;
-	initServer();
-	initCommandHandlerMap();
+	_commandHandlers["CAP"] = &Server::handleCap;
+	_commandHandlers["INVITE"] = &Server::handleInvite;
+	_commandHandlers["JOIN"] = &Server::handleJoin;
+	_commandHandlers["KICK"] = &Server::handleKick;
+	_commandHandlers["LIST"] = &Server::handleList;
+	_commandHandlers["MODE"] = &Server::handleMode;
+	_commandHandlers["MOTD"] = &Server::handleMotd;
+	_commandHandlers["NAMES"] = &Server::handleNames;
+	_commandHandlers["NICK"] = &Server::handleNick;
+	_commandHandlers["PART"] = &Server::handlePart;
+	_commandHandlers["PING"] = &Server::handlePing;
+	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
+	_commandHandlers["QUIT"] = &Server::handleQuit;
+	_commandHandlers["TOPIC"] = &Server::handleTopic;
+	_commandHandlers["USER"] = &Server::handleUser;
+	_commandHandlers["WHOIS"] = &Server::handleWhois;
 }
 
-// Destructeur
 Server::~Server() {}
-
-// Getters
 
 const std::string Server::getServerName() const { return (_serverName); }
 
@@ -58,11 +67,7 @@ Channel* Server::getChannel(std::string channelName) const
 	return (NULL);
 }
 
-// Setters
-
 void Server::setServerMotd(std::string motd) { _serverMotd = motd; }
-
-// Client getters
 
 Client* Server::getClient(int socketFd) const
 {
@@ -84,8 +89,6 @@ Client* Server::getClient(std::string nickname) const
 	}
 	return (NULL);
 }
-
-// Client add and remove
 
 void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
 {
@@ -115,8 +118,6 @@ void Server::removeClient(Client* client)
 	}
 }
 
-// Channel add and remove
-
 void Server::addChannel(Channel* channel)
 {
 	_channels.push_back(channel);
@@ -135,29 +136,7 @@ void Server::removeChannel(Channel* channel)
 	}
 }
 
-void Server::initCommandHandlerMap()
-{
-	_commandHandlers["CAP"] = &Server::handleCap;
-	_commandHandlers["INVITE"] = &Server::handleInvite;
-	_commandHandlers["JOIN"] = &Server::handleJoin;
-	_commandHandlers["KICK"] = &Server::handleKick;
-	_commandHandlers["LIST"] = &Server::handleList;
-	_commandHandlers["MODE"] = &Server::handleMode;
-	_commandHandlers["MOTD"] = &Server::handleMotd;
-	_commandHandlers["NAMES"] = &Server::handleNames;
-	_commandHandlers["NICK"] = &Server::handleNick;
-	_commandHandlers["PART"] = &Server::handlePart;
-	_commandHandlers["PING"] = &Server::handlePing;
-	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
-	_commandHandlers["QUIT"] = &Server::handleQuit;
-	_commandHandlers["TOPIC"] = &Server::handleTopic;
-	_commandHandlers["USER"] = &Server::handleUser;
-	_commandHandlers["WHOIS"] = &Server::handleWhois;
-}
-
-// Server initialization
-
-void Server::initServer()
+void Server::init()
 {
 	// Server address initialization
 	std::memset(&_serverAddress, 0, sizeof(_serverAddress));
@@ -235,6 +214,7 @@ int Server::acceptNewClient()
 void Server::start()
 {
 	int nfds;
+	this->init();
 	while (true)
 	{
 		syscall(nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1), "epoll_wait");
@@ -254,36 +234,20 @@ void Server::start()
 			{
 				Client* client = getClient(_eventList[i].data.fd);
 				if (client == NULL)
-				{
-					std::cerr << "Error: client not found" << std::endl;
-					// exit(EXIT_FAILURE); à reflechir
-				}
-				else
-				{
-					readFromClient(client);
-				}
+					panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
+				readFromClient(client);
 			}
-			else // unknown event
-			{
-				std::cerr << "Error: unknown event" << std::endl;
-				// exit(EXIT_FAILURE); à reflechir
-			}
-			if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP)) // client disconnected
+			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP)) // client disconnected
 			{
 				Client* client = getClient(_eventList[i].data.fd);
 				if (client == NULL)
-				{
-					std::cerr << "Error: client not found" << std::endl;
-					// exit(EXIT_FAILURE); à reflechir
-				}
-				else
-				{
-					std::vector<std::string> args; // TODO c'est la merde
-					args.push_back("connection lost with client");
-					handleQuit(client, args);
-					continue;
-				}
+					panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
+				std::vector<std::string> args; // TODO c'est la merde
+				args.push_back("connection lost with client");
+				handleQuit(client, args);
 			}
+			else
+				panic("Unknown event.");
 		}
 	}
 }
