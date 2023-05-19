@@ -7,35 +7,10 @@ D		:= deps/
 
 GARBAGE	:= .vscode
 
-SRCS	+= main.cpp
-SRCS	+= utils.cpp
-SRCS	+= classes/Channel.cpp
-SRCS	+= classes/Client.cpp
-SRCS	+= classes/Server.cpp
-SRCS	+= message/parseMessage.cpp
-SRCS	+= message/reply.cpp
-SRCS	+= message/broadcast.cpp
-SRCS	+= commands/handleCap.cpp
-SRCS	+= commands/handleMode.cpp
-SRCS	+= commands/handleNick.cpp
-SRCS	+= commands/handlePing.cpp
-SRCS	+= commands/handleQuit.cpp
-SRCS	+= commands/handleUser.cpp
-SRCS	+= commands/handleWhois.cpp
-SRCS	+= commands/handleMotd.cpp
-SRCS	+= commands/handlePrivateMessage.cpp
-SRCS	+= commands/handleJoin.cpp
-SRCS	+= commands/handleKick.cpp
-SRCS	+= commands/handleTopic.cpp
-SRCS	+= commands/handleNames.cpp
-SRCS	+= commands/handlePart.cpp
-SRCS	+= commands/handleList.cpp
-SRCS	+= commands/handleInvite.cpp
-
 CC		:= clang++ # TODO c++
 CFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 
-SRCS	:= $(foreach file,$(SRCS),$S$(file))
+SRCS	:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
 FOLDERS := $(sort $(dir $(SRCS)))
 OBJS	:= $(SRCS:$S%=$O%.o)
 DEPS	:= $(SRCS:$S%=$D%.d)
@@ -44,9 +19,9 @@ RM		:= rm -rf
 MKDIR	:= mkdir -p
 
 END		:= \033[0m
-RED		:= \033[0;91m
-GREEN	:= \033[0;92m
-BLUE	:= \033[0;94m
+RED		:= \033[31m
+GREEN	:= \033[32m
+BLUE	:= \033[34m
 
 all: $(NAME)
 
