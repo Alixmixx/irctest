@@ -7,7 +7,7 @@ class Server;
 
 class Client {
 public:
-	Client(Server *server, int socketFd, sockaddr_in clientAddress);
+	Client(Server* server, int socketFd, sockaddr_in clientAddress);
 	~Client();
 
 	// Setters
@@ -19,8 +19,8 @@ public:
 	void setMessage(std::string message);
 	void setChannelCount(int channelCount);
 	void setIsInvisible(bool invisible);
-	void addChannel(Channel *channel);
-	void leaveChannel(Channel *channel);
+	void addChannel(Channel* channel);
+	void leaveChannel(Channel* channel);
 
 	// Getters
 	int getSocket() const;
@@ -33,7 +33,7 @@ public:
 	std::string getPrefix() const;
 	std::string getMessage() const;
 	bool IsInvisible() const;
-	Server *getServer() const;
+	Server* getServer() const;
 
 	// Reply
 	void reply(std::string replyMessage) const;
@@ -56,6 +56,6 @@ private:
 
 	std::string _message;
 
-	std::vector<Channel *> _channels;
-	Server *_server;
+	std::vector<Channel*> _channels;
+	Server* _server;
 };
