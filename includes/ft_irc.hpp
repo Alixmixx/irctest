@@ -153,6 +153,11 @@ typedef enum Modes {
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
 
+# define RESET "\033[0m"
+# define RED "\033[31m"
+# define GREEN "\033[32m"
+# define BLUE "\033[34m"
+
 #define DEBUG true
 #define OUTSTANDING_ERROR 125
 

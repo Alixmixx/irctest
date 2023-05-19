@@ -18,14 +18,7 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 	client->setHostname(arguments[2]);
 	client->setRealname(arguments[3].substr(1)); // TODO attention real name peut contenir des espaces, donc faut faire un iterateur tant que y'a pas de : et ajouter les arguments dans le realname
 
-	if (DEBUG)
-	{
-		std::cout << "Nickname: " << client->getNickname() << " "
-				  << "Username: " << client->getUsername() << " "
-				  << "Hostname: " << client->getHostname() << " "
-				  << "Realname: " << client->getRealname() << std::endl;
-	}
-
+	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getUsername() != "" && client->getNickname() != "")
 	{
 		client->setIsRegistered(true);

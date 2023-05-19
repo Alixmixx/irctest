@@ -110,11 +110,11 @@ void Server::removeClient(Client* client)
 		if ((*it) == client)
 		{
 			_clients.erase(it);
+			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
 			delete client;
 			return;
 		}
 	}
-	std::cout << "Client disconnected" << std::endl;
 }
 
 // Channel add and remove
@@ -215,6 +215,7 @@ void Server::initServer()
 		std::cerr << "Error: epoll_ctl failed" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
 int Server::epollWait()
@@ -237,8 +238,7 @@ int Server::acceptNewClient()
 	struct sockaddr_in newClientAddress;
 	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
 
-	// Accept new client
-	std::cout << "Accepting new client" << std::endl;
+	std::cout << BLUE << "Client connected." << RESET << std::endl;
 	if ((newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen)) < 0)
 	{
 		std::cerr << "Error: accept failed - " << strerror(errno) << std::endl;
@@ -246,7 +246,6 @@ int Server::acceptNewClient()
 	}
 
 	addClient(newClientSocket, newClientAddress);
-
 	return (newClientSocket);
 }
 

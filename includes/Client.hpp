@@ -26,13 +26,13 @@ public:
 	int			getSocket() const;
 	int			getChannelCount() const;
 	bool		IsRegistered() const;
+	bool		IsInvisible() const;
 	std::string getNickname() const;
 	std::string getUsername() const;
 	std::string getRealname() const;
 	std::string getHostname() const;
 	std::string getPrefix() const;
 	std::string getMessage() const;
-	bool		IsInvisible() const;
 	Server*		getServer() const;
 
 	// Reply
@@ -59,3 +59,5 @@ private:
 	std::vector<Channel*> _channels;
 	Server*				  _server;
 };
+
+std::ostream &operator<<(std::ostream &os, const Client &client);

@@ -89,3 +89,12 @@ std::string Client::getMessage() const { return (_message); }
 bool Client::IsInvisible() const { return (_isInvisible); }
 
 Server* Client::getServer() const { return (_server); }
+
+std::ostream &operator<<(std::ostream &os, const Client &client)
+{
+	os << "Client(nickname=" << client.getNickname() << ", "
+	   << "username=" << client.getUsername() << ", "
+	   << "hostname=" << client.getHostname() << ", "
+	   << "realname=" << client.getRealname() << ")";
+	return os;
+}

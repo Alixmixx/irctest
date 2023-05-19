@@ -26,7 +26,7 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 	}
 	else
 	{
-		std::cout << "Command not found: " << command << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
+		std::cout << BLUE <<  "Command not found: " << command << RESET << std::endl; // si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
 	}
 }
 
@@ -48,7 +48,7 @@ void Server::readFromClient(Client* client) // TODO tres tard ~ reflechir si IRS
 		}
 		else if (recvSize == 0)
 		{
-			std::cout << "Client disconnected" << std::endl;
+			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
 			removeClient(client);
 		}
 		else
@@ -59,9 +59,7 @@ void Server::readFromClient(Client* client) // TODO tres tard ~ reflechir si IRS
 		}
 	} while (recvSize == BUFFER_SIZE - 1);
 
-	if (DEBUG && message.find("PING") == std::string::npos)
-		std::cout << "\033[31mMessage from client: " << client->getSocket() << "\n"
-				  << message << "\033[0m";
+	std::cout << RED << "Message from client " << client->getSocket() << ":\n" << message << RESET;
 
 	size_t pos;
 	while ((pos = message.find("\r\n")) != std::string::npos)
