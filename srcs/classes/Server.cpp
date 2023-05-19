@@ -147,7 +147,7 @@ void Server::initCommandHandlerMap()
 	_commandHandlers["NAMES"] = &Server::handleNames;
 	_commandHandlers["NICK"] = &Server::handleNick;
 	_commandHandlers["PART"] = &Server::handlePart;
-	_commandHandlers["PING"] = &Server::handlePing; // A LAISSER EN ORDRE ALPHABETIQUE MERCI
+	_commandHandlers["PING"] = &Server::handlePing;
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
@@ -161,7 +161,6 @@ void Server::initServer()
 {
 	// Server address initialization
 	std::memset(&_serverAddress, 0, sizeof(_serverAddress));
-
 	_serverAddress.sin_family = AF_INET;
 	_serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
 	_serverAddress.sin_port = htons(_port);
@@ -235,42 +234,21 @@ int Server::acceptNewClient()
 
 void Server::start()
 {
+	int nfds;
 	while (true)
 	{
-		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
-		if (nfds < 0)
-		{
-			std::cerr << "Error: epoll_wait failed" << std::endl;
-			exit(EXIT_FAILURE);
-		}
+		syscall(nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1), "epoll_wait");
 		for (int i = 0; i < nfds; ++i)
 		{
 			if (_eventList[i].data.fd == _serverSocket) // new client
 			{
 				int newClientFd = this->acceptNewClient();
-				if (fcntl(newClientFd, F_SETFL, O_NONBLOCK) < 0)
-				{
-					std::cerr << "Error: fnctl failed" << std::endl;
-					// exit(EXIT_FAILURE); à reflechir
-				}
-				else
-				{
-					struct epoll_event ev;
-					ev.data.fd = newClientFd;
-					ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
-					if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)) < 0)
-					{
-						std::cerr << "Error: setsockopt failed" << std::endl;
-						// exit(EXIT_FAILURE); à reflechir
-					}
-
-					if (epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientFd, &ev) < 0)
-					{
-						std::cerr << "Error: epoll_ctl failed" << std::endl;
-						// exit(EXIT_FAILURE); à reflechir
-					}
-					//_iLastConnect = i;
-				}
+				syscall(fcntl(newClientFd, F_SETFL, O_NONBLOCK), "fcntl");
+				struct epoll_event ev;
+				ev.data.fd = newClientFd;
+				ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
+				syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
+				syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientFd, &ev), "epoll_ctl");
 			}
 			else if (_eventList[i].events & EPOLLIN) // read from client
 			{

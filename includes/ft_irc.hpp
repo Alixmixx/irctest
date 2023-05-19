@@ -173,3 +173,5 @@ std::string				 formatTime(time_t time);
 
 // clean.cpp
 void handleSigint(int signum);
+void panic(std::string message);
+void syscall(int returnValue, const char *funcName);

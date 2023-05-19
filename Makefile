@@ -1,28 +1,29 @@
-NAME	:= ircserv
+NAME		:= ircserv
 
-S		:= srcs/
-O		:= objs/
-I		:= includes/
-D		:= deps/
+S			:= srcs/
+O			:= objs/
+I			:= includes/
+D			:= deps/
 
-GARBAGE	:= .vscode
+GARBAGE		:= .vscode
 
-CC		:= clang++ # TODO c++
-CFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+CXX			:= clang++ # TODO c++
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
-SRCS	:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
-NAMES	:= $(basename $(SRCS))
-FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	:= $(NAMES:$S%=$O%.o)
-DEPS	:= $(NAMES:$S%=$D%.d)
+SRCS		:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
+NAMES		:= $(basename $(SRCS))
+FOLDERS 	:= $(sort $(dir $(SRCS)))
+OBJS		:= $(NAMES:$S%=$O%.o)
+DEPS		:= $(NAMES:$S%=$D%.d)
 
-RM		:= rm -rf
-MKDIR	:= mkdir -p
+RM			:= rm -rf
+MKDIR		:= mkdir -p
 
-END		:= \033[0m
-RED		:= \033[31m
-GREEN	:= \033[32m
-BLUE	:= \033[34m
+END			:= \033[0m
+RED			:= \033[31m
+GREEN		:= \033[32m
+BLUE		:= \033[34m
 
 all: $(NAME)
 
@@ -30,15 +31,15 @@ $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
 $(OBJS): $O%.o: $S%.cpp | $O
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
 $(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CXX) $(CXXFLAGS -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CC) $^ -o $@
+	@$(CXX) $^ -o $@
 	@echo "$(BLUE)$(NAME) is compiled$(END)"
 
 clean:
@@ -51,6 +52,9 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
+
+run: $(NAME)
+	@$(VALGRIND) ./$(NAME) 6667 password
 
 bonus: $(NAME)
 
