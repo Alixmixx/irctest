@@ -1,6 +1,6 @@
 #include "ft_irc.hpp"
 
-int exitStatus = OUTSTANDING_ERROR;
+bool run = true;
 
 int main(int argc, char** argv)
 {
@@ -23,5 +23,5 @@ int main(int argc, char** argv)
 	std::signal(SIGINT, handleSigint);
 	std::cout << BLUE << "Press Ctrl+C to exit." << RESET << std::endl;
 	server.start();
-	return exitStatus;
+	return EXIT_SUCCESS;
 }

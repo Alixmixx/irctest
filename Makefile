@@ -11,7 +11,7 @@ CXX			:= clang++ # TODO c++
 CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
-SRCS		:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
+SRCS		:= $(wildcard $S/*.cpp) $(wildcard $S/*/*.cpp)
 FILENAMES	:= $(basename $(SRCS))
 FOLDERS 	:= $(sort $(dir $(SRCS)))
 OBJS		:= $(FILENAMES:$S%=$O%.o)

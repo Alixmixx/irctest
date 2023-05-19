@@ -1,12 +1,15 @@
 #include "ft_irc.hpp"
 
-extern int exitStatus;
+extern bool run;
 
 void handleSigint(int signum)
 {
 	(void)signum;
-	exitStatus = EXIT_SUCCESS;
-	std::cout << "\r" << BLUE << "Good bye. 💞" << RESET << std::endl;
+	if (run)
+	{
+		run = false;
+		std::cout << "\r" << BLUE << "Good bye. 💞" << RESET << std::endl;
+	}
 }
 
 void panic(std::string message)

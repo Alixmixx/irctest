@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-extern int exitStatus;
+extern bool run;
 
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
@@ -152,7 +152,7 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
-	while (exitStatus == OUTSTANDING_ERROR)
+	while (run)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
 		if (nfds < 0)
@@ -171,7 +171,7 @@ void Server::loop()
 				readFromClient(client);
 			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
 			{
-				std::vector<std::string> args; // TODO c'est la merde
+				std::vector<std::string> args;
 				args.push_back("connection lost with client");
 				handleQuit(client, args);
 			}
