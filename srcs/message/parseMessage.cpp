@@ -45,10 +45,6 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		CommandHandler handler = it->second;
 		(this->*handler)(client, arguments);
 	}
-	else if (command == "admin" && client->getSocket() == 6)
-	{
-		broadcast(_clients, message.substr(6, std::string::npos), client);
-	}
 	else
 	{
 		// TODO si c'est pas une commande c'est un message, donc on l'affiche sur le channel (si le client est dans un channel)
