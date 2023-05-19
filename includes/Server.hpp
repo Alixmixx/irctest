@@ -34,14 +34,12 @@ public:
 
 	// Start
 	void start();
-	int	 acceptNewClient();
 
 	// Methods
 	// 1. Server
 	void readFromClient(Client* client);
 	void parseMessageFromClient(Client* client, std::string command);
 	// 2. Client
-	void addClient(int clientSocket, struct sockaddr_in clientAddress);
 	void removeClient(Client* client);
 	// 3. Channel
 	void addChannel(Channel* channel);
@@ -104,6 +102,8 @@ private:
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
 
+	// start
+	void acceptNewClient();
 	void init();
 	void loop();
 };

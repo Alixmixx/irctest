@@ -90,19 +90,6 @@ Client* Server::getClient(std::string nickname) const
 	return (NULL);
 }
 
-void Server::addClient(int clientSocket, struct sockaddr_in clientAddress)
-{
-	Client* newClient = new Client(this, clientSocket, clientAddress);
-
-	if (newClient == NULL)
-	{
-		std::cerr << "Error: new client creation failed" << std::endl;
-		exit(EXIT_FAILURE);
-	}
-
-	_clients.push_back(newClient);
-}
-
 void Server::removeClient(Client* client)
 {
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
@@ -194,7 +181,7 @@ void Server::init()
 	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
-int Server::acceptNewClient()
+void Server::acceptNewClient()
 {
 	int				   newClientSocket;
 	struct sockaddr_in newClientAddress;
@@ -207,8 +194,13 @@ int Server::acceptNewClient()
 		exit(EXIT_FAILURE);
 	}
 
-	addClient(newClientSocket, newClientAddress);
-	return (newClientSocket);
+	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
+	syscall(fcntl(newClientSocket, F_SETFL, O_NONBLOCK), "fcntl");
+	struct epoll_event ev;
+	ev.data.fd = newClientSocket;
+	ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
+	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
+	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientSocket, &ev), "epoll_ctl");
 }
 
 void Server::loop()
@@ -221,13 +213,7 @@ void Server::loop()
 		{
 			if (_eventList[i].data.fd == _serverSocket)
 			{
-				int newClientFd = this->acceptNewClient();
-				syscall(fcntl(newClientFd, F_SETFL, O_NONBLOCK), "fcntl");
-				struct epoll_event ev;
-				ev.data.fd = newClientFd;
-				ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
-				syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
-				syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientFd, &ev), "epoll_ctl");
+				this->acceptNewClient();
 				continue ;
 			}
 			Client* client = getClient(_eventList[i].data.fd);
