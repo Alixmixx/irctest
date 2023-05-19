@@ -2,12 +2,10 @@
 
 void Client::reply(std::string replyMessage) const
 {
-	replyMessage += "\r\n";
-
 	if (DEBUG)
-		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
-				  << replyMessage << "\033[0m" << std::endl;
+		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n" << replyMessage << "\033[0m" << std::endl;
 
+	replyMessage += "\r\n";
 	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), MSG_NOSIGNAL);
 }
 
