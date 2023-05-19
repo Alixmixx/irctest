@@ -180,7 +180,7 @@ void Server::loop()
 				handleQuit(client, args);
 			}
 			else
-				panic("Unknown event: " + toString(_eventList[i].events) + ".");
+				panic("Unknown event: " + toString(_eventList[i].events) + " on client " + toString(_eventList[i].data.fd) + ".");
 		}
 	}
 }
