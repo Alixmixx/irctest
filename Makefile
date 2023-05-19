@@ -11,9 +11,10 @@ CC		:= clang++ # TODO c++
 CFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 
 SRCS	:= $(wildcard *.cpp) $(wildcard */*.cpp) $(wildcard */*/*.cpp)
+NAMES	:= $(basename $(SRCS))
 FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	:= $(SRCS:$S%=$O%.o)
-DEPS	:= $(SRCS:$S%=$D%.d)
+OBJS	:= $(NAMES:$S%=$O%.o)
+DEPS	:= $(NAMES:$S%=$D%.d)
 
 RM		:= rm -rf
 MKDIR	:= mkdir -p
@@ -28,11 +29,11 @@ all: $(NAME)
 $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): $O%.o: $S% | $O
+$(OBJS): $O%.o: $S%.cpp | $O
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
-$(DEPS): $D%.d: $S%
+$(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
 	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
@@ -51,6 +52,8 @@ fclean: clean
 re: fclean
 	@$(MAKE) all
 
-.PHONY: all clean fclean re
+bonus: $(NAME)
+
+.PHONY: all bonus clean fclean re
 
 -include $(DEPS)
