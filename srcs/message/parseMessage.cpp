@@ -62,18 +62,17 @@ void Server::readFromClient(Client* client)
 	do
 	{
 		syscall(recvSize = recv(client->getSocket(), buffer, BUFFER_SIZE - 1, 0), "recv");
-		if (recvSize == 0)
-		{
-			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
-			removeClient(client);
-		}
-		else
-		{
-			buffer[recvSize] = '\0';
-			message += buffer;
-			std::memset(buffer, 0, BUFFER_SIZE);
-		}
+		buffer[recvSize] = '\0';
+		message += buffer;
+		std::memset(buffer, 0, BUFFER_SIZE);
 	} while (recvSize == BUFFER_SIZE - 1);
+
+	if (message.empty())
+	{
+		// TODO call handleQuit instead
+		removeClient(client);
+		return;
+	}
 
 	std::cout << RED << "Message from client " << client->getSocket() << ":\n" << message << RESET;
 
@@ -81,8 +80,7 @@ void Server::readFromClient(Client* client)
 	while ((pos = message.find("\r\n")) != std::string::npos)
 	{
 		std::string line = message.substr(0, pos);
-		message = message.substr(pos + 2);
-		client->setMessage(message);
+		client->setMessage(message.substr(pos + 2));
 		parseMessageFromClient(client, line);
 	}
 }
