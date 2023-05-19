@@ -211,16 +211,15 @@ int Server::acceptNewClient()
 	return (newClientSocket);
 }
 
-void Server::start()
+void Server::loop()
 {
 	int nfds;
-	this->init();
 	while (true)
 	{
 		syscall(nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1), "epoll_wait");
 		for (int i = 0; i < nfds; ++i)
 		{
-			if (_eventList[i].data.fd == _serverSocket) // new client
+			if (_eventList[i].data.fd == _serverSocket)
 			{
 				int newClientFd = this->acceptNewClient();
 				syscall(fcntl(newClientFd, F_SETFL, O_NONBLOCK), "fcntl");
@@ -229,25 +228,27 @@ void Server::start()
 				ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
 				syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
 				syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientFd, &ev), "epoll_ctl");
+				continue ;
 			}
-			else if (_eventList[i].events & EPOLLIN) // read from client
-			{
-				Client* client = getClient(_eventList[i].data.fd);
-				if (client == NULL)
-					panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
+			Client* client = getClient(_eventList[i].data.fd);
+			if (client == NULL)
+				panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
+			if (_eventList[i].events & EPOLLIN)
 				readFromClient(client);
-			}
-			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP)) // client disconnected
+			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
 			{
-				Client* client = getClient(_eventList[i].data.fd);
-				if (client == NULL)
-					panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
 				std::vector<std::string> args; // TODO c'est la merde
 				args.push_back("connection lost with client");
 				handleQuit(client, args);
 			}
 			else
-				panic("Unknown event.");
+				panic("Unknown event: " + toString(_eventList[i].events) + ".");
 		}
 	}
+}
+
+void Server::start()
+{
+	this->init();
+	this->loop();
 }

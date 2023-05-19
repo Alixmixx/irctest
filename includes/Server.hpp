@@ -105,4 +105,5 @@ private:
 	std::vector<Channel*> _channels;
 
 	void init();
+	void loop();
 };
