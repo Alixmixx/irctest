@@ -35,40 +35,23 @@ static bool isNicknameAlreadyTaken(std::vector<Client*> clients, const std::stri
 void Server::handleNick(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
-	{
 		client->reply(ERR_NONICKNAMEGIVEN);
-		return;
-	}
-	if (isNicknameValid(arguments[0]))
+	else if (!isNicknameValid(arguments[0]))
+		client->reply(ERR_ERRONEUSNICKNAME, arguments[0]);
+	else
 	{
 		unsigned int suffix = 0;
 		std::string	 nickname = arguments[0];
 		while (isNicknameAlreadyTaken(this->getClients(), nickname))
 		{
 			if (client->IsRegistered())
-			{
-				client->reply(ERR_NICKNAMEINUSE, nickname);
-				return;
-			}
-			else
-			{
-				nickname = arguments[0] + toString(suffix++);
-			}
+				return client->reply(ERR_NICKNAMEINUSE, nickname);
+			nickname = arguments[0] + toString(suffix++);
 		}
 		if (client->IsRegistered())
-		{
 			broadcast(_clients, client->getPrefix() + " NICK " + nickname);
-		}
 		else if (suffix)
-		{
 			client->reply(":" + arguments[0] + " NICK " + nickname);
-		}
 		client->setNickname(nickname);
-		return;
-	}
-	else
-	{
-		client->reply(ERR_ERRONEUSNICKNAME, arguments[0]);
-		return;
 	}
 }
