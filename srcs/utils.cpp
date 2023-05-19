@@ -38,6 +38,13 @@ std::string toString(long number)
 	return ss.str();
 }
 
+std::string toString(Client *client)
+{
+	std::stringstream ss;
+	ss << *client;
+	return ss.str();
+}
+
 std::string formatTime(time_t time)
 {
 	std::tm* localTime = std::localtime(&time);

@@ -7,14 +7,14 @@ void handleSigint(int signum)
 	(void)signum;
 	std::cout << "\r" << BLUE << "Good bye. 💞" << RESET << std::endl;
 	delete g_server;
-	exit(EXIT_SUCCESS);
+	std::exit(EXIT_SUCCESS);
 }
 
 void panic(std::string message)
 {
 	std::cerr << message << std::endl;
 	delete g_server;
-    exit(EXIT_FAILURE);
+    std::exit(EXIT_FAILURE);
 }
 
 void syscall(int returnValue, const char *funcName)
@@ -23,6 +23,6 @@ void syscall(int returnValue, const char *funcName)
 	{
         std::perror(funcName);
         delete g_server;
-        exit(EXIT_FAILURE);
+        std::exit(EXIT_FAILURE);
     }
 }

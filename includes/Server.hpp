@@ -10,7 +10,7 @@ public:
 	Server(unsigned short port, std::string password);
 	~Server();
 	void start();
-	
+
 	void addChannel(Channel* channel);
 
 	Channel*			  getChannel(std::string channelName) const;
@@ -30,7 +30,6 @@ private:
 	int				   _serverSocket;
 	int				   _epollFd;
 	int				   _reuseAddr;
-	int				   _iLastConnect;
 	struct sockaddr_in _serverAddress;
 	struct epoll_event _eventList[MAX_CLIENTS];
 	const std::string  _serverName;
@@ -65,11 +64,6 @@ private:
 	void handleTopic(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
-	// ServerCommands
-	// void handleAdmin(Client *client, std::vector<std::string> arguments);
-	// void handleInfo(Client *client, std::vector<std::string> arguments);
-	// void handleTime(Client *client, std::vector<std::string> arguments);
-	// void handleVersion(Client *client, std::vector<std::string> arguments);
 
 	void broadcast(std::vector<Client*> recipients, std::string message);
 	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);

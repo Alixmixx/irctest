@@ -227,6 +227,6 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_USERSDONTMATCH:
 		return reply(":Cant change mode for other users", replyCode);
 	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }
