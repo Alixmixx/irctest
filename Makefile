@@ -40,7 +40,7 @@ $(DEPS): $D%.d: $S%.cpp
 
 $(NAME): $(OBJS)
 	@$(CXX) $^ -o $@
-	@echo "$(BLUE)$(NAME) is compiled$(END)"
+	@echo "$(BLUE)$(NAME) is compiled.$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
@@ -58,6 +58,6 @@ run: $(NAME)
 
 bonus: $(NAME)
 
-.PHONY: all bonus clean fclean re
+.PHONY: all bonus clean fclean re run
 
 -include $(DEPS)

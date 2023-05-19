@@ -89,7 +89,6 @@ void Server::removeClient(Client* client)
 		{
 			_clients.erase(it);
 			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
-			delete client;
 			return;
 		}
 	}
@@ -102,15 +101,8 @@ void Server::addChannel(Channel* channel)
 
 void Server::removeChannel(Channel* channel)
 {
-	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	{
-		if ((*it) == channel)
-		{
-			_channels.erase(it);
-			delete channel;
-			return;
-		}
-	}
+	_channels.erase(std::find(_channels.begin(), _channels.end(), channel));
+	delete channel;
 }
 
 void Server::init()
