@@ -67,7 +67,8 @@ connections = []
 while True:
     sockets = [
         proxy_socket,
-        *[s for c in connections for s in [c.client_socket, c.server_socket]],
+        *[c.client_socket for c in connections],
+        *[c.server_socket for c in connections],
     ]
     responses = select.select(sockets, [], [])[0]
     for sender in responses:
@@ -86,10 +87,12 @@ while True:
                 direction = f"Client {connection.idx} to Server:"
                 color = "red"
                 receiver = connection.server_socket
+                name = "Client"
             else:
                 direction = f"Server to Client {connection.idx}:"
                 color = "green"
                 receiver = connection.client_socket
+                name = "Server"
             if data:
                 print(colored(direction, color))
                 print(
@@ -102,7 +105,7 @@ while True:
                 )
                 receiver.sendall(data)
             else:
-                print_info(f"Client {connection.idx} disconnected.")
+                print_info(f"{name} {connection.idx} disconnected.")
                 sender.close()
                 receiver.close()
                 connections.remove(connection)
