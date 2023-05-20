@@ -48,7 +48,6 @@ private:
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
 
-	void handleCap(Client* client, std::vector<std::string> arguments);
 	void handleInvite(Client* client, std::vector<std::string> arguments);
 	void handleJoin(Client* client, std::vector<std::string> arguments);
 	void handleKick(Client* client, std::vector<std::string> arguments);
@@ -64,6 +63,7 @@ private:
 	void handleTopic(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
+	void ignoreCommand(Client* client, std::vector<std::string> arguments);
 
 	void broadcast(std::vector<Client*> recipients, std::string message);
 	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);

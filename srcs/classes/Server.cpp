@@ -11,7 +11,7 @@ Server::Server(unsigned short port, std::string password)
 	  _serverCreationTime(std::time(NULL)),
 	  _serverMotd(MOTD)
 {
-	_commandHandlers["CAP"] = &Server::handleCap;
+	_commandHandlers["CAP"] = &Server::ignoreCommand;
 	_commandHandlers["INVITE"] = &Server::handleInvite;
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;

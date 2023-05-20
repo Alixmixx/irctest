@@ -2,7 +2,7 @@
 
 static void newChannel(Client* client, std::string channelName, std::string channelPassword)
 {
-	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
+	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
 	{
 		client->reply(ERR_TOOMANYCHANNELS, channelName);
 		return;
@@ -13,13 +13,12 @@ static void newChannel(Client* client, std::string channelName, std::string chan
 
 	channel->setPassword(channelPassword);
 	channel->addChannelUser(client, FOUNDER);
-	client->setChannelCount(client->getChannelCount() + 1);
 	server->addChannel(channel);
 }
 
 static void addToChannel(Client* client, Channel* channel, std::string channelPassword)
 {
-	if (client->getChannelCount() >= MAX_CHANNELS_PER_CLIENT)
+	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
 	{
 		client->reply(ERR_TOOMANYCHANNELS, channel->getName());
 		return;
@@ -55,7 +54,6 @@ static void addToChannel(Client* client, Channel* channel, std::string channelPa
 	}
 
 	channel->addChannelUser(client);
-	client->setChannelCount(client->getChannelCount() + 1);
 }
 
 static std::string extractFromArgument(std::string& arguments)

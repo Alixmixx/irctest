@@ -1,23 +1,20 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-// Constructeur
-
 Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
-	  _channelCount(0),
 	  _isRegistered(false),
 	  _clientAddress(clientAddress),
 	  _nickname(""),
 	  _username(""),
 	  _realname(""),
 	  _hostname(""),
+	  _currentChannel(NULL),
 	  _server(server)
 {
 	(void)_clientAddress;
 }
 
-// Destructeur
 Client::~Client()
 {
 	std::vector<Channel*>::iterator it = _channels.begin();
@@ -47,8 +44,6 @@ void Client::setHostname(std::string hostname) { _hostname = hostname; }
 
 void Client::setMessage(std::string message) { _message = message; }
 
-void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
-
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
 void Client::addChannel(Channel* channel) { _channels.push_back(channel); }
@@ -70,8 +65,6 @@ void Client::leaveChannel(Channel* channel)
 
 int Client::getSocket() const { return (_clientSocket); }
 
-int Client::getChannelCount() const { return (_channelCount); }
-
 bool Client::IsRegistered() const { return (_isRegistered); }
 
 std::string Client::getNickname() const { return (_nickname); }
@@ -89,6 +82,8 @@ std::string Client::getMessage() const { return (_message); }
 bool Client::IsInvisible() const { return (_isInvisible); }
 
 Server* Client::getServer() const { return (_server); }
+
+const std::vector<Channel*>	&Client::getChannels() const { return (_channels); };
 
 std::ostream &operator<<(std::ostream &os, const Client &client)
 {

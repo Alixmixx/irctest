@@ -16,22 +16,21 @@ public:
 	void setRealname(std::string realname);
 	void setHostname(std::string hostname);
 	void setMessage(std::string message);
-	void setChannelCount(int channelCount);
 	void setIsInvisible(bool invisible);
 	void addChannel(Channel* channel);
 	void leaveChannel(Channel* channel);
 
-	int			getSocket() const;
-	int			getChannelCount() const;
-	bool		IsRegistered() const;
-	bool		IsInvisible() const;
-	std::string getNickname() const;
-	std::string getUsername() const;
-	std::string getRealname() const;
-	std::string getHostname() const;
-	std::string getPrefix() const;
-	std::string getMessage() const;
-	Server*		getServer() const;
+	int							getSocket() const;
+	bool						IsRegistered() const;
+	bool						IsInvisible() const;
+	std::string 				getNickname() const;
+	std::string 				getUsername() const;
+	std::string 				getRealname() const;
+	std::string 				getHostname() const;
+	std::string 				getPrefix() const;
+	std::string 				getMessage() const;
+	Server*						getServer() const;
+	const std::vector<Channel*>	&getChannels() const;
 
 	void reply(std::string replyMessage) const;
 	void reply(std::string replyMessage, ReplyCode replyCode) const;
@@ -39,7 +38,6 @@ public:
 
 private:
 	int	 _clientSocket;
-	int	 _channelCount;
 	bool _isRegistered;
 	bool _isInvisible;
 
@@ -53,8 +51,9 @@ private:
 
 	std::string _message;
 
+	Channel*			  _currentChannel;
 	std::vector<Channel*> _channels;
 	Server*				  _server;
 };
 
-std::ostream &operator<<(std::ostream &os, const Client &client);
+std::ostream& operator<<(std::ostream& os, const Client& client);
