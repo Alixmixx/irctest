@@ -38,6 +38,8 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		return;
 	}
 	std::string command = arguments[0];
+	// TODO command = toUpperCase(command);
+	// TODO toUpperCase(str) and toLowerCase(str) in utils.cpp
 	arguments.erase(arguments.begin());
 	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command);
 	if (it == _commandHandlers.end())

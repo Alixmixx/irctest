@@ -21,8 +21,5 @@ void panic(std::string message)
 void syscall(int returnValue, const char* funcName)
 {
 	if (returnValue < 0)
-	{
-		std::perror(funcName);
-		std::exit(EXIT_FAILURE);
-	}
+		throw SystemError(funcName);
 }

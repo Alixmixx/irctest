@@ -160,6 +160,16 @@ typedef enum Modes {
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
 
+class SystemError : public std::runtime_error {
+public:
+	explicit SystemError(const char* funcName)
+		: std::runtime_error(funcName), funcName(funcName) {}
+
+	virtual ~SystemError() throw() {}
+
+	const char* funcName;
+};
+
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"

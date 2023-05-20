@@ -43,6 +43,8 @@ const std::string Server::getServerPassword() const { return (_serverPassword); 
 
 time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
+unsigned short Server::getPort() const { return (_port); }
+
 const std::string Server::getServerMotd() const { return (_serverMotd); }
 
 std::vector<Client*> Server::getClients() const { return (_clients); }
@@ -128,8 +130,6 @@ void Server::init()
 	ev.events = EPOLLIN | EPOLLET;
 	syscall(_epollFd = epoll_create1(0), "epoll_create1");
 	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, _serverSocket, &ev), "epoll_ctl");
-
-	std::cout << BLUE << "Listening on port " << _port << ". 👂" << RESET << std::endl;
 }
 
 void Server::acceptNewClient()
@@ -178,10 +178,4 @@ void Server::loop()
 				panic("Unknown event: " + toString(_eventList[i].events) + " on client " + toString(_eventList[i].data.fd) + ".");
 		}
 	}
-}
-
-void Server::start()
-{
-	this->init();
-	this->loop();
 }
