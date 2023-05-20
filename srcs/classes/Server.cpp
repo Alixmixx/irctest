@@ -102,7 +102,6 @@ void Server::addChannel(Channel* channel)
 void Server::removeChannel(Channel* channel)
 {
 	_channels.erase(std::find(_channels.begin(), _channels.end(), channel));
-	delete channel;
 }
 
 void Server::init()
