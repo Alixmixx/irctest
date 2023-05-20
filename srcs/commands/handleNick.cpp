@@ -1,14 +1,5 @@
 #include "Server.hpp"
 
-static std::string toLowercase(std::string lowercaseStr)
-{
-	for (std::string::iterator it = lowercaseStr.begin(); it != lowercaseStr.end(); it++)
-	{
-		*it = std::tolower(*it);
-	}
-	return lowercaseStr;
-}
-
 static bool isNicknameValid(std::string nickname)
 {
 	if (nickname.length() > 9)
@@ -26,7 +17,7 @@ static bool isNicknameAlreadyTaken(std::vector<Client*> clients, const std::stri
 {
 	for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (toLowercase((*it)->getNickname()) == toLowercase(nickname))
+		if (toLowerCase((*it)->getNickname()) == toLowerCase(nickname))
 			return true;
 	}
 	return false;

@@ -20,6 +20,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["NICK"] = &Server::handleNick;
 	_commandHandlers["PART"] = &Server::handlePart;
 	_commandHandlers["PING"] = &Server::handlePing;
+	_commandHandlers["PONG"] = &Server::ignoreCommand;
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;

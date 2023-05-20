@@ -145,7 +145,7 @@ typedef enum Modes {
 #define NETWORKNAME "Oustanding"
 #define MOTD "Welcome to the IRC server"
 
-// TODO define best constants
+// TODO find best constants
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
 #define MAX_EVENTS 32
@@ -175,12 +175,14 @@ public:
 #include "Client.hpp"
 #include "Server.hpp"
 
+void					 panic(std::string message);
+void					 syscall(int returnValue, const char* funcName);
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
-std::vector<std::string> split(const std::string& str, char delim);
+std::string				 toLowerCase(std::string str);
+std::string				 toUpperCase(std::string str);
 std::string				 toString(Client* client);
 std::string				 toString(long number);
 std::string				 formatTime(time_t time);
-void					 panic(std::string message);
-void					 syscall(int returnValue, const char* funcName);
+std::vector<std::string> split(const std::string& str, char delim);

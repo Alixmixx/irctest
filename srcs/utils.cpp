@@ -50,7 +50,7 @@ std::string toString(long number)
 	return ss.str();
 }
 
-std::string toString(Client *client)
+std::string toString(Client* client)
 {
 	std::stringstream ss;
 	ss << *client;
@@ -94,4 +94,22 @@ bool isStringPrintable(std::string str)
 		if (!std::isprint(str[i]))
 			return false;
 	return true;
+}
+
+std::string toLowerCase(std::string str)
+{
+	for (std::string::iterator it = str.begin(); it != str.end(); it++)
+	{
+		*it = std::tolower(*it);
+	}
+	return str;
+}
+
+std::string toUpperCase(std::string str)
+{
+	for (std::string::iterator it = str.begin(); it != str.end(); it++)
+	{
+		*it = std::toupper(*it);
+	}
+	return str;
 }
