@@ -1,6 +1,6 @@
 # Proxy usage
 
-1. 1st terminal : `python3 scripts/proxy.py 5555 188.240.145.40:6667`
+1. 1st terminal : `python3 scripts/proxy.py 127.0.0.1:5555 188.240.145.40:6667`
 2. 2nd terminal : `irssi -c localhost -p 5555 -n gertrude1`
 3. Un peu de patience (genre 10 secondes)
 4. 3rd terminal : `irssi -c localhost -p 5555 -n gertrude2`
