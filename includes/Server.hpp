@@ -9,7 +9,9 @@ class Server {
 public:
 	Server(unsigned short port, std::string password);
 	~Server();
-	void start();
+
+	void init();
+	void loop();
 
 	void addChannel(Channel* channel);
 
@@ -18,6 +20,7 @@ public:
 	Client*				  getClient(int socketFd) const;
 	Client*				  getClient(std::string nickname) const;
 	std::vector<Client*>  getClients() const;
+	unsigned short		  getPort() const;
 	time_t				  getServerCreationTime() const;
 	const std::string	  getServerHostname() const;
 	const std::string	  getServerInfo() const;
@@ -69,12 +72,9 @@ private:
 	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);
 	void broadcast(std::vector<Client*> recipients, std::string message, std::vector<Client*> except);
 
+	void acceptNewClient();
 	void readFromClient(Client* client);
 	void parseMessageFromClient(Client* client, std::string command);
 	void removeClient(Client* client);
 	void removeChannel(Channel* channel);
-
-	void acceptNewClient();
-	void init();
-	void loop();
 };
