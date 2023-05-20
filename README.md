@@ -7,7 +7,5 @@
 
 # Proxy usage
 
-1. 1st terminal : `make && valgrind --track-origins=yes ./ircserv 6667`
-2. 2nd terminal : `python3 scripts/proxy.py localhost:6667 5555`
-3. 3rd terminal : `irssi -c localhost -p 5555`
-3. 3rd terminal : `/whois <username>`
+1. 1st terminal : `python3 scripts/proxy.py 5555 188.240.145.40:6667`
+2. 2nd terminal : `irssi -c localhost -p 5555 -n gertrude`

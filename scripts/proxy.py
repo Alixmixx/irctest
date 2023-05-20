@@ -1,17 +1,23 @@
-import errno
-import os
 import re
-import signal
+import select
 import socket
 import sys
 from termcolor import colored
 
 BUFFER_SIZE = 1024
-BACKLOG = 128
 
 
-def is_valid_address(s):
-    return re.fullmatch(r".*:\d{4,5}", s)
+def print_info(message):
+    print(colored(message, "blue"), end="\n")
+
+
+def forward_data(receiver, data, direction, color):
+    if not data:
+        print_info(direction + " empty message.")
+        sys.exit(0)
+    print(colored(direction, color))
+    print(colored(data.decode().strip(), color))
+    receiver.sendall(data)
 
 
 def parse_address(s):
@@ -21,98 +27,34 @@ def parse_address(s):
 
 if (
     len(sys.argv) != 3
-    or not re.fullmatch(r".*:\d{4,5}", sys.argv[1])
-    or not re.fullmatch(r"\d{4,5}", sys.argv[2])
+    or not re.fullmatch(r"\d{4,5}", sys.argv[1])
+    or not re.fullmatch(r".*:\d{4,5}", sys.argv[2])
 ):
-    print(f"Usage: python3 {sys.argv[0]} server_host:server_port proxy_port")
-    print(f"Example: python3 {sys.argv[0]} localhost:6669 5555")
+    print(f"Usage: python3 {sys.argv[0]} proxy_port server_host:server_port")
+    print(f"Example: python3 {sys.argv[0]} 5555 188.240.145.40:6667")
     sys.exit(1)
-SERVER_ADDRESS = SERVER_HOST, SERVER_PORT = parse_address(sys.argv[1])
-PROXY_ADDRESS = PROXY_HOST, PROXY_PORT = "localhost", int(sys.argv[2])
-
-
-def print_info(message):
-    print(colored(message, "blue"), end="\n\n")
-
-
-def tryclose(sock):
-    try:
-        sock.close()
-    except:
-        print_info(f"Could not close socket {sock}")
-
-
-def parent_sigint(sig, frame):
-    print_info("\rGood bye.")
-    tryclose(server_socket)
-    tryclose(proxy_socket)
-    sys.exit(0)
-
-
-def child_sigint(sig, frame):
-    tryclose(server_socket)
-    tryclose(client_socket)
-    sys.exit(0)
-
-
-def grim_reaper(signum, frame):
-    while True:
-        try:
-            pid, status = os.waitpid(-1, os.WNOHANG)
-        except OSError:
-            return
-        if pid == 0:
-            return
-
-
-def parent_signals():
-    signal.signal(signal.SIGINT, parent_sigint)
-    signal.signal(signal.SIGCHLD, grim_reaper)
-
-
-def child_signals():
-    signal.signal(signal.SIGINT, signal.SIG_DFL)
-    signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-
-
-def forward_data(sender, receiver, direction, color):
-    data = sender.recv(BUFFER_SIZE)
-    if (
-        data
-        and not data.decode().startswith("PING")
-        and not data.decode().startswith("PONG")
-    ):
-        print(colored(direction, color))
-        print(colored(data.decode(), color))
-        receiver.sendall(data)
-
-
-server_socket = proxy_socket = client_socket = None
-parent_signals()
+PROXY_ADDRESS = _, PROXY_PORT = "127.0.0.1", int(sys.argv[1])
+SERVER_ADDRESS = SERVER_HOST, SERVER_PORT = parse_address(sys.argv[2])
+print_info(f"Listening on port {PROXY_PORT}.")
+print_info(f"Forwarding to {sys.argv[2]}.")
 
 proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 proxy_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 proxy_socket.bind(PROXY_ADDRESS)
-proxy_socket.listen(BACKLOG)
+proxy_socket.listen(1)
+client_socket, _ = proxy_socket.accept()
+
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.connect(SERVER_ADDRESS)
 
-print_info(f"Proxy listening on port {PROXY_PORT}, talking to {SERVER_PORT}.")
+sockets = [client_socket, server_socket]
 while True:
-    client_socket, client_address = proxy_socket.accept()
-    print_info(f"Client :{client_address[1]} connected.")
-    pid = os.fork()
-    if pid == 0:
-        child_signals()
-        proxy_socket.close()
-        if os.fork() == 0:
-            while True:
-                forward_data(client_socket, server_socket, "Client to Server:", "green")
-        elif os.fork() == 0:
-            while True:
-                forward_data(server_socket, client_socket, "Server to Client:", "red")
+    s_read, _, _ = select.select(sockets, [], [])
+    for s in s_read:
+        data = s.recv(BUFFER_SIZE)
+        if s == client_socket:
+            forward_data(server_socket, data, "Client to Server:", "red")
+        elif s == server_socket:
+            forward_data(client_socket, data, "Server to Client:", "green")
         else:
-            os.waitpid(-1, os.WNOHANG)
-            os.waitpid(-1, os.WNOHANG)
-    else:
-        client_socket.close()
+            assert False
