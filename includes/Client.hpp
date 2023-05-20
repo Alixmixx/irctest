@@ -51,7 +51,6 @@ private:
 
 	std::string _message;
 
-	Channel*			  _currentChannel;
 	std::vector<Channel*> _channels;
 	Server*				  _server;
 };

@@ -9,7 +9,6 @@ Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	  _username(""),
 	  _realname(""),
 	  _hostname(""),
-	  _currentChannel(NULL),
 	  _server(server)
 {
 	(void)_clientAddress;

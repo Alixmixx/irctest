@@ -199,9 +199,6 @@
 407:
   name: ERR_TOOMANYTARGETS
   reply: <target> :Duplicate recipients. No message delivered
-409:
-  name: ERR_NOORIGIN
-  reply: :No origin specified
 411:
   name: ERR_NORECIPIENT
   reply: :No recipient given (<command>)

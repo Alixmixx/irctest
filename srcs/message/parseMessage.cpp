@@ -40,17 +40,10 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 	std::string command = arguments[0];
 	arguments.erase(arguments.begin());
 	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command);
-	if (it != _commandHandlers.end())
-	{
-		CommandHandler handler = it->second;
-		(this->*handler)(client, arguments);
-	}
-	else
-	{
-		// TODO si ca commence par un slash c'est command not found
-		// sinon c'est un private msg ou un message dans un channel, je sais pas comment on fait la diff
-		std::cout << BLUE <<  "Command not found: " << command << RESET << std::endl;
-	}
+	if (it == _commandHandlers.end())
+		return client->reply(ERR_UNKNOWNCOMMAND, command);
+	CommandHandler handler = it->second;
+	(this->*handler)(client, arguments);
 }
 
 // TODO tres tard ~ reflechir si IRSSI/netcat peut faire exploser le serveur avec des char choulous

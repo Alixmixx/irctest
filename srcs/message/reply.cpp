@@ -152,8 +152,6 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :There was no such nickname", replyCode);
 	case ERR_TOOMANYTARGETS:
 		return reply(arg1 + " :Duplicate recipients. No message delivered", replyCode);
-	case ERR_NOORIGIN:
-		return reply(":No origin specified", replyCode);
 	case ERR_NORECIPIENT:
 		return reply(":No recipient given (" + arg1 + ")", replyCode);
 	case ERR_NOTEXTTOSEND:
