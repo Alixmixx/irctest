@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <arpa/inet.h>
 #include <cctype>
-#include <csignal>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -176,7 +175,6 @@ public:
 #include "Client.hpp"
 #include "Server.hpp"
 
-// utils.cpp
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
@@ -184,8 +182,5 @@ std::vector<std::string> split(const std::string& str, char delim);
 std::string				 toString(Client* client);
 std::string				 toString(long number);
 std::string				 formatTime(time_t time);
-
-// clean.cpp
-void handleSigint(int signum);
-void panic(std::string message);
-void syscall(int returnValue, const char* funcName);
+void					 panic(std::string message);
+void					 syscall(int returnValue, const char* funcName);

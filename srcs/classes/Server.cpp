@@ -1,7 +1,5 @@
 #include "Server.hpp"
 
-extern bool run;
-
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
@@ -151,7 +149,7 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
-	while (run)
+	while (true)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
 		if (nfds < 0)

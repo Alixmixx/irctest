@@ -1,5 +1,17 @@
 #include "ft_irc.hpp"
 
+void panic(std::string message)
+{
+	std::cerr << message << std::endl;
+	std::exit(EXIT_FAILURE);
+}
+
+void syscall(int returnValue, const char* funcName)
+{
+	if (returnValue < 0)
+		throw SystemError(funcName);
+}
+
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start)
 {
 	std::string message = "";
