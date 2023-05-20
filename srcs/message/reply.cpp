@@ -219,7 +219,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_CANTKILLSERVER:
 		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(":No O-lines for your host", replyCode);
+		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
 		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:
