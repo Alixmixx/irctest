@@ -18,6 +18,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["MOTD"] = &Server::handleMotd;
 	_commandHandlers["NAMES"] = &Server::handleNames;
 	_commandHandlers["NICK"] = &Server::handleNick;
+	_commandHandlers["OPER"] = &Server::handleOper;
 	_commandHandlers["PART"] = &Server::handlePart;
 	_commandHandlers["PING"] = &Server::handlePing;
 	_commandHandlers["PONG"] = &Server::ignoreCommand;

@@ -99,17 +99,13 @@ bool isStringPrintable(std::string str)
 std::string toLowerCase(std::string str)
 {
 	for (std::string::iterator it = str.begin(); it != str.end(); it++)
-	{
 		*it = std::tolower(*it);
-	}
 	return str;
 }
 
 std::string toUpperCase(std::string str)
 {
 	for (std::string::iterator it = str.begin(); it != str.end(); it++)
-	{
 		*it = std::toupper(*it);
-	}
 	return str;
 }

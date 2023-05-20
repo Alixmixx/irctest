@@ -37,8 +37,7 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		std::cout << BLUE << "Empty line received." << RESET << std::endl;
 		return;
 	}
-	std::string command = arguments[0];
-	command = toUpperCase(command);
+	std::string command = toUpperCase(arguments[0]);
 	arguments.erase(arguments.begin());
 	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command);
 	if (it == _commandHandlers.end())
