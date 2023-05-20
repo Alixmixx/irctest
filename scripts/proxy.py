@@ -20,7 +20,7 @@ class Connection:
 
 
 def print_info(message):
-    print(colored(message, "blue"), end="\n")
+    print(colored(message, "blue"))
 
 
 def find_connection(connections, socket):
@@ -60,7 +60,8 @@ proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 proxy_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 proxy_socket.bind(proxy_address)
 proxy_socket.listen(BACKLOG)
-print_info(f"{sys.argv[1]} -> {sys.argv[2]}")
+print_info(f"Listening on {sys.argv[1]}.")
+print_info(f"Forwarding to {sys.argv[2]}.")
 total_connections = 0
 connections = []
 while True:
