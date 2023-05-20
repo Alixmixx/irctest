@@ -9,4 +9,4 @@ for rfc in RFCS:
     res = requests.get(url).text
     full += res
     time.sleep(1)
-open("scripts/full_rfcs.txt", "w").write(full)
+open("scripts/files/full_rfcs.txt", "w").write(full)
