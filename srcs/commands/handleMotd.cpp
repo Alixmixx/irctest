@@ -1,9 +1,15 @@
 #include "Server.hpp"
 
-// TODO
-
 void Server::handleMotd(Client* client, std::vector<std::string> arguments)
 {
-	(void)client;
-	(void)arguments;
+	if (arguments.size() >= 1 && arguments[0] != SERVERHOSTNAME)
+		return client->reply(ERR_NOSUCHSERVER, arguments[0]);
+	client->reply(RPL_MOTDSTART, SERVERHOSTNAME);
+	client->reply(RPL_MOTD, "   '       '       '   ");
+	client->reply(RPL_MOTD, "__/ \\__ __/ \\__ __/ \\__");
+	client->reply(RPL_MOTD, "\\     / \\     / \\     /");
+	client->reply(RPL_MOTD, "/_   _\\ /_   _\\ /_   _\\");
+	client->reply(RPL_MOTD, "  \\ /     \\ /     \\ /  ");
+	client->reply(RPL_MOTD, "   '       '       '   ");
+	client->reply(RPL_ENDOFMOTD);
 }
