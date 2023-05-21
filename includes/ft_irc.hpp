@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <arpa/inet.h>
 #include <cctype>
-#include <csignal>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -91,7 +90,6 @@ typedef enum ReplyCode {
 	ERR_TOOMANYCHANNELS = 405,
 	ERR_WASNOSUCHNICK = 406,
 	ERR_TOOMANYTARGETS = 407,
-	ERR_NOORIGIN = 409,
 	ERR_NORECIPIENT = 411,
 	ERR_NOTEXTTOSEND = 412,
 	ERR_WILDTOPLEVEL = 414,
@@ -145,25 +143,46 @@ typedef enum Modes {
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
-#define INFO "42School"
-#define BACKLOG 128 // why 128 ?
+#define MOTD "Welcome to the IRC server"
+
+// TODO find best constants
+#define BACKLOG 128
 #define MAX_CLIENTS 1024
-#define MAX_EVENTS 32 // why 10 ?
+#define MAX_EVENTS 32
 #define BUFFER_SIZE 256
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
 
-#define DEBUG true
+#define ARGUMENT_ERROR 2
 #define OUTSTANDING_ERROR 125
+
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define BLUE "\033[34m"
+
+class SystemError : public std::runtime_error {
+public:
+	explicit SystemError(const char* funcName)
+		: std::runtime_error(funcName), funcName(funcName) {}
+
+	virtual ~SystemError() throw() {}
+
+	const char* funcName;
+};
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
-bool isPortNumberCorrect(std::string port);
-bool isStringPrintable(std::string str);
-std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
-std::vector<std::string> split(const std::string &str, char delim);
-std::string toString(long number);
-std::string toLowercase(std::string str);
-std::string formatTime(time_t time);
+void					 panic(std::string message);
+void					 syscall(int returnValue, const char* funcName);
+bool					 isPortNumberCorrect(std::string port);
+bool					 isStringPrintable(std::string str);
+std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
+std::string				 toLowerCase(std::string str);
+std::string				 toUpperCase(std::string str);
+std::string				 toString(Client* client);
+std::string				 toString(long number);
+std::string				 formatTime(time_t time);
+std::vector<std::string> split(const std::string& str, char delim);

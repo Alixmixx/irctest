@@ -1,23 +1,19 @@
-#include "Server.hpp"
 #include "Client.hpp"
-
-// Constructeur
+#include "Server.hpp"
 
 Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
-	_channelCount(0),
-	_isRegistered(false),
-	_clientAddress(clientAddress),
-	_nickname(""),
-	_username(""),
-	_realname(""),
-	_hostname(""),
-	_server(server)
+	  _isRegistered(false),
+	  _clientAddress(clientAddress),
+	  _nickname(""),
+	  _username(""),
+	  _realname(""),
+	  _hostname(""),
+	  _server(server)
 {
 	(void)_clientAddress;
 }
 
-// Destructeur
 Client::~Client()
 {
 	std::vector<Channel*>::iterator it = _channels.begin();
@@ -31,7 +27,11 @@ Client::~Client()
 
 // Setters
 
-void Client::setNickname(std::string nickname) { _nickname = nickname; _prefix = ":" + _nickname + "!" + _username + "@" + _hostname; }
+void Client::setNickname(std::string nickname)
+{
+	_nickname = nickname;
+	_prefix = ":" + _nickname + "!" + _username + "@" + _hostname;
+}
 
 void Client::setIsRegistered(bool isRegistered) { _isRegistered = isRegistered; }
 
@@ -42,8 +42,6 @@ void Client::setRealname(std::string realname) { _realname = realname; }
 void Client::setHostname(std::string hostname) { _hostname = hostname; }
 
 void Client::setMessage(std::string message) { _message = message; }
-
-void Client::setChannelCount(int channelCount) { _channelCount = channelCount; }
 
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
@@ -66,8 +64,6 @@ void Client::leaveChannel(Channel* channel)
 
 int Client::getSocket() const { return (_clientSocket); }
 
-int Client::getChannelCount() const { return (_channelCount); }
-
 bool Client::IsRegistered() const { return (_isRegistered); }
 
 std::string Client::getNickname() const { return (_nickname); }
@@ -85,3 +81,14 @@ std::string Client::getMessage() const { return (_message); }
 bool Client::IsInvisible() const { return (_isInvisible); }
 
 Server* Client::getServer() const { return (_server); }
+
+const std::vector<Channel*>	&Client::getChannels() const { return (_channels); };
+
+std::ostream &operator<<(std::ostream &os, const Client &client)
+{
+	os << "Client(nickname=" << client.getNickname() << ", "
+	   << "username=" << client.getUsername() << ", "
+	   << "hostname=" << client.getHostname() << ", "
+	   << "realname=" << client.getRealname() << ")";
+	return os;
+}

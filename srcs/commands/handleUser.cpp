@@ -14,18 +14,10 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 	}
 
 	client->setUsername(arguments[0]);
-	// arguments[1] j'ai pas capté a quoi ca sert, a investiguer TODO
+	// TODO investiguer arguments[1]
 	client->setHostname(arguments[2]);
-	client->setRealname(arguments[3].substr(1)); // TODO attention real name peut contenir des espaces, donc faut faire un iterateur tant que y'a pas de : et ajouter les arguments dans le realname
-
-	if (DEBUG)
-	{
-		std::cout << "Nickname: " << client->getNickname() << " "
-			<< "Username: " << client->getUsername() << " "
-			<< "Hostname: " << client->getHostname() << " "
-			<< "Realname: " << client->getRealname() << std::endl;
-	}
-
+	client->setRealname(arguments[3]);
+	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getUsername() != "" && client->getNickname() != "")
 	{
 		client->setIsRegistered(true);
@@ -33,8 +25,6 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
 		client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
 		client->reply(RPL_CREATED, formatTime(_serverCreationTime));
-		//client->reply(RPL_MYINFO); // TODO apres avoir lu la doc
-		// 05 TODO pour axel
 	}
 	else
 	{

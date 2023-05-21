@@ -1,24 +1,32 @@
 #include "ft_irc.hpp"
 
-int main(int argc, char **argv)
+static int argumentError(std::string message)
+{
+	std::cerr << message << std::endl;
+	return ARGUMENT_ERROR;
+}
+
+int main(int argc, char** argv)
 {
 	if (argc != 3)
-	{
-		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
-		return EXIT_FAILURE;
-	}
+		return argumentError("Usage: " + std::string(argv[0]) + " <port> <password>");
 	else if (!isPortNumberCorrect(argv[1]))
-	{
-		std::cerr << "Invalid port number: " << argv[1] << std::endl;
-		return EXIT_FAILURE;
-	}
+		return argumentError("Invalid port number: " + std::string(argv[1]));
 	else if (!isStringPrintable(argv[2]))
-	{
-		std::cerr << "Invalid password: " << argv[2] << std::endl;
-		return EXIT_FAILURE;
-	}
+		return argumentError("Invalid password: " + std::string(argv[2]));
 
 	Server server(atoi(argv[1]), argv[2]);
-	server.start();
+	try {
+		server.init();
+		std::cout << BLUE << "Listening on port " << server.getPort() << ". 👂" << RESET << std::endl;
+		std::cout << BLUE << "Press Ctrl+C to exit." << RESET << std::endl;
+		server.loop();
+	} catch (const SystemError &e) {
+        std::perror(e.funcName);
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+		return OUTSTANDING_ERROR;
+    }
+	std::cout << BLUE << "Good bye. 💞" << RESET << std::endl;
 	return EXIT_SUCCESS;
 }

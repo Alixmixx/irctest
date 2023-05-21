@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleWhois(Client *client, std::vector<std::string> arguments)
+void Server::handleWhois(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 	{
@@ -10,7 +10,7 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 
 	if (arguments.size() == 1)
 	{
-		Client *target = getClient(arguments[0]);
+		Client* target = getClient(arguments[0]);
 		if (!target)
 		{
 			client->reply(ERR_NOSUCHNICK, arguments[0]);
@@ -28,7 +28,7 @@ void Server::handleWhois(Client *client, std::vector<std::string> arguments)
 			return;
 		}
 
-		Client *target = getClient(arguments[1]);
+		Client* target = getClient(arguments[1]);
 		if (!target)
 		{
 			client->reply(ERR_NOSUCHNICK, arguments[1]);

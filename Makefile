@@ -1,75 +1,50 @@
-NAME	:= ircserv
+NAME		:= ircserv
 
-S		:= srcs/
-O		:= objs/
-I		:= includes/
-D		:= deps/
+S			:= srcs/
+O			:= objs/
+I			:= includes/
+D			:= deps/
 
-SRCS	+= main.cpp
-SRCS	+= Server.cpp
-SRCS	+= Client.cpp
-SRCS	+= Channel.cpp
-SRCS	+= Init/InitCommandHandlerMap.cpp
-SRCS	+= Message/ParseMessage.cpp
-SRCS	+= Message/Reply.cpp
-SRCS	+= Message/Broadcast.cpp
-SRCS	+= Commands/ConnectionCommands/HandleCap.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMode.cpp
-SRCS	+= Commands/ConnectionCommands/HandleNick.cpp
-SRCS	+= Commands/ConnectionCommands/HandlePing.cpp
-SRCS	+= Commands/ConnectionCommands/HandleQuit.cpp
-SRCS	+= Commands/ConnectionCommands/HandleUser.cpp
-SRCS	+= Commands/ConnectionCommands/HandleWhois.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMotd.cpp
-SRCS	+= Commands/SendingCommands/HandlePrivateMessage.cpp
-SRCS	+= Commands/ChannelCommands/HandleJoin.cpp
-SRCS	+= Commands/ChannelCommands/HandleKick.cpp
-SRCS	+= Commands/ChannelCommands/HandleTopic.cpp
-SRCS	+= Commands/ChannelCommands/HandleNames.cpp
-SRCS	+= Commands/ChannelCommands/HandlePart.cpp
-SRCS	+= Commands/ChannelCommands/HandleList.cpp
-SRCS	+= Commands/ChannelCommands/HandleInvite.cpp
-SRCS	+= Utils/ParseArgv.cpp
-SRCS	+= Utils/Utils.cpp
+GARBAGE		:= .vscode
 
-CC		:= clang++
-CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
+CXX			:= clang++ # TODO c++
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
-SRCS	:= $(foreach file,$(SRCS),$S$(file))
-FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	:= $(SRCS:$S%=$O%.o)
-DEPS	:= $(SRCS:$S%=$D%.d)
+SRCS		:= $(wildcard $S*.cpp) $(wildcard $S*/*.cpp)
+FILENAMES	:= $(basename $(SRCS))
+FOLDERS 	:= $(sort $(dir $(SRCS)))
+OBJS		:= $(FILENAMES:$S%=$O%.o)
+DEPS		:= $(FILENAMES:$S%=$D%.d)
 
-RM		:= rm -rf
-MKDIR	:= mkdir -p
+RM			:= rm -rf
+MKDIR		:= mkdir -p
 
-END		:= \033[0m
-RED		:= \033[0;91m
-GREEN	:= \033[0;92m
-MAGENTA	:= \033[0;95m
-
-.PHONY: all clean fclean re
+END			:= \033[0m
+RED			:= \033[31m
+GREEN		:= \033[32m
+BLUE		:= \033[34m
 
 all: $(NAME)
 
 $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): $O%.o: $S% | $O
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS): $O%.o: $S%.cpp | $O
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
-$(DEPS): $D%.d: $S%
+$(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CC) $^ -o $@
-	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
+	@$(CXX) $^ -o $@
+	@echo "$(BLUE)$(NAME) is compiled.$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
-	@$(RM) $D $O
+	@$(RM) $D $O ${GARBAGE}
 
 fclean: clean
 	@echo "$(RED)Removing executable$(END)"
@@ -77,5 +52,12 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
+
+run: $(NAME)
+	@$(VALGRIND) ./$(NAME) 6667 password
+
+bonus: $(NAME)
+
+.PHONY: all bonus clean fclean re run
 
 -include $(DEPS)

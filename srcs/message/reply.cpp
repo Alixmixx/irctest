@@ -3,12 +3,8 @@
 void Client::reply(std::string replyMessage) const
 {
 	replyMessage += "\r\n";
-
-	if (DEBUG)
-		std::cout << "\033[1;32mMessage to client: " << _clientSocket << "\n"
-		<< replyMessage << "\033[0m" << std::endl;
-
-	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), 0);
+	std::cout << GREEN << "Message to client " << _clientSocket << ":\n" << replyMessage << RESET;
+	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), MSG_NOSIGNAL);
 }
 
 void Client::reply(std::string replyMessage, ReplyCode replyCode) const
@@ -156,8 +152,6 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :There was no such nickname", replyCode);
 	case ERR_TOOMANYTARGETS:
 		return reply(arg1 + " :Duplicate recipients. No message delivered", replyCode);
-	case ERR_NOORIGIN:
-		return reply(":No origin specified", replyCode);
 	case ERR_NORECIPIENT:
 		return reply(":No recipient given (" + arg1 + ")", replyCode);
 	case ERR_NOTEXTTOSEND:
@@ -225,12 +219,12 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_CANTKILLSERVER:
 		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(":No O-lines for your host", replyCode);
+		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
 		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:
 		return reply(":Cant change mode for other users", replyCode);
 	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }

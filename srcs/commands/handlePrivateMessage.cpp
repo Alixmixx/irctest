@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handlePrivateMessage(Client *client, std::vector<std::string> arguments)
+void Server::handlePrivateMessage(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
 	{
@@ -17,7 +17,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 	if (arguments[0][0] == '#' || arguments[0][0] == '&')
 	{
 		// get channel
-		Channel *targetChannel = getChannel(arguments[0]);
+		Channel* targetChannel = getChannel(arguments[0]);
 		if (targetChannel == NULL)
 		{
 			client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
@@ -37,7 +37,7 @@ void Server::handlePrivateMessage(Client *client, std::vector<std::string> argum
 		return;
 	}
 
-	Client *targetClient = getClient(arguments[0]);
+	Client* targetClient = getClient(arguments[0]);
 	if (targetClient == NULL)
 	{
 		// get channel

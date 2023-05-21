@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleInvite(Client *client, std::vector<std::string> arguments)
+void Server::handleInvite(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
 	{
@@ -8,14 +8,14 @@ void Server::handleInvite(Client *client, std::vector<std::string> arguments)
 		return;
 	}
 
-	Client *target = getClient(arguments[0]);
+	Client* target = getClient(arguments[0]);
 	if (target == NULL)
 	{
 		client->reply(ERR_NOSUCHNICK, arguments[0]);
 		return;
 	}
 
-	Channel *channel = getChannel(arguments[1]);
+	Channel* channel = getChannel(arguments[1]);
 	if (channel == NULL)
 	{
 		client->reply(ERR_NOSUCHCHANNEL, arguments[1]);
