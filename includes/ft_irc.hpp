@@ -62,6 +62,7 @@ typedef enum ReplyCode {
 	RPL_ENDOFWHO = 315,
 	RPL_WHOISIDLE = 317,
 	RPL_ENDOFWHOIS = 318,
+	RPL_WHOISCHANNELS = 319,
 	RPL_LISTSTART = 321,
 	RPL_LIST = 322,
 	RPL_LISTEND = 323,
@@ -69,6 +70,7 @@ typedef enum ReplyCode {
 	RPL_NOTOPIC = 331,
 	RPL_TOPIC = 332,
 	RPL_TOPICWHOTIME = 333,
+	RPL_WHOISACTUALLY = 338,
 	RPL_INVITING = 341,
 	RPL_SUMMONING = 342,
 	RPL_VERSION = 351,
@@ -185,9 +187,10 @@ public:
 #include "Server.hpp"
 
 // clean.cpp
+int	 argumentError(std::string message);
 void panic(std::string message);
-void syscall(int returnValue, const char* funcName);
 void signalHandler(int signum);
+void syscall(int returnValue, const char* funcName);
 
 // utils.cpp
 bool					 isPortNumberCorrect(std::string port);

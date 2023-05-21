@@ -108,9 +108,12 @@
   reply: <name> :End of /WHO list
 317:
   name: RPL_WHOISIDLE
-  reply: <nick> <integer> :seconds idle
+  reply: <nick> <seconds idle> <signon time> :seconds idle, signon time
 318:
   name: RPL_ENDOFWHOIS
+  reply: <nick> :End of /WHOIS list
+319:
+  name: RPL_WHOISCHANNELS
   reply: <nick> :End of /WHOIS list
 321:
   name: RPL_LISTSTART
@@ -133,6 +136,9 @@
 333:
   name: RPL_TOPICWHOTIME
   reply: <channel> <nick> <setat>
+338:
+  name: RPL_WHOISACTUALLY
+  reply: <nick> <ip> :actually using host
 341:
   name: RPL_INVITING
   reply: <channel> <nick>

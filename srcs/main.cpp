@@ -2,12 +2,6 @@
 
 bool run = true;
 
-static int argumentError(std::string message)
-{
-	std::cerr << message << std::endl;
-	return ARGUMENT_ERROR;
-}
-
 int main(int argc, char** argv)
 {
 	if (argc != 3)

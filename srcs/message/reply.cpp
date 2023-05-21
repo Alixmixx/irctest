@@ -92,8 +92,10 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_ENDOFWHO:
 		return reply(arg1 + " :End of /WHO list", replyCode);
 	case RPL_WHOISIDLE:
-		return reply(arg1 + " " + arg2 + " :seconds idle", replyCode);
+		return reply(arg1 + " " + arg2 + " " + arg3 + " :seconds idle, signon time", replyCode);
 	case RPL_ENDOFWHOIS:
+		return reply(arg1 + " :End of /WHOIS list", replyCode);
+	case RPL_WHOISCHANNELS:
 		return reply(arg1 + " :End of /WHOIS list", replyCode);
 	case RPL_LISTSTART:
 		return reply("Channel :Users Name", replyCode);
@@ -109,6 +111,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :" + arg2, replyCode);
 	case RPL_TOPICWHOTIME:
 		return reply(arg1 + " " + arg2 + " " + arg3, replyCode);
+	case RPL_WHOISACTUALLY:
+		return reply(arg1 + " " + arg2 + " :actually using host", replyCode);
 	case RPL_INVITING:
 		return reply(arg1 + " " + arg2, replyCode);
 	case RPL_SUMMONING:
