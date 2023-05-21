@@ -60,7 +60,11 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_LUSERME:
 		return reply(":I have " + arg1 + " clients and " + arg2 + " servers", replyCode);
 	case RPL_ADMINME:
-		return reply(arg1 + " :Administrative info", replyCode);
+		return reply(":" + arg1, replyCode);
+	case RPL_ADMINLOC1:
+		return reply(":" + arg1, replyCode);
+	case RPL_ADMINLOC2:
+		return reply(":" + arg1, replyCode);
 	case RPL_ADMINEMAIL:
 		return reply(":" + arg1, replyCode);
 	case RPL_TRACELOG:

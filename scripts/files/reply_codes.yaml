@@ -60,7 +60,13 @@
   reply: :I have <integer> clients and <integer> servers
 256:
   name: RPL_ADMINME
-  reply: <server> :Administrative info
+  reply: :<admin info>
+257:
+  name: RPL_ADMINLOC1
+  reply: :<admin info>
+258:
+  name: RPL_ADMINLOC2
+  reply: :<admin info>
 259:
   name: RPL_ADMINEMAIL
   reply: :<admin info>

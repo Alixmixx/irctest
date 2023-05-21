@@ -45,6 +45,8 @@ typedef enum ReplyCode {
 	RPL_LUSERCHANNELS = 254,
 	RPL_LUSERME = 255,
 	RPL_ADMINME = 256,
+	RPL_ADMINLOC1 = 257,
+	RPL_ADMINLOC2 = 258,
 	RPL_ADMINEMAIL = 259,
 	RPL_TRACELOG = 261,
 	RPL_NONE = 300,
@@ -142,6 +144,7 @@ typedef enum Modes {
 
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
+#define SERVERMAIL "miao@outstanding.gov"
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
 #define MOTD "Welcome to the IRC server"

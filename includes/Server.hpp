@@ -51,6 +51,7 @@ private:
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
 
+	void handleAdmin(Client* client, std::vector<std::string> arguments);
 	void handleInvite(Client* client, std::vector<std::string> arguments);
 	void handleJoin(Client* client, std::vector<std::string> arguments);
 	void handleKick(Client* client, std::vector<std::string> arguments);

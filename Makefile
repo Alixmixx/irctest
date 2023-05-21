@@ -20,6 +20,7 @@ SRCS		+= srcs/classes/Server.cpp
 SRCS		+= srcs/message/broadcast.cpp
 SRCS		+= srcs/message/reply.cpp
 SRCS		+= srcs/message/parseMessage.cpp
+SRCS		+= srcs/commands/handleAdmin.cpp
 SRCS		+= srcs/commands/handleInvite.cpp
 SRCS		+= srcs/commands/handleJoin.cpp
 SRCS		+= srcs/commands/handleKick.cpp
