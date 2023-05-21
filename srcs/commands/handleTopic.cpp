@@ -3,48 +3,29 @@
 void Server::handleTopic(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "TOPIC");
-		return;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS, "TOPIC");
 
-	// Handle TOPIC error cases
 	Channel* channel = getChannel(arguments[0]);
 	if (channel == NULL)
-	{
-		client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
 	if (!channel->isOnChannel(client))
-	{
-		client->reply(ERR_NOTONCHANNEL, channel->getName());
-		return;
-	}
+		return client->reply(ERR_NOTONCHANNEL, arguments[0]);
 
-	// Handle TOPIC <channel>
 	if (arguments.size() == 1)
 	{
 		if (channel->getTopic() == "")
+			return client->reply(RPL_NOTOPIC, channel->getName());
+		else
 		{
-			client->reply(RPL_NOTOPIC, channel->getName());
-			return;
+			client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
+			return client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), formatTime(channel->getTopicTimestamp()));
 		}
-
-		//	client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
-		//	client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), channel->getTopicTimestamp());
-		return;
 	}
 
-	// Handle TOPIC <channel> <topic>
-	std::string topic = concatenateArguments(arguments, 1);
+	if (channel->isTopicProtected() && channel->getChannelUserMode(client) < OPERATOR)
+		return client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
 
-	if (channel->getChannelUserMode(client) < OPERATOR) // protected topic ?
-	{
-		client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
-		return;
-	}
-
-	channel->setTopic(client, topic);
-	broadcast(channel->getChannelUsers(), client->getNickname() + " TOPIC " + channel->getName() + " :" + topic); // Probably false
+	channel->setTopic(client, arguments[1]);
+	broadcast(channel->getChannelUsers(), client->getPrefix() + " TOPIC " + channel->getName() + " :" + arguments[1]);
 }

@@ -22,10 +22,7 @@ void Server::handleList(Client* client, std::vector<std::string> arguments)
 	{
 		Channel* channel = getChannel(*it);
 		if (channel == NULL)
-		{
-			client->reply(ERR_NOSUCHCHANNEL, channel->getName());
-			continue;
-		}
+			continue; /// peut-etre 			client->reply(ERR_NOSUCHCHANNEL, channel->getName()); */
 		if (channel->isSecret() == false)
 			client->reply(RPL_LIST, channel->getName(), toString(channel->getChannelUsers().size()), channel->getTopic());
 	}

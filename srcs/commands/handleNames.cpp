@@ -3,10 +3,12 @@
 static void showChannelUsers(Channel* channel, Client* client, bool showInvisible)
 {
 	std::string symbol = "=";
-	std::string names = ":"; // peut etre pas
+	std::string names = "";
 
-	if (channel->isSecret() == true)
+	if (channel->isSecret() == true && channel->isOnChannel(client) == true)
 		symbol = "@";
+	else if (channel->isSecret())
+		return;
 	else if (channel->isInviteOnly() == true)
 		symbol = "*";
 
@@ -47,48 +49,37 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 		it++;
 	}
 
-	//<client>                   <symbol><channel>           :[prefix]<nick>{ [prefix]<nick>}"
-	// client->reply(RPL_NAMREPLY, symbol, channel->getName(), names);
-	// "<client> <channel> :End of /NAMES list"
-	client->reply(RPL_ENDOFNAMES, channel->getName());
+	if (names != "")
+		client->reply(RPL_NAMREPLY, symbol, channel->getName(), names);
 }
 
 void Server::handleNames(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "NAMES");
-		return;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS, "NAMES");
 
-	if (arguments[0].find(',') != std::string::npos)
-	{
-		client->reply(RPL_ENDOFNAMES, "TARGMAX 1");
-		return;
-	}
+	std::vector<std::string> channels = split(arguments[0], ',');
 
-	Channel* channel = getChannel(arguments[0]);
-	if (channel == NULL || channel->getChannelUsers().size() == 0)
+	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
 	{
-		client->reply(RPL_ENDOFNAMES, arguments[0]);
-		return;
-	}
+		Channel* channel = getChannel(*it);
+		if (channel == NULL || channel->getChannelUsers().size() == 0)
+		{
+			client->reply(RPL_ENDOFNAMES, (*it));
+			continue;
+		}
 
-	if (channel->isOnChannel(client) == false && (channel->isSecret() == true))
-	{
-		client->reply(RPL_ENDOFNAMES, arguments[0]);
-		return;
-	}
+		if (channel->isOnChannel(client) == false && (channel->isSecret() == true))
+		{
+			client->reply(RPL_ENDOFNAMES, (*it));
+			continue;
+		}
 
-	if (channel->isOnChannel(client) == false) // Hide invisible users
-	{
-		showChannelUsers(channel, client, false);
-		return;
-	}
+		if (channel->isOnChannel(client) == false) // Hide invisible users
+			showChannelUsers(channel, client, false);
 
-	if (channel->isOnChannel(client) == true) // Show invisible users
-	{
-		showChannelUsers(channel, client, true);
-		return;
+		if (channel->isOnChannel(client) == true) // Show invisible users
+			showChannelUsers(channel, client, true);
+		client->reply(RPL_ENDOFNAMES, channel->getName());
 	}
 }

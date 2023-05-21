@@ -2,10 +2,7 @@
 
 void Server::handleQuit(Client* client, std::vector<std::string> arguments)
 {
-	std::string clientMessage;
-	std::string quitMessage = ":" + client->getNickname() + " QUIT";
+	std::string quitMessage = client->getPrefix() + " QUIT" + (arguments.size() > 0 ? " :" + arguments[0] : "");
 	removeClient(client);
-	if (arguments.size() >= 1)
-		quitMessage += " :" + arguments[0];
 	broadcast(_clients, quitMessage);
 }

@@ -3,14 +3,11 @@
 void Server::handlePart(Client* client, std::vector<std::string> argument)
 {
 	if (argument.size() < 1)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "PART");
-		return;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS, "PART");
 
 	std::string reason = "";
 	if (argument.size() > 1)
-		reason = " " + concatenateArguments(argument, 1);
+		reason = " :" + argument[1];
 
 	std::vector<std::string> channels = split(argument[0], ',');
 	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
@@ -18,17 +15,15 @@ void Server::handlePart(Client* client, std::vector<std::string> argument)
 		Channel* channel = getChannel(*it);
 		if (channel == NULL)
 		{
-			client->reply(ERR_NOSUCHCHANNEL, channel->getName());
+			client->reply(ERR_NOSUCHCHANNEL, (*it));
 			continue;
 		}
 		if (channel->isOnChannel(client) == false)
 		{
-			client->reply(ERR_NOTONCHANNEL, channel->getName());
+			client->reply(ERR_NOTONCHANNEL, (*it));
 			continue;
 		}
-		broadcast(channel->getChannelUsers(), client->getNickname() + " PART " + channel->getName() + reason); // lorenzo miaoo PART #test
-		channel->removeChannelUser(client);
-		if (channel->getChannelUsers().size() == 0)
-			removeChannel(channel);
+		broadcast(channel->getChannelUsers(), client->getPrefix() + " PART " + channel->getName() + reason);
+		channel->removeClientFromChannel(client);
 	}
 }

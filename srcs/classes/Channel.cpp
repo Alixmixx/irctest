@@ -2,15 +2,17 @@
 
 Channel::Channel(Server* server, std::string& name)
 	: _name(name),
-	  _topic("Change topic with /topic <new topic>"),
+	  _topic(""),
 	  _password(""),
 	  _mode(""),
 	  _key(""),
+	  _topicSetter(""),
+	  _topicTimestamp(std::time(NULL)),
+	  _isTopicProtected(false),
 	  _inviteOnly(false),
 	  _isSecret(false),
 	  _server(server)
 {
-	(void)_server;
 }
 
 Channel::~Channel()
@@ -32,6 +34,8 @@ const std::string& Channel::getKey() const { return _key; }
 const std::string& Channel::getTopicSetter() const { return _topicSetter; }
 
 time_t Channel::getTopicTimestamp() const { return _topicTimestamp; }
+
+bool Channel::isTopicProtected() const { return (_isTopicProtected); }
 
 std::vector<Client*>& Channel::getChannelUsers() { return _channelUsers; }
 
@@ -78,6 +82,8 @@ void Channel::setKey(const std::string& key) { _key = key; }
 
 void Channel::setClientMode(Client* client, int mode) { _channelUsersModes[client] = mode; }
 
+void Channel::setIsTopicProtected(bool isTopicProtected) { _isTopicProtected = isTopicProtected; }
+
 // Methods
 
 void Channel::addChannelUser(Client* client)
@@ -94,27 +100,47 @@ void Channel::addChannelUser(Client* client, int mode)
 	client->addChannel(this);
 }
 
-void Channel::removeClientFromChannel(Client* client)
+Client* Channel::getHighestGradedUser()
 {
-	removeChannelUser(client);
+	int		grade = INVITED;
+	Client* client = NULL;
+
+	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
+	{
+		if (it->second > grade && it->second != FOUNDER)
+		{
+			client = it->first;
+			grade = it->second;
+		}
+	}
+	return (client);
 }
 
-void Channel::removeChannelUser(Client* client)
+void Channel::removeClientFromChannel(Client* client)
 {
-	std::vector<Client*>::iterator it = _channelUsers.begin();
-	while (it != _channelUsers.end())
+
+	for (std::vector<Client*>::iterator it = _channelUsers.begin(); it != _channelUsers.end(); it++)
 	{
 		if (*it == client)
 		{
 			_channelUsers.erase(it);
 			break;
 		}
-		it++;
 	}
 
-	std::map<Client*, int>::iterator it2 = _channelUsersModes.find(client);
-	if (it2 != _channelUsersModes.end())
-		_channelUsersModes.erase(it2);
+	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
+	{
+		if (it->first == client)
+		{
+			if (it->second == FOUNDER && getChannelUsers().size() > 1)
+				setClientMode(getHighestGradedUser(), FOUNDER);
+			_channelUsersModes.erase(it);
+			break;
+		}
+	}
 
 	client->leaveChannel(this);
+
+	if (getChannelUsers().size() == 0)
+		_server->removeChannel(this);
 }

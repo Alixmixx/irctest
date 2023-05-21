@@ -82,9 +82,9 @@ bool Client::IsInvisible() const { return (_isInvisible); }
 
 Server* Client::getServer() const { return (_server); }
 
-const std::vector<Channel*>	&Client::getChannels() const { return (_channels); };
+std::vector<Channel*> Client::getChannels() const { return (_channels); };
 
-std::ostream &operator<<(std::ostream &os, const Client &client)
+std::ostream& operator<<(std::ostream& os, const Client& client)
 {
 	os << "Client(nickname=" << client.getNickname() << ", "
 	   << "username=" << client.getUsername() << ", "
