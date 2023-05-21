@@ -2,7 +2,7 @@
 
 Channel::Channel(Server* server, std::string& name)
 	: _name(name),
-	  _topic("Change topic with /topic <new topic>"),
+	  _topic(""),
 	  _password(""),
 	  _mode(""),
 	  _key(""),
