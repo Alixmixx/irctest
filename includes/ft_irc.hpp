@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <arpa/inet.h>
 #include <cctype>
+#include <csignal>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -175,8 +176,12 @@ public:
 #include "Client.hpp"
 #include "Server.hpp"
 
-void					 panic(std::string message);
-void					 syscall(int returnValue, const char* funcName);
+// clean.cpp
+void panic(std::string message);
+void syscall(int returnValue, const char* funcName);
+void signalHandler(int signum);
+
+// utils.cpp
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);

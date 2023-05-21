@@ -11,6 +11,7 @@ CXX			:= clang++ # TODO c++
 CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
+SRCS		+= srcs/clean.cpp
 SRCS		+= srcs/main.cpp
 SRCS		+= srcs/utils.cpp
 SRCS		+= srcs/classes/Channel.cpp
@@ -36,7 +37,6 @@ SRCS		+= srcs/commands/handleTopic.cpp
 SRCS		+= srcs/commands/handleUser.cpp
 SRCS		+= srcs/commands/handleWhois.cpp
 SRCS		+= srcs/commands/ignoreCommand.cpp
-
 
 FILENAMES	:= $(basename $(SRCS))
 FOLDERS 	:= $(sort $(dir $(SRCS)))
