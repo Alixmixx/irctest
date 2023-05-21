@@ -42,15 +42,15 @@ private:
 	unsigned short	   _port;
 	unsigned int	   _maxUsers;
 
-	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
-	std::map<std::string, CommandHandler> _commandHandlers;
-
 	const std::string _serverPassword;
 	const time_t	  _serverCreationTime;
 	std::string		  _serverMotd;
 
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
+
+	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
+	std::map<std::string, CommandHandler> _commandHandlers;
 
 	// TODO CommandHandler handleXxxx;
 	void handleAdmin(Client* client, std::vector<std::string> arguments);
@@ -71,6 +71,7 @@ private:
 	void handleTime(Client* client, std::vector<std::string> arguments);
 	void handleTopic(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
+	void handleVersion(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
 	void ignoreCommand(Client* client, std::vector<std::string> arguments);
 

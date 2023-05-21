@@ -7,9 +7,9 @@ Server::Server(unsigned short port, std::string password)
 	  _serverHostname(SERVERHOSTNAME),
 	  _serverVersion(SERVERVERSION),
 	  _port(port),
+	  _maxUsers(0),
 	  _serverPassword(password),
-	  _serverCreationTime(std::time(NULL)),
-	  _serverMotd(MOTD)
+	  _serverCreationTime(std::time(NULL))
 {
 	_commandHandlers["ADMIN"] = &Server::handleAdmin;
 	_commandHandlers["CAP"] = &Server::ignoreCommand;
@@ -31,6 +31,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["TIME"] = &Server::handleTime;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
+	_commandHandlers["VERSION"] = &Server::handleVersion;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
 }
 

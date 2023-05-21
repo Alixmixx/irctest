@@ -149,7 +149,6 @@ typedef enum Modes {
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
-#define MOTD "Welcome to the IRC server"
 
 // TODO find best constants
 #define BACKLOG 128
