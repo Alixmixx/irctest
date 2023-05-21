@@ -163,6 +163,7 @@ typedef enum Modes {
 bool isPortNumberCorrect(std::string port);
 bool isStringPrintable(std::string str);
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
-std::vector<std::string> split(const std::string& str, char delim);
+std::vector<std::string> split(const std::string &str, char delim);
 std::string toString(long number);
+std::string toLowercase(std::string str);
 std::string formatTime(time_t time);

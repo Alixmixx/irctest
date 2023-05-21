@@ -55,8 +55,7 @@ void Server::handleKick(Client *client, std::vector<std::string> arguments)
 	}
 
 	std::string reason = concatenateArguments(arguments, 2);
-	broadcast(channel->getChannelUsers(), client->getPrefix() + " KICK " + arguments[0] + " " + arguments[1] + (reason == ":" ? "" : " " + reason));
+	broadcast(channel->getChannelUsers(), client->getPrefix() + " KICK " + channel->getName() + " " + target->getNickname() + reason ? " :" + reason : "");
 	channel->removeClientFromChannel(target);
 	channel->setClientMode(target, BANNED);
-	// MAYBE ADD A REPLY TO THE TARGET
 }

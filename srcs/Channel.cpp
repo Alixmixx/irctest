@@ -80,13 +80,15 @@ void Channel::setClientMode(Client *client, int mode) { _channelUsersModes[clien
 
 // Methods
 
-void Channel::addChannelUser(Client *client) {
+void Channel::addChannelUser(Client *client)
+{
 	_channelUsers.push_back(client);
 	_channelUsersModes[client] = USER;
 	client->addChannel(this);
 }
 
-void Channel::addChannelUser(Client *client, int mode) {
+void Channel::addChannelUser(Client *client, int mode)
+{
 	_channelUsers.push_back(client);
 	_channelUsersModes[client] = mode;
 	client->addChannel(this);

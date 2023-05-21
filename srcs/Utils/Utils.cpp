@@ -38,6 +38,15 @@ std::string toString(long number)
 	return ss.str();
 }
 
+std::string toLowercase(std::string str)
+{
+	for (std::string::iterator it = str.begin(); it != str.end(); it++)
+	{
+		*it = std::tolower(*it);
+	}
+	return str;
+}
+
 std::string formatTime(time_t time)
 {
     std::tm* localTime = std::localtime(&time);

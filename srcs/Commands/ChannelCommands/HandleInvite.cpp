@@ -42,5 +42,5 @@ void Server::handleInvite(Client *client, std::vector<std::string> arguments)
 
 	channel->setClientMode(target, INVITED);
 	client->reply(RPL_INVITING, arguments[0], arguments[1]);
-	/* target->reply("RPL_INVITING", arguments[0], arguments[1]); */ // lorenzo Je pense c'est pas bon mais t'es chiant alors je te laisse te debrouiller miao miao surement "INVITE" a la place de "RPL_INVITING" mais je sais pas c'est toi le boss des messages d'erreur
+	target->reply(client->getPrefix() + " INVITE " + client->getNickname() + " " + arguments[1]);
 }
