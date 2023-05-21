@@ -26,6 +26,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["PONG"] = &Server::ignoreCommand;
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
+	_commandHandlers["TIME"] = &Server::handleTime;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;

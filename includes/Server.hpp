@@ -68,6 +68,7 @@ private:
 	void handlePing(Client* client, std::vector<std::string> arguments);
 	void handlePrivateMessage(Client* client, std::vector<std::string> arguments);
 	void handleQuit(Client* client, std::vector<std::string> arguments);
+	void handleTime(Client* client, std::vector<std::string> arguments);
 	void handleTopic(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
