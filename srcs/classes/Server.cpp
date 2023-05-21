@@ -1,5 +1,7 @@
 #include "Server.hpp"
 
+extern bool run;
+
 Server::Server(unsigned short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
@@ -26,6 +28,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["PONG"] = &Server::ignoreCommand;
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
+	_commandHandlers["TIME"] = &Server::handleTime;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
@@ -159,11 +162,15 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
-	while (true)
+	while (run)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
 		if (nfds < 0)
-			return;
+		{
+			if (!run)
+				return;
+			throw SystemError("epoll_wait");
+		}
 		for (int i = 0; i < nfds; ++i)
 		{
 			if (_eventList[i].data.fd == _serverSocket)

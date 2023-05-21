@@ -35,6 +35,7 @@ SRCS		+= srcs/commands/handlePart.cpp
 SRCS		+= srcs/commands/handlePing.cpp
 SRCS		+= srcs/commands/handlePrivateMessage.cpp
 SRCS		+= srcs/commands/handleQuit.cpp
+SRCS		+= srcs/commands/handleTime.cpp
 SRCS		+= srcs/commands/handleTopic.cpp
 SRCS		+= srcs/commands/handleUser.cpp
 SRCS		+= srcs/commands/handleWhois.cpp
