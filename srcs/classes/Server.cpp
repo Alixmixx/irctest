@@ -51,8 +51,6 @@ time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
 unsigned short Server::getPort() const { return (_port); }
 
-const std::string Server::getServerMotd() const { return (_serverMotd); }
-
 std::vector<Client*> Server::getClients() const { return (_clients); }
 
 std::vector<Channel*> Server::getChannels() const { return (_channels); }
@@ -102,7 +100,8 @@ void Server::removeClient(Client* client)
 		}
 	}
 
-	for (std::vector<Channel*>::iterator it = client->getChannels().begin(); it != client->getChannels().end(); ++it)
+	std::vector<Channel*> channels = client->getChannels();
+	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
 		(*it)->removeClientFromChannel(client);
 }
 

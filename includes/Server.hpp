@@ -46,7 +46,6 @@ private:
 
 	const std::string _serverPassword;
 	const time_t	  _serverCreationTime;
-	std::string		  _serverMotd;
 
 	std::vector<Client*>  _clients;
 	std::vector<Channel*> _channels;
