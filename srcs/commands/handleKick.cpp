@@ -3,58 +3,32 @@
 void Server::handleKick(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 2)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "KICK");
-		return;
-	}
-
-	if (arguments[0].find(',') != std::string::npos)
-	{
-		client->reply(ERR_BADCHANMASK, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS, "KICK");
 
 	Channel* channel = getChannel(arguments[0]);
+
 	if (channel == NULL)
-	{
-		client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
 	if (channel->isOnChannel(client) == false)
-	{
-		client->reply(ERR_NOTONCHANNEL, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_NOTONCHANNEL, arguments[0]);
 
 	if (channel->getChannelUserMode(client) < MODERATOR)
-	{
-		client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
+
+
+	if (arguments[1].find(',') != std::string::npos)
+		arguments[1] = arguments[1].substr(0, arguments[1].find(','));
 
 	Client* target = getClient(arguments[1]);
 
-	if (target == NULL)
-	{
-		client->reply(ERR_NOSUCHNICK, arguments[1]);
-		return;
-	}
-
-	if (channel->isOnChannel(target) == false)
-	{
-		client->reply(ERR_USERNOTINCHANNEL, arguments[1], arguments[0]);
-		return;
-	}
+	if (target == NULL || channel->isOnChannel(target) == false)
+		return client->reply(ERR_USERNOTINCHANNEL, arguments[1], arguments[0]);
 
 	if (channel->getChannelUserMode(client) < channel->getChannelUserMode(target))
-	{
-		client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_CHANOPRIVSNEEDED, arguments[0]);
 
-	std::string reason = concatenateArguments(arguments, 2);
-	broadcast(channel->getChannelUsers(), client->getPrefix() + " KICK " + channel->getName() + " " + target->getNickname() + reason ? " :" + reason : "");
-	channel->removeClientFromChannel(target);
+	broadcast(channel->getChannelUsers(), client->getPrefix() + " KICK " + channel->getName() + " " + target->getNickname() + (arguments[2] == ":" ? "" : " :" + arguments[2]));
+	channel->removeClientFromChannel(target); //not sure
 	channel->setClientMode(target, BANNED);
 }

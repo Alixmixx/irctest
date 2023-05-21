@@ -18,8 +18,6 @@ void Server::handleList(Client* client, std::vector<std::string> arguments)
 
 	std::vector<std::string> channels = split(arguments[0], ',');
 
-	// Maybe implement ELIST ?  if (arguments.size() > 1)
-
 	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
 	{
 		Channel* channel = getChannel(*it);

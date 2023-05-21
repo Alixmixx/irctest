@@ -2,31 +2,32 @@
 
 static std::vector<std::string> splitMessage(std::string message)
 {
-    std::vector<std::string> arguments;
-    std::string current;
-    std::stringstream iss(message);
+	std::vector<std::string> arguments;
+	std::string				 current;
+	std::stringstream		 iss(message);
 
-    for (size_t i = 0; i < message.size(); ++i) {
-        char c = message[i];
-        if (c == ' ')
+	for (size_t i = 0; i < message.size(); ++i)
+	{
+		char c = message[i];
+		if (c == ' ')
 		{
-            if (!current.empty())
-            {
-                arguments.push_back(current);
-                current = "";
-            }
-        }
-        else if (c == ':' && current.empty())
-        {
-            arguments.push_back(message.substr(i + 1));
-            return arguments;
-        }
-        else
-            current += c;
-    }
-    if (!current.empty())
-        arguments.push_back(current);
-    return arguments;
+			if (!current.empty())
+			{
+				arguments.push_back(current);
+				current = "";
+			}
+		}
+		else if (c == ':' && current.empty())
+		{
+			arguments.push_back(message.substr(i + 1));
+			return arguments;
+		}
+		else
+			current += c;
+	}
+	if (!current.empty())
+		arguments.push_back(current);
+	return arguments;
 }
 
 void Server::parseMessageFromClient(Client* client, std::string message)
@@ -50,8 +51,8 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 void Server::readFromClient(Client* client)
 {
 	std::string message = client->getMessage();
-	char buffer[BUFFER_SIZE] = {0};
-	int recvSize;
+	char		buffer[BUFFER_SIZE] = {0};
+	int			recvSize;
 
 	do
 	{
@@ -68,7 +69,8 @@ void Server::readFromClient(Client* client)
 		return;
 	}
 
-	std::cout << RED << "Message from client " << client->getSocket() << ":\n" << message << RESET;
+	std::cout << RED << "Message from client " << client->getSocket() << ":\n"
+			  << message << RESET;
 
 	size_t pos;
 	while ((pos = message.find("\r\n")) != std::string::npos)

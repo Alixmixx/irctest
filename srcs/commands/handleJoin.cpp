@@ -3,10 +3,7 @@
 static void newChannel(Client* client, std::string channelName, std::string channelPassword)
 {
 	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
-	{
-		client->reply(ERR_TOOMANYCHANNELS, channelName);
-		return;
-	}
+		return client->reply(ERR_TOOMANYCHANNELS, channelName);
 
 	Server*	 server = client->getServer();
 	Channel* channel = new Channel(server, channelName);
@@ -19,39 +16,22 @@ static void newChannel(Client* client, std::string channelName, std::string chan
 static void addToChannel(Client* client, Channel* channel, std::string channelPassword)
 {
 	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
-	{
-		client->reply(ERR_TOOMANYCHANNELS, channel->getName());
-		return;
-	}
+		return client->reply(ERR_TOOMANYCHANNELS, channel->getName());
 
 	if (channel->isPasswordProtected() && channel->getPassword() != channelPassword)
-	{
-		client->reply(ERR_BADCHANNELKEY, channel->getName());
-		return;
-	}
+		return client->reply(ERR_BADCHANNELKEY, channel->getName());
 
 	if (channel->getChannelUserMode(client) == BANNED)
-	{
-		client->reply(ERR_BANNEDFROMCHAN, channel->getName());
-		return;
-	}
+		return client->reply(ERR_BANNEDFROMCHAN, channel->getName());
 
 	if (channel->getChannelUsers().size() >= MAX_USERS_PER_CHANNEL)
-	{
-		client->reply(ERR_CHANNELISFULL, channel->getName());
-		return;
-	}
+		return client->reply(ERR_CHANNELISFULL, channel->getName());
 
 	if (channel->isInviteOnly() && channel->getChannelUserMode(client) != INVITED)
-	{
-		client->reply(ERR_INVITEONLYCHAN, channel->getName());
-		return;
-	}
+		return client->reply(ERR_INVITEONLYCHAN, channel->getName());
 
 	if (channel->isOnChannel(client))
-	{
 		return;
-	}
 
 	channel->addChannelUser(client);
 }
@@ -86,10 +66,7 @@ static bool checkChannelName(std::string& channelName)
 void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() == 0)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "JOIN");
-		return;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS, "JOIN");
 
 	std::string channelName;
 	std::string channelPassword;

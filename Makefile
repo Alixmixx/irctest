@@ -1,50 +1,74 @@
-NAME		:= ircserv
+NAME	:= ircserv
 
-S			:= srcs/
-O			:= objs/
-I			:= includes/
-D			:= deps/
+S		:= srcs/
+O		:= objs/
+I		:= includes/
+D		:= deps/
 
-GARBAGE		:= .vscode
+SRCS	+= main.cpp
+SRCS	+= classes/Server.cpp
+SRCS	+= classes/Client.cpp
+SRCS	+= classes/Channel.cpp
+SRCS	+= message/parseMessage.cpp
+SRCS	+= message/reply.cpp
+SRCS	+= message/broadcast.cpp
+SRCS	+= commands/handleInvite.cpp
+SRCS	+= commands/handleMode.cpp
+SRCS	+= commands/handleJoin.cpp
+SRCS	+= commands/handleNick.cpp
+SRCS	+= commands/handlePing.cpp
+SRCS	+= commands/handleQuit.cpp
+SRCS	+= commands/handleUser.cpp
+SRCS	+= commands/handleWhois.cpp
+SRCS	+= commands/handleMotd.cpp
+SRCS	+= commands/handlePrivateMessage.cpp
+SRCS	+= commands/handleKick.cpp
+SRCS	+= commands/handleOper.cpp
+SRCS	+= commands/handleTopic.cpp
+SRCS	+= commands/handleNames.cpp
+SRCS	+= commands/handlePart.cpp
+SRCS	+= commands/handleList.cpp
+SRCS	+= commands/ignoreCommand.cpp
+SRCS	+= utils/utils.cpp
 
-CXX			:= clang++ # TODO c++
-CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
-VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
+CC		:= c++
+CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
 
-SRCS		:= $(wildcard $S*.cpp) $(wildcard $S*/*.cpp)
-FILENAMES	:= $(basename $(SRCS))
-FOLDERS 	:= $(sort $(dir $(SRCS)))
-OBJS		:= $(FILENAMES:$S%=$O%.o)
-DEPS		:= $(FILENAMES:$S%=$D%.d)
+SRCS	:= $(foreach file,$(SRCS),$S$(file))
+FOLDERS := $(sort $(dir $(SRCS)))
+OBJS	:= $(SRCS:$S%=$O%.o)
+DEPS	:= $(SRCS:$S%=$D%.d)
 
-RM			:= rm -rf
-MKDIR		:= mkdir -p
+RM		:= rm -rf
+MKDIR	:= mkdir -p
 
-END			:= \033[0m
-RED			:= \033[31m
-GREEN		:= \033[32m
-BLUE		:= \033[34m
+END		:= \033[0m
+RED		:= \033[0;91m
+GREEN	:= \033[0;92m
+MAGENTA	:= \033[0;95m
+
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
 $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): $O%.o: $S%.cpp | $O
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+$(OBJS): $O%.o: $S% | $O
+	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
-$(DEPS): $D%.d: $S%.cpp
+$(DEPS): $D%.d: $S%
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CXX) $^ -o $@
-	@echo "$(BLUE)$(NAME) is compiled.$(END)"
+	@$(CC) $^ -o $@
+	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
-	@$(RM) $D $O ${GARBAGE}
+	@$(RM) $D $O
 
 fclean: clean
 	@echo "$(RED)Removing executable$(END)"
@@ -52,12 +76,5 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
-
-run: $(NAME)
-	@$(VALGRIND) ./$(NAME) 6667 password
-
-bonus: $(NAME)
-
-.PHONY: all bonus clean fclean re run
 
 -include $(DEPS)

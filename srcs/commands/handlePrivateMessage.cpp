@@ -3,33 +3,21 @@
 void Server::handlePrivateMessage(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
-	{
-		client->reply(ERR_NORECIPIENT, "PRIVMSG");
-		return;
-	}
+		return client->reply(ERR_NORECIPIENT, "PRIVMSG");
 
 	if (arguments.size() < 2)
-	{
-		client->reply(ERR_NOTEXTTOSEND);
-		return;
-	}
+		return client->reply(ERR_NOTEXTTOSEND);
 
 	if (arguments[0][0] == '#' || arguments[0][0] == '&')
 	{
 		// get channel
 		Channel* targetChannel = getChannel(arguments[0]);
 		if (targetChannel == NULL)
-		{
-			client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
-			return;
-		}
+			return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
 		// check if client has modes to send message
 		if (targetChannel->isOnChannel(client) == false)
-		{
-			client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
-			return;
-		}
+			return client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
 
 		// send message to all clients in channel
 

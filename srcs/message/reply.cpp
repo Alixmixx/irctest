@@ -1,4 +1,5 @@
 #include "Client.hpp"
+#include "Server.hpp"
 
 void Client::reply(std::string replyMessage) const
 {
