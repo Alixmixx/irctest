@@ -29,6 +29,8 @@ public:
 	const std::string	  getServerPassword() const;
 	const std::string	  getServerVersion() const;
 
+	void removeChannel(Channel* channel);
+
 private:
 	int				   _serverSocket;
 	int				   _epollFd;
@@ -83,5 +85,4 @@ private:
 	void readFromClient(Client* client);
 	void parseMessageFromClient(Client* client, std::string command);
 	void removeClient(Client* client);
-	void removeChannel(Channel* channel);
 };

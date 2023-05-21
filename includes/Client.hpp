@@ -30,7 +30,7 @@ public:
 	std::string 				getPrefix() const;
 	std::string 				getMessage() const;
 	Server*						getServer() const;
-	const std::vector<Channel*>	&getChannels() const;
+	std::vector<Channel*>		getChannels() const;
 
 	void reply(std::string replyMessage) const;
 	void reply(std::string replyMessage, ReplyCode replyCode) const;

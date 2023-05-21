@@ -17,9 +17,11 @@ public:
 	const std::string& getKey() const;
 	const std::string& getTopicSetter() const;
 	time_t			   getTopicTimestamp() const;
+	bool			   isTopicProtected() const;
 
 	std::vector<Client*>&	getChannelUsers();
 	std::map<Client*, int>& getChannelUsersModes();
+	Client*					getHighestGradedUser();
 
 	int getChannelUserMode(Client* client) const;
 
@@ -29,6 +31,7 @@ public:
 	bool isInviteOnly() const;
 
 	void setTopic(Client* client, const std::string& topic);
+	void setIsTopicProtected(bool isTopicProtected);
 	void setPassword(const std::string& password);
 	void setMode(const std::string& mode);
 	void setKey(const std::string& key);
@@ -39,7 +42,6 @@ public:
 
 	void addChannelUser(Client* client);
 	void addChannelUser(Client* client, int mode);
-	void removeChannelUser(Client* client);
 
 	void addChannelOperator(Client* client);
 	void removeChannelOperator(Client* client);
@@ -59,6 +61,7 @@ private:
 
 	std::string _topicSetter;
 	time_t		_topicTimestamp;
+	bool		_isTopicProtected;
 	bool		_inviteOnly;
 	bool		_isSecret;
 

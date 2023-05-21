@@ -94,6 +94,10 @@ void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 		if (channel != NULL)
 		{
 			addToChannel(client, channel, channelPassword);
+			if (channel->getTopic() == "")
+				client->reply(RPL_NOTOPIC, channel->getName());
+			else
+				client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
 		}
 		else
 		{

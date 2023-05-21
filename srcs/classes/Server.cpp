@@ -91,15 +91,19 @@ Client* Server::getClient(std::string nickname) const
 void Server::removeClient(Client* client)
 {
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
+
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it) == client)
 		{
 			_clients.erase(it);
 			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
-			return;
+			break;
 		}
 	}
+
+	for (std::vector<Channel*>::iterator it = client->getChannels().begin(); it != client->getChannels().end(); ++it)
+		(*it)->removeClientFromChannel(client);
 }
 
 void Server::addChannel(Channel* channel)

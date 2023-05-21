@@ -3,10 +3,12 @@
 static void showChannelUsers(Channel* channel, Client* client, bool showInvisible)
 {
 	std::string symbol = "=";
-	std::string names = ":"; // peut etre pas
+	std::string names = "";
 
-	if (channel->isSecret() == true)
+	if (channel->isSecret() == true && channel->isOnChannel(client) == true)
 		symbol = "@";
+	else if (channel->isSecret())
+		return;
 	else if (channel->isInviteOnly() == true)
 		symbol = "*";
 
@@ -47,22 +49,33 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 		it++;
 	}
 
-	//<client>                   <symbol><channel>           :[prefix]<nick>{ [prefix]<nick>}"
-	// client->reply(RPL_NAMREPLY, symbol, channel->getName(), names);
-	// "<client> <channel> :End of /NAMES list"
-	client->reply(RPL_ENDOFNAMES, channel->getName());
+	if (names != "")
+		client->reply(RPL_NAMREPLY, symbol, channel->getName(), names);
 }
 
 void Server::handleNames(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
 		return client->reply(ERR_NEEDMOREPARAMS, "NAMES");
-	if (arguments[0].find(',') != std::string::npos)
-		return client->reply(RPL_ENDOFNAMES, "TARGMAX 1");
-	Channel* channel = getChannel(arguments[0]);
-	if (channel == NULL || channel->getChannelUsers().size() == 0)
-		return client->reply(RPL_ENDOFNAMES, arguments[0]);
-	if (channel->isOnChannel(client) == false && channel->isSecret())
-		return client->reply(RPL_ENDOFNAMES, arguments[0]);
-	showChannelUsers(channel, client, channel->isOnChannel(client));
+
+	std::vector<std::string> channels = split(arguments[0], ',');
+
+	for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
+	{
+		Channel* channel = getChannel(*it);
+		if (channel == NULL || channel->getChannelUsers().size() == 0)
+		{
+			client->reply(RPL_ENDOFNAMES, (*it));
+			continue;
+		}
+
+		if (channel->isOnChannel(client) == false && (channel->isSecret() == true))
+		{
+			client->reply(RPL_ENDOFNAMES, (*it));
+			continue;
+		}
+
+		showChannelUsers(channel, client, channel->isOnChannel(client));
+		client->reply(RPL_ENDOFNAMES, channel->getName());
+	}
 }

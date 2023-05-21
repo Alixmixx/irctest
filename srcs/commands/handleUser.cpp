@@ -3,15 +3,10 @@
 void Server::handleUser(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 4)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "USER");
-		return;
-	}
+ 		return client->reply(ERR_NEEDMOREPARAMS, "USER");
+
 	if (client->isRegistered())
-	{
-		client->reply(ERR_ALREADYREGISTRED);
-		return;
-	}
+ 		return client->reply(ERR_ALREADYREGISTRED);
 
 	client->setUsername(arguments[0]);
 	// TODO investiguer arguments[1]
@@ -24,10 +19,7 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		client->setNickname(client->getNickname());
 		client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
 		client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
-		client->reply(RPL_CREATED, formatTime(_serverCreationTime));
+		return client->reply(RPL_CREATED, formatTime(_serverCreationTime));
 	}
-	else
-	{
-		client->reply(ERR_ALREADYREGISTRED);
-	}
+ 	return client->reply(ERR_NEEDMOREPARAMS, "USER");
 }

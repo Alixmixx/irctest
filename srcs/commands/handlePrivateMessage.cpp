@@ -10,38 +10,19 @@ void Server::handlePrivateMessage(Client* client, std::vector<std::string> argum
 
 	if (arguments[0][0] == '#' || arguments[0][0] == '&')
 	{
-		// get channel
 		Channel* targetChannel = getChannel(arguments[0]);
 		if (targetChannel == NULL)
 			return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
-		// check if client has modes to send message
 		if (targetChannel->isOnChannel(client) == false)
 			return client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
 
-		// send message to all clients in channel
-
-		broadcast(targetChannel->getChannelUsers(), client->getPrefix() + " PRIVMSG " + arguments[0] + " " + concatenateArguments(arguments, 1), client);
-		return;
+		return broadcast(targetChannel->getChannelUsers(), client->getPrefix() + " PRIVMSG " + targetChannel->getName() + " :" + arguments[1], client);
 	}
 
 	Client* targetClient = getClient(arguments[0]);
 	if (targetClient == NULL)
-	{
-		// get channel
-		client->reply(ERR_NOSUCHNICK, arguments[0]);
-		return;
-	}
+		return client->reply(ERR_NOSUCHNICK, arguments[0]);
 
-	std::string message = "";
-	for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); ++it)
-	{
-		message += *it;
-		if (it != arguments.end() - 1)
-		{
-			message += " ";
-		}
-	}
-
-	targetClient->reply(client->getPrefix() + " PRIVMSG " + message);
+	targetClient->reply(client->getPrefix() + " PRIVMSG " + targetClient->getNickname() + " :" + arguments[1]);
 }

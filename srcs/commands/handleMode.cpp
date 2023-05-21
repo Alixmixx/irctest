@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleMode(Client* client, std::vector<std::string> arguments)
+void Server::handleMode(Client* client, std::vector<std::string> arguments) // TODO by Alix
 {
 	if (arguments.size() == 0)
 	{
