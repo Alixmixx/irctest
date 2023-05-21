@@ -33,11 +33,11 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_STATSHLINE:
 		return reply("H " + arg1 + " * " + arg2, replyCode);
 	case RPL_LUSERCLIENT:
-		return reply(":There are " + arg1 + " users and " + arg2 + " invisible on " + arg3 + " servers", replyCode);
+		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 + " servers", replyCode);
 	case RPL_LUSEROP:
-		return reply(arg1 + " :operator(s) online", replyCode);
+		return reply(arg1 + " :IRC operators online", replyCode);
 	case RPL_LUSERUNKNOWN:
-		return reply(arg1 + " :unknown connection(s)", replyCode);
+		return reply(arg1 + " :unknown connections", replyCode);
 	case RPL_LUSERCHANNELS:
 		return reply(arg1 + " :channels formed", replyCode);
 	case RPL_LUSERME:
@@ -52,6 +52,10 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(":" + arg1, replyCode);
 	case RPL_TRACELOG:
 		return reply("File " + arg1 + " " + arg2, replyCode);
+	case RPL_LOCALUSERS:
+		return reply(":Current local users " + arg1 + ", max " + arg2, replyCode);
+	case RPL_GLOBALUSERS:
+		return reply(":Current global users " + arg1 + ", max " + arg2, replyCode);
 	case RPL_NONE:
 		return reply("n/a", replyCode);
 	case RPL_AWAY:
@@ -213,6 +217,6 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_USERSDONTMATCH:
 		return reply(":Cant change mode for other users", replyCode);
 	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }

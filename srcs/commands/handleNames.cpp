@@ -15,7 +15,7 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 	{
 		if (it != channel->getChannelUsersModes().begin())
 			names += " ";
-		if (it->first->IsInvisible() == true && showInvisible == false)
+		if (it->first->isInvisible() && !showInvisible)
 		{
 			it++;
 			continue;
@@ -56,39 +56,13 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 void Server::handleNames(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
-	{
-		client->reply(ERR_NEEDMOREPARAMS, "NAMES");
-		return;
-	}
-
+		return client->reply(ERR_NEEDMOREPARAMS, "NAMES");
 	if (arguments[0].find(',') != std::string::npos)
-	{
-		client->reply(RPL_ENDOFNAMES, "TARGMAX 1");
-		return;
-	}
-
+		return client->reply(RPL_ENDOFNAMES, "TARGMAX 1");
 	Channel* channel = getChannel(arguments[0]);
 	if (channel == NULL || channel->getChannelUsers().size() == 0)
-	{
-		client->reply(RPL_ENDOFNAMES, arguments[0]);
-		return;
-	}
-
-	if (channel->isOnChannel(client) == false && (channel->isSecret() == true))
-	{
-		client->reply(RPL_ENDOFNAMES, arguments[0]);
-		return;
-	}
-
-	if (channel->isOnChannel(client) == false) // Hide invisible users
-	{
-		showChannelUsers(channel, client, false);
-		return;
-	}
-
-	if (channel->isOnChannel(client) == true) // Show invisible users
-	{
-		showChannelUsers(channel, client, true);
-		return;
-	}
+		return client->reply(RPL_ENDOFNAMES, arguments[0]);
+	if (channel->isOnChannel(client) == false && channel->isSecret())
+		return client->reply(RPL_ENDOFNAMES, arguments[0]);
+	showChannelUsers(channel, client, channel->isOnChannel(client));
 }

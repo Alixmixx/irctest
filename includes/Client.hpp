@@ -21,8 +21,8 @@ public:
 	void leaveChannel(Channel* channel);
 
 	int							getSocket() const;
-	bool						IsRegistered() const;
-	bool						IsInvisible() const;
+	bool						isRegistered() const;
+	bool						isInvisible() const;
 	std::string 				getNickname() const;
 	std::string 				getUsername() const;
 	std::string 				getRealname() const;

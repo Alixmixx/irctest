@@ -45,13 +45,13 @@
   reply: H <hostmask> * <servername>
 251:
   name: RPL_LUSERCLIENT
-  reply: :There are <integer> users and <integer> invisible on <integer> servers
+  reply: :There are <integer> users and <integer> invisibles on <integer> servers
 252:
   name: RPL_LUSEROP
-  reply: <integer> :operator(s) online
+  reply: <integer> :IRC operators online
 253:
   name: RPL_LUSERUNKNOWN
-  reply: <integer> :unknown connection(s)
+  reply: <integer> :unknown connections
 254:
   name: RPL_LUSERCHANNELS
   reply: <integer> :channels formed
@@ -73,6 +73,12 @@
 261:
   name: RPL_TRACELOG
   reply: File <logfile> <debug level>
+265:
+  name: RPL_LOCALUSERS
+  reply: :Current local users <u>, max <m>
+266:
+  name: RPL_GLOBALUSERS
+  reply: :Current global users <u>, max <m>
 300:
   name: RPL_NONE
   reply: n/a

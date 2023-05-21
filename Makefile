@@ -25,6 +25,7 @@ SRCS		+= srcs/commands/handleInvite.cpp
 SRCS		+= srcs/commands/handleJoin.cpp
 SRCS		+= srcs/commands/handleKick.cpp
 SRCS		+= srcs/commands/handleList.cpp
+SRCS		+= srcs/commands/handleLusers.cpp
 SRCS		+= srcs/commands/handleMode.cpp
 SRCS		+= srcs/commands/handleMotd.cpp
 SRCS		+= srcs/commands/handleNames.cpp

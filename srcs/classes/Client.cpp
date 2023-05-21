@@ -4,6 +4,7 @@
 Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
 	  _isRegistered(false),
+	  _isInvisible(false),
 	  _clientAddress(clientAddress),
 	  _nickname(""),
 	  _username(""),
@@ -64,7 +65,7 @@ void Client::leaveChannel(Channel* channel)
 
 int Client::getSocket() const { return (_clientSocket); }
 
-bool Client::IsRegistered() const { return (_isRegistered); }
+bool Client::isRegistered() const { return (_isRegistered); }
 
 std::string Client::getNickname() const { return (_nickname); }
 
@@ -78,7 +79,7 @@ std::string Client::getPrefix() const { return (_prefix); }
 
 std::string Client::getMessage() const { return (_message); }
 
-bool Client::IsInvisible() const { return (_isInvisible); }
+bool Client::isInvisible() const { return (_isInvisible); }
 
 Server* Client::getServer() const { return (_server); }
 

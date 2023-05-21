@@ -15,6 +15,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;
 	_commandHandlers["LIST"] = &Server::handleList;
+	_commandHandlers["LUSERS"] = &Server::handleLusers;
 	_commandHandlers["MODE"] = &Server::handleMode;
 	_commandHandlers["MOTD"] = &Server::handleMotd;
 	_commandHandlers["NAMES"] = &Server::handleNames;
@@ -142,6 +143,8 @@ void Server::acceptNewClient()
 	std::cout << BLUE << "Client connected." << RESET << std::endl;
 	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen), "accept");
 	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
+	if (_clients.size() > _maxUsers)
+		_maxUsers = _clients.size();
 	syscall(fcntl(newClientSocket, F_SETFL, O_NONBLOCK), "fcntl");
 	struct epoll_event ev;
 	ev.data.fd = newClientSocket;

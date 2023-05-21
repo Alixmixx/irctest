@@ -7,7 +7,7 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		client->reply(ERR_NEEDMOREPARAMS, "USER");
 		return;
 	}
-	if (client->IsRegistered())
+	if (client->isRegistered())
 	{
 		client->reply(ERR_ALREADYREGISTRED);
 		return;

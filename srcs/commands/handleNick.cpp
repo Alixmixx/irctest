@@ -25,11 +25,11 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 		std::string nickname = arguments[0];
 		while (getClient(nickname) != NULL)
 		{
-			if (client->IsRegistered())
+			if (client->isRegistered())
 				return client->reply(ERR_NICKNAMEINUSE, nickname);
 			nickname = arguments[0] + toString(suffix++);
 		}
-		if (client->IsRegistered())
+		if (client->isRegistered())
 			broadcast(_clients, client->getPrefix() + " NICK " + nickname);
 		else if (suffix)
 			client->reply(":" + arguments[0] + " NICK " + nickname);
