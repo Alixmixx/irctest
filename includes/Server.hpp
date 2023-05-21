@@ -53,7 +53,6 @@ private:
 	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
 	std::map<std::string, CommandHandler> _commandHandlers;
 
-	// TODO CommandHandler handleXxxx;
 	void handleAdmin(Client* client, std::vector<std::string> arguments);
 	void handleInvite(Client* client, std::vector<std::string> arguments);
 	void handleJoin(Client* client, std::vector<std::string> arguments);

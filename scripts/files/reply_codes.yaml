@@ -130,6 +130,9 @@
 332:
   name: RPL_TOPIC
   reply: <channel> :<topic>
+333:
+  name: RPL_TOPICWHOTIME
+  reply: <channel> <nick> <setat>
 341:
   name: RPL_INVITING
   reply: <channel> <nick>
@@ -139,6 +142,9 @@
 351:
   name: RPL_VERSION
   reply: <version> <server> :<comments>
+353:
+  name: RPL_NAMREPLY
+  reply: <symbol> <channel> :<names>
 364:
   name: RPL_LINKS
   reply: <mask> <server> :<hopcount> <server info>
