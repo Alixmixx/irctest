@@ -1,74 +1,78 @@
-NAME	:= ircserv
+NAME		:= ircserv
 
-S		:= srcs/
-O		:= objs/
-I		:= includes/
-D		:= deps/
+S			:= srcs/
+O			:= objs/
+I			:= includes/
+D			:= deps/
 
-SRCS	+= main.cpp
-SRCS	+= classes/Server.cpp
-SRCS	+= classes/Client.cpp
-SRCS	+= classes/Channel.cpp
-SRCS	+= message/parseMessage.cpp
-SRCS	+= message/reply.cpp
-SRCS	+= message/broadcast.cpp
-SRCS	+= commands/handleInvite.cpp
-SRCS	+= commands/handleMode.cpp
-SRCS	+= commands/handleJoin.cpp
-SRCS	+= commands/handleNick.cpp
-SRCS	+= commands/handlePing.cpp
-SRCS	+= commands/handleQuit.cpp
-SRCS	+= commands/handleUser.cpp
-SRCS	+= commands/handleWhois.cpp
-SRCS	+= commands/handleMotd.cpp
-SRCS	+= commands/handlePrivateMessage.cpp
-SRCS	+= commands/handleKick.cpp
-SRCS	+= commands/handleOper.cpp
-SRCS	+= commands/handleTopic.cpp
-SRCS	+= commands/handleNames.cpp
-SRCS	+= commands/handlePart.cpp
-SRCS	+= commands/handleList.cpp
-SRCS	+= commands/ignoreCommand.cpp
-SRCS	+= utils/utils.cpp
+GARBAGE		:= .vscode classes commands message
 
-CC		:= c++
-CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
+CXX			:= clang++ # TODO c++
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
-SRCS	:= $(foreach file,$(SRCS),$S$(file))
-FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	:= $(SRCS:$S%=$O%.o)
-DEPS	:= $(SRCS:$S%=$D%.d)
+SRCS		+= srcs/clean.cpp
+SRCS		+= srcs/main.cpp
+SRCS		+= srcs/utils.cpp
+SRCS		+= srcs/classes/Channel.cpp
+SRCS		+= srcs/classes/Client.cpp
+SRCS		+= srcs/classes/Server.cpp
+SRCS		+= srcs/message/broadcast.cpp
+SRCS		+= srcs/message/reply.cpp
+SRCS		+= srcs/message/parseMessage.cpp
+SRCS		+= srcs/commands/handleAdmin.cpp
+SRCS		+= srcs/commands/handleInvite.cpp
+SRCS		+= srcs/commands/handleJoin.cpp
+SRCS		+= srcs/commands/handleKick.cpp
+SRCS		+= srcs/commands/handleList.cpp
+SRCS		+= srcs/commands/handleLusers.cpp
+SRCS		+= srcs/commands/handleMode.cpp
+SRCS		+= srcs/commands/handleMotd.cpp
+SRCS		+= srcs/commands/handleNames.cpp
+SRCS		+= srcs/commands/handleNick.cpp
+SRCS		+= srcs/commands/handleOper.cpp
+SRCS		+= srcs/commands/handlePart.cpp
+SRCS		+= srcs/commands/handlePing.cpp
+SRCS		+= srcs/commands/handlePrivateMessage.cpp
+SRCS		+= srcs/commands/handleQuit.cpp
+SRCS		+= srcs/commands/handleTopic.cpp
+SRCS		+= srcs/commands/handleUser.cpp
+SRCS		+= srcs/commands/handleWhois.cpp
+SRCS		+= srcs/commands/ignoreCommand.cpp
 
-RM		:= rm -rf
-MKDIR	:= mkdir -p
+FILENAMES	:= $(basename $(SRCS))
+FOLDERS 	:= $(sort $(dir $(SRCS)))
+OBJS		:= $(FILENAMES:$S%=$O%.o)
+DEPS		:= $(FILENAMES:$S%=$D%.d)
 
-END		:= \033[0m
-RED		:= \033[0;91m
-GREEN	:= \033[0;92m
-MAGENTA	:= \033[0;95m
+RM			:= rm -rf
+MKDIR		:= mkdir -p
 
-.PHONY: all clean fclean re
+END			:= \033[0m
+RED			:= \033[31m
+GREEN		:= \033[32m
+BLUE		:= \033[34m
 
 all: $(NAME)
 
 $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): $O%.o: $S% | $O
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS): $O%.o: $S%.cpp | $O
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
-$(DEPS): $D%.d: $S%
+$(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CC) $^ -o $@
-	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
+	@$(CXX) $^ -o $@
+	@echo "$(BLUE)$(NAME) is compiled.$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
-	@$(RM) $D $O
+	@$(RM) $D $O ${GARBAGE}
 
 fclean: clean
 	@echo "$(RED)Removing executable$(END)"
@@ -76,5 +80,12 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
+
+run: $(NAME)
+	@$(VALGRIND) ./$(NAME) 6667 password
+
+bonus: $(NAME)
+
+.PHONY: all bonus clean fclean re run
 
 -include $(DEPS)

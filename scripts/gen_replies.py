@@ -11,7 +11,7 @@ TOP = """void Client::reply(ReplyCode replyCode, std::string arg1, std::string a
 	{"""
 
 BOTTOM = """	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }"""
 
@@ -42,7 +42,7 @@ print("typedef enum ReplyCode {", file=fe)
 for code, response in sorted(data.items()):
     print(f"\tcase {response['name']}:", file=fr)
     print(
-        f"\t\treturn reply(replyCode, {transform(response['reply'])});",
+        f"\t\treturn reply({transform(response['reply'])}, replyCode);",
         file=fr,
     )
     print(f"\t{response['name']} = {code},", file=fe)

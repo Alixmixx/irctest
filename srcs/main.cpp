@@ -1,5 +1,7 @@
 #include "ft_irc.hpp"
 
+bool run = true;
+
 static int argumentError(std::string message)
 {
 	std::cerr << message << std::endl;
@@ -19,14 +21,16 @@ int main(int argc, char** argv)
 	try {
 		server.init();
 		std::cout << BLUE << "Listening on port " << server.getPort() << ". 👂" << RESET << std::endl;
+		signal(SIGINT, signalHandler);
 		std::cout << BLUE << "Press Ctrl+C to exit." << RESET << std::endl;
 		server.loop();
 	} catch (const SystemError &e) {
         std::perror(e.funcName);
+		return EXIT_FAILURE;
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
 		return OUTSTANDING_ERROR;
     }
-	std::cout << BLUE << "Good bye. 💞" << RESET << std::endl;
+	std::cout << BLUE << "\rGood bye. 💞" << RESET << std::endl;
 	return EXIT_SUCCESS;
 }

@@ -17,7 +17,7 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 	{
 		if (it != channel->getChannelUsersModes().begin())
 			names += " ";
-		if (it->first->IsInvisible() == true && showInvisible == false)
+		if (it->first->isInvisible() && !showInvisible)
 		{
 			it++;
 			continue;
@@ -75,11 +75,7 @@ void Server::handleNames(Client* client, std::vector<std::string> arguments)
 			continue;
 		}
 
-		if (channel->isOnChannel(client) == false) // Hide invisible users
-			showChannelUsers(channel, client, false);
-
-		if (channel->isOnChannel(client) == true) // Show invisible users
-			showChannelUsers(channel, client, true);
+		showChannelUsers(channel, client, channel->isOnChannel(client));
 		client->reply(RPL_ENDOFNAMES, channel->getName());
 	}
 }

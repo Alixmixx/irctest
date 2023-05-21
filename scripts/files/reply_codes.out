@@ -3,214 +3,220 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	switch (replyCode)
 	{
 	case RPL_WELCOME:
-		return reply(replyCode, ":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 + "]");
+		return reply(":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 + "]", replyCode);
 	case RPL_YOURHOST:
-		return reply(replyCode, ":Your host is " + arg1 + ", running version " + arg2);
+		return reply(":Your host is " + arg1 + ", running version " + arg2, replyCode);
 	case RPL_CREATED:
-		return reply(replyCode, ":This server was created on " + arg1);
+		return reply(":This server was created on " + arg1, replyCode);
 	case RPL_STATSCOMMANDS:
-		return reply(replyCode, arg1 + " " + arg2);
+		return reply(arg1 + " " + arg2, replyCode);
 	case RPL_STATSCLINE:
-		return reply(replyCode, "C " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4);
+		return reply("C " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4, replyCode);
 	case RPL_STATSNLINE:
-		return reply(replyCode, "N " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4);
+		return reply("N " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4, replyCode);
 	case RPL_STATSILINE:
-		return reply(replyCode, "I " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4);
+		return reply("I " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4, replyCode);
 	case RPL_STATSKLINE:
-		return reply(replyCode, "K " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4);
+		return reply("K " + arg1 + " * " + arg2 + " " + arg3 + " " + arg4, replyCode);
 	case RPL_STATSYLINE:
-		return reply(replyCode, "Y " + arg1 + " " + arg2 + " " + arg3 + " " + arg4);
+		return reply("Y " + arg1 + " " + arg2 + " " + arg3 + " " + arg4, replyCode);
 	case RPL_ENDOFSTATS:
-		return reply(replyCode, arg1 + " :End of /STATS report");
+		return reply(arg1 + " :End of /STATS report", replyCode);
 	case RPL_UMODEIS:
-		return reply(replyCode, arg1);
+		return reply(arg1, replyCode);
 	case RPL_STATSLLINE:
-		return reply(replyCode, "L " + arg1 + " * " + arg2 + " " + arg3);
+		return reply("L " + arg1 + " * " + arg2 + " " + arg3, replyCode);
 	case RPL_STATSUPTIME:
-		return reply(replyCode, ":Server Up " + arg1 + " days " + arg2 + ":" + arg3 + ":" + arg4);
+		return reply(":Server Up " + arg1 + " days " + arg2 + ":" + arg3 + ":" + arg4, replyCode);
 	case RPL_STATSOLINE:
-		return reply(replyCode, "O " + arg1 + " * " + arg2);
+		return reply("O " + arg1 + " * " + arg2, replyCode);
 	case RPL_STATSHLINE:
-		return reply(replyCode, "H " + arg1 + " * " + arg2);
+		return reply("H " + arg1 + " * " + arg2, replyCode);
 	case RPL_LUSERCLIENT:
-		return reply(replyCode, ":There are " + arg1 + " users and " + arg2 + " invisible on " + arg3 + " servers");
+		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 + " servers", replyCode);
 	case RPL_LUSEROP:
-		return reply(replyCode, arg1 + " :operator(s) online");
+		return reply(arg1 + " :IRC operators online", replyCode);
 	case RPL_LUSERUNKNOWN:
-		return reply(replyCode, arg1 + " :unknown connection(s)");
+		return reply(arg1 + " :unknown connections", replyCode);
 	case RPL_LUSERCHANNELS:
-		return reply(replyCode, arg1 + " :channels formed");
+		return reply(arg1 + " :channels formed", replyCode);
 	case RPL_LUSERME:
-		return reply(replyCode, ":I have " + arg1 + " clients and " + arg2 + " servers");
+		return reply(":I have " + arg1 + " clients and " + arg2 + " servers", replyCode);
 	case RPL_ADMINME:
-		return reply(replyCode, arg1 + " :Administrative info");
+		return reply(":" + arg1, replyCode);
+	case RPL_ADMINLOC1:
+		return reply(":" + arg1, replyCode);
+	case RPL_ADMINLOC2:
+		return reply(":" + arg1, replyCode);
 	case RPL_ADMINEMAIL:
-		return reply(replyCode, ":" + arg1);
+		return reply(":" + arg1, replyCode);
 	case RPL_TRACELOG:
-		return reply(replyCode, "File " + arg1 + " " + arg2);
+		return reply("File " + arg1 + " " + arg2, replyCode);
+	case RPL_LOCALUSERS:
+		return reply(":Current local users " + arg1 + ", max " + arg2, replyCode);
+	case RPL_GLOBALUSERS:
+		return reply(":Current global users " + arg1 + ", max " + arg2, replyCode);
 	case RPL_NONE:
-		return reply(replyCode, "n/a");
+		return reply("n/a", replyCode);
 	case RPL_AWAY:
-		return reply(replyCode, arg1 + " :" + arg2);
+		return reply(arg1 + " :" + arg2, replyCode);
 	case RPL_UNAWAY:
-		return reply(replyCode, ":You are no longer marked as being away");
+		return reply(":You are no longer marked as being away", replyCode);
 	case RPL_NOWAWAY:
-		return reply(replyCode, ":You have been marked as being away");
+		return reply(":You have been marked as being away", replyCode);
 	case RPL_WHOISUSER:
-		return reply(replyCode, arg1 + " " + arg2 + " " + arg3 + " * :" + arg4);
+		return reply(arg1 + " " + arg2 + " " + arg3 + " * :" + arg4, replyCode);
 	case RPL_WHOISSERVER:
-		return reply(replyCode, arg1 + " " + arg2 + " :" + arg3);
+		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
 	case RPL_WHOISOPERATOR:
-		return reply(replyCode, arg1 + " :is an IRC operator");
+		return reply(arg1 + " :is an IRC operator", replyCode);
 	case RPL_WHOWASUSER:
-		return reply(replyCode, arg1 + " " + arg2 + " " + arg3 + " * :" + arg4);
+		return reply(arg1 + " " + arg2 + " " + arg3 + " * :" + arg4, replyCode);
 	case RPL_ENDOFWHO:
-		return reply(replyCode, arg1 + " :End of /WHO list");
+		return reply(arg1 + " :End of /WHO list", replyCode);
 	case RPL_WHOISIDLE:
-		return reply(replyCode, arg1 + " " + arg2 + " :seconds idle");
+		return reply(arg1 + " " + arg2 + " :seconds idle", replyCode);
 	case RPL_ENDOFWHOIS:
-		return reply(replyCode, arg1 + " :End of /WHOIS list");
+		return reply(arg1 + " :End of /WHOIS list", replyCode);
 	case RPL_LISTSTART:
-		return reply(replyCode, "Channel :Users Name");
+		return reply("Channel :Users Name", replyCode);
 	case RPL_LIST:
-		return reply(replyCode, arg1 + " " + arg2 + " :" + arg3);
+		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
 	case RPL_LISTEND:
-		return reply(replyCode, ":End of /LIST");
+		return reply(":End of /LIST", replyCode);
 	case RPL_CHANNELMODEIS:
-		return reply(replyCode, arg1 + " " + arg2 + " " + arg3);
+		return reply(arg1 + " " + arg2 + " " + arg3, replyCode);
 	case RPL_NOTOPIC:
-		return reply(replyCode, arg1 + " :No topic is set");
+		return reply(arg1 + " :No topic is set", replyCode);
 	case RPL_TOPIC:
-		return reply(replyCode, arg1 + " :" + arg2);
+		return reply(arg1 + " :" + arg2, replyCode);
 	case RPL_INVITING:
-		return reply(replyCode, arg1 + " " + arg2);
+		return reply(arg1 + " " + arg2, replyCode);
 	case RPL_SUMMONING:
-		return reply(replyCode, arg1 + " :Summoning user to IRC");
+		return reply(arg1 + " :Summoning user to IRC", replyCode);
 	case RPL_VERSION:
-		return reply(replyCode, arg1 + " " + arg2 + " :" + arg3);
+		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
 	case RPL_LINKS:
-		return reply(replyCode, arg1 + " " + arg2 + " :" + arg3 + " " + arg4);
+		return reply(arg1 + " " + arg2 + " :" + arg3 + " " + arg4, replyCode);
 	case RPL_ENDOFLINKS:
-		return reply(replyCode, arg1 + " :End of /LINKS list");
+		return reply(arg1 + " :End of /LINKS list", replyCode);
 	case RPL_ENDOFNAMES:
-		return reply(replyCode, arg1 + " :End of /NAMES list");
+		return reply(arg1 + " :End of /NAMES list", replyCode);
 	case RPL_BANLIST:
-		return reply(replyCode, arg1 + " " + arg2);
+		return reply(arg1 + " " + arg2, replyCode);
 	case RPL_ENDOFBANLIST:
-		return reply(replyCode, arg1 + " :End of channel ban list");
+		return reply(arg1 + " :End of channel ban list", replyCode);
 	case RPL_ENDOFWHOWAS:
-		return reply(replyCode, arg1 + " :End of WHOWAS");
+		return reply(arg1 + " :End of WHOWAS", replyCode);
 	case RPL_INFO:
-		return reply(replyCode, ":" + arg1);
+		return reply(":" + arg1, replyCode);
 	case RPL_MOTD:
-		return reply(replyCode, ":- " + arg1);
+		return reply(":- " + arg1, replyCode);
 	case RPL_ENDOFINFO:
-		return reply(replyCode, ":End of /INFO list");
+		return reply(":End of /INFO list", replyCode);
 	case RPL_MOTDSTART:
-		return reply(replyCode, ":- " + arg1 + " Message of the day -");
+		return reply(":- " + arg1 + " Message of the day -", replyCode);
 	case RPL_ENDOFMOTD:
-		return reply(replyCode, ":End of /MOTD command");
+		return reply(":End of /MOTD command", replyCode);
 	case RPL_YOUREOPER:
-		return reply(replyCode, ":You are now an IRC operator");
+		return reply(":You are now an IRC operator", replyCode);
 	case RPL_REHASHING:
-		return reply(replyCode, arg1 + " :Rehashing");
+		return reply(arg1 + " :Rehashing", replyCode);
 	case RPL_TIME:
-		return reply(replyCode, arg1 + " :" + arg2);
+		return reply(arg1 + " :" + arg2, replyCode);
 	case RPL_USERSSTART:
-		return reply(replyCode, ":UserID Terminal Host");
+		return reply(":UserID Terminal Host", replyCode);
 	case RPL_ENDOFUSERS:
-		return reply(replyCode, ":End of users");
+		return reply(":End of users", replyCode);
 	case RPL_NOUSERS:
-		return reply(replyCode, ":Nobody logged in");
+		return reply(":Nobody logged in", replyCode);
 	case ERR_NOSUCHNICK:
-		return reply(replyCode, arg1 + " :No such nick/channel");
+		return reply(arg1 + " :No such nick/channel", replyCode);
 	case ERR_NOSUCHSERVER:
-		return reply(replyCode, arg1 + " :No such server");
+		return reply(arg1 + " :No such server", replyCode);
 	case ERR_NOSUCHCHANNEL:
-		return reply(replyCode, arg1 + " :No such channel");
+		return reply(arg1 + " :No such channel", replyCode);
 	case ERR_CANNOTSENDTOCHAN:
-		return reply(replyCode, arg1 + " :Cannot send to channel");
+		return reply(arg1 + " :Cannot send to channel", replyCode);
 	case ERR_TOOMANYCHANNELS:
-		return reply(replyCode, arg1 + " :You have joined too many channels");
+		return reply(arg1 + " :You have joined too many channels", replyCode);
 	case ERR_WASNOSUCHNICK:
-		return reply(replyCode, arg1 + " :There was no such nickname");
+		return reply(arg1 + " :There was no such nickname", replyCode);
 	case ERR_TOOMANYTARGETS:
-		return reply(replyCode, arg1 + " :Duplicate recipients. No message delivered");
-	case ERR_NOORIGIN:
-		return reply(replyCode, ":No origin specified");
+		return reply(arg1 + " :Duplicate recipients. No message delivered", replyCode);
 	case ERR_NORECIPIENT:
-		return reply(replyCode, ":No recipient given (" + arg1 + ")");
+		return reply(":No recipient given (" + arg1 + ")", replyCode);
 	case ERR_NOTEXTTOSEND:
-		return reply(replyCode, ":No text to send");
+		return reply(":No text to send", replyCode);
 	case ERR_WILDTOPLEVEL:
-		return reply(replyCode, arg1 + " :Wildcard in toplevel domain");
+		return reply(arg1 + " :Wildcard in toplevel domain", replyCode);
 	case ERR_UNKNOWNCOMMAND:
-		return reply(replyCode, arg1 + " :Unknown command");
+		return reply(arg1 + " :Unknown command", replyCode);
 	case ERR_NOMOTD:
-		return reply(replyCode, ":MOTD File is missing");
+		return reply(":MOTD File is missing", replyCode);
 	case ERR_NOADMININFO:
-		return reply(replyCode, arg1 + " :No administrative info available");
+		return reply(arg1 + " :No administrative info available", replyCode);
 	case ERR_FILEERROR:
-		return reply(replyCode, ":File error doing " + arg1 + " on " + arg2);
+		return reply(":File error doing " + arg1 + " on " + arg2, replyCode);
 	case ERR_NONICKNAMEGIVEN:
-		return reply(replyCode, ":No nickname given");
+		return reply(":No nickname given", replyCode);
 	case ERR_ERRONEUSNICKNAME:
-		return reply(replyCode, arg1 + " :Erroneus nickname");
+		return reply(arg1 + " :Erroneus nickname", replyCode);
 	case ERR_NICKNAMEINUSE:
-		return reply(replyCode, arg1 + " :Nickname is already in use");
+		return reply(arg1 + " :Nickname is already in use", replyCode);
 	case ERR_NICKCOLLISION:
-		return reply(replyCode, arg1 + " :Nickname collision KILL");
+		return reply(arg1 + " :Nickname collision KILL", replyCode);
 	case ERR_USERNOTINCHANNEL:
-		return reply(replyCode, arg1 + " " + arg2 + " :They aren't on that channel");
+		return reply(arg1 + " " + arg2 + " :They aren't on that channel", replyCode);
 	case ERR_NOTONCHANNEL:
-		return reply(replyCode, arg1 + " :You're not on that channel");
+		return reply(arg1 + " :You're not on that channel", replyCode);
 	case ERR_USERONCHANNEL:
-		return reply(replyCode, arg1 + " " + arg2 + " :is already on channel");
+		return reply(arg1 + " " + arg2 + " :is already on channel", replyCode);
 	case ERR_NOLOGIN:
-		return reply(replyCode, arg1 + " :User not logged in");
+		return reply(arg1 + " :User not logged in", replyCode);
 	case ERR_SUMMONDISABLED:
-		return reply(replyCode, ":SUMMON has been disabled");
+		return reply(":SUMMON has been disabled", replyCode);
 	case ERR_USERSDISABLED:
-		return reply(replyCode, ":USERS has been disabled");
+		return reply(":USERS has been disabled", replyCode);
 	case ERR_NOTREGISTERED:
-		return reply(replyCode, ":You have not registered");
+		return reply(":You have not registered", replyCode);
 	case ERR_NEEDMOREPARAMS:
-		return reply(replyCode, arg1 + " :Not enough parameters");
+		return reply(arg1 + " :Not enough parameters", replyCode);
 	case ERR_ALREADYREGISTRED:
-		return reply(replyCode, ":You may not reregister");
+		return reply(":You may not reregister", replyCode);
 	case ERR_NOPERMFORHOST:
-		return reply(replyCode, ":Your host isn't among the privileged");
+		return reply(":Your host isn't among the privileged", replyCode);
 	case ERR_PASSWDMISMATCH:
-		return reply(replyCode, ":Password incorrect");
+		return reply(":Password incorrect", replyCode);
 	case ERR_YOUREBANNEDCREEP:
-		return reply(replyCode, ":You are banned from this server");
+		return reply(":You are banned from this server", replyCode);
 	case ERR_KEYSET:
-		return reply(replyCode, arg1 + " :Channel key already set");
+		return reply(arg1 + " :Channel key already set", replyCode);
 	case ERR_CHANNELISFULL:
-		return reply(replyCode, arg1 + " :Cannot join channel (+l)");
+		return reply(arg1 + " :Cannot join channel (+l)", replyCode);
 	case ERR_UNKNOWNMODE:
-		return reply(replyCode, arg1 + " :is unknown mode char to me");
+		return reply(arg1 + " :is unknown mode char to me", replyCode);
 	case ERR_INVITEONLYCHAN:
-		return reply(replyCode, arg1 + " :Cannot join channel (+i)");
+		return reply(arg1 + " :Cannot join channel (+i)", replyCode);
 	case ERR_BANNEDFROMCHAN:
-		return reply(replyCode, arg1 + " :Cannot join channel (+b)");
+		return reply(arg1 + " :Cannot join channel (+b)", replyCode);
 	case ERR_BADCHANNELKEY:
-		return reply(replyCode, arg1 + " :Cannot join channel (+k)");
+		return reply(arg1 + " :Cannot join channel (+k)", replyCode);
 	case ERR_BADCHANMASK:
-		return reply(replyCode, arg1 + " :Bad Channel Mask");
+		return reply(arg1 + " :Bad Channel Mask", replyCode);
 	case ERR_NOPRIVILEGES:
-		return reply(replyCode, ":Permission Denied- You're not an IRC operator");
+		return reply(":Permission Denied- You're not an IRC operator", replyCode);
 	case ERR_CHANOPRIVSNEEDED:
-		return reply(replyCode, arg1 + " :You're not channel operator");
+		return reply(arg1 + " :You're not channel operator", replyCode);
 	case ERR_CANTKILLSERVER:
-		return reply(replyCode, ":You cant kill a server!");
+		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(replyCode, ":No O-lines for your host");
+		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
-		return reply(replyCode, ":Unknown MODE flag");
+		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:
-		return reply(replyCode, ":Cant change mode for other users");
+		return reply(":Cant change mode for other users", replyCode);
 	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }

@@ -5,7 +5,7 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 	if (arguments.size() < 4)
  		return client->reply(ERR_NEEDMOREPARAMS, "USER");
 
-	if (client->IsRegistered())
+	if (client->isRegistered())
  		return client->reply(ERR_ALREADYREGISTRED);
 
 	client->setUsername(arguments[0]);

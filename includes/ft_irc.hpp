@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <arpa/inet.h>
 #include <cctype>
+#include <csignal>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -44,8 +45,12 @@ typedef enum ReplyCode {
 	RPL_LUSERCHANNELS = 254,
 	RPL_LUSERME = 255,
 	RPL_ADMINME = 256,
+	RPL_ADMINLOC1 = 257,
+	RPL_ADMINLOC2 = 258,
 	RPL_ADMINEMAIL = 259,
 	RPL_TRACELOG = 261,
+	RPL_LOCALUSERS = 265,
+	RPL_GLOBALUSERS = 266,
 	RPL_NONE = 300,
 	RPL_AWAY = 301,
 	RPL_UNAWAY = 305,
@@ -143,6 +148,7 @@ typedef enum Modes {
 
 #define SERVERNAME "MiaoRC"
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
+#define SERVERMAIL "miao@outstanding.gov"
 #define SERVERVERSION "0.125.42b"
 #define NETWORKNAME "Oustanding"
 #define MOTD "Welcome to the IRC server"
@@ -177,8 +183,12 @@ public:
 #include "Client.hpp"
 #include "Server.hpp"
 
-void					 panic(std::string message);
-void					 syscall(int returnValue, const char* funcName);
+// clean.cpp
+void panic(std::string message);
+void syscall(int returnValue, const char* funcName);
+void signalHandler(int signum);
+
+// utils.cpp
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
