@@ -67,6 +67,7 @@ typedef enum ReplyCode {
 	RPL_INVITING = 341,
 	RPL_SUMMONING = 342,
 	RPL_VERSION = 351,
+	RPL_NAMREPLY = 353,
 	RPL_LINKS = 364,
 	RPL_ENDOFLINKS = 365,
 	RPL_ENDOFNAMES = 366,
@@ -165,4 +166,5 @@ bool isStringPrintable(std::string str);
 std::string concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::vector<std::string> split(const std::string& str, char delim);
 std::string toString(long number);
+std::string toLowercase(std::string lowercaseStr);
 std::string formatTime(time_t time);

@@ -26,6 +26,7 @@ public:
 	int getSocket() const;
 	int getChannelCount() const;
 	bool IsRegistered() const;
+	sockaddr_in getClientAddress() const;
 	std::string getNickname() const;
 	std::string getUsername() const;
 	std::string getRealname() const;

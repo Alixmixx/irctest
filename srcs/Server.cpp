@@ -56,7 +56,7 @@ Channel *Server::getChannel(std::string channelName) const
 {
 	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
-		if ((*it)->getName() == channelName)
+		if (toLowercase((*it)->getName()) == toLowercase(channelName))
 			return (*it);
 	}
 	return (NULL);
@@ -83,7 +83,7 @@ Client *Server::getClient(std::string nickname) const
 {
 	for (std::vector<Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
-		if ((*it)->getNickname() == nickname)
+		if (toLowercase((*it)->getNickname()) == toLowercase(nickname))
 			return (*it);
 	}
 	return (NULL);

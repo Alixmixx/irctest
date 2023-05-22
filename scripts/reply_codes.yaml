@@ -127,6 +127,9 @@
 351:
   name: RPL_VERSION
   reply: <version> <server> :<comments>
+353:
+  name: RPL_NAMREPLY
+	reply: <arg1><arg2> :<arg3>
 364:
   name: RPL_LINKS
   reply: <mask> <server> :<hopcount> <server info>

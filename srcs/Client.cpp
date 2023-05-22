@@ -70,6 +70,8 @@ int Client::getChannelCount() const { return (_channelCount); }
 
 bool Client::IsRegistered() const { return (_isRegistered); }
 
+sockaddr_in Client::getClientAddress() const { return (_clientAddress); }
+
 std::string Client::getNickname() const { return (_nickname); }
 
 std::string Client::getUsername() const { return (_username); }

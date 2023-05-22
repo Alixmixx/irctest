@@ -108,6 +108,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :Summoning user to IRC", replyCode);
 	case RPL_VERSION:
 		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
+	case RPL_NAMREPLY:
+		return reply(arg1 + arg2 + " :" + arg3);
 	case RPL_LINKS:
 		return reply(arg1 + " " + arg2 + " :" + arg3 + " " + arg4, replyCode);
 	case RPL_ENDOFLINKS:
