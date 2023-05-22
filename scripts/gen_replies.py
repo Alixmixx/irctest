@@ -1,9 +1,8 @@
-from pprint import pprint
 import re
 import yaml
 from yaml.loader import SafeLoader
 
-with open("scripts/reply_codes.yaml") as f:
+with open("scripts/files/reply_codes.yaml") as f:
     data = yaml.load(f, Loader=SafeLoader)
 
 TOP = """void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3, std::string arg4) const
@@ -12,7 +11,7 @@ TOP = """void Client::reply(ReplyCode replyCode, std::string arg1, std::string a
 	{"""
 
 BOTTOM = """	default:
-		exit(OUTSTANDING_ERROR);
+		std::exit(OUTSTANDING_ERROR);
 	}
 }"""
 
@@ -36,14 +35,14 @@ def transform(reply):
     return " + ".join(reply)
 
 
-fr = open("scripts/reply_codes.out", "w")
-fe = open("scripts/enum_yaml.out", "w")
+fr = open("scripts/files/reply_codes.out", "w")
+fe = open("scripts/files/enum_yaml.out", "w")
 print(TOP, file=fr)
 print("typedef enum ReplyCode {", file=fe)
 for code, response in sorted(data.items()):
     print(f"\tcase {response['name']}:", file=fr)
     print(
-        f"\t\treturn reply(replyCode, {transform(response['reply'])});",
+        f"\t\treturn reply({transform(response['reply'])}, replyCode);",
         file=fr,
     )
     print(f"\t{response['name']} = {code},", file=fe)

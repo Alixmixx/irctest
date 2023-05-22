@@ -8,7 +8,7 @@ def display(title, diff):
 	print(f"{BOLDBLUE}--- {title} ---{RESET}")
 	print(*sorted(diff), sep="\n")
 
-manual = get_codes("scripts/enum_yaml.out")
-generated = get_codes("scripts/enum_rfcs.out")
+manual = get_codes("scripts/files/enum_yaml.out")
+generated = get_codes("scripts/files/enum_rfcs.out")
 display("NOT IN GENERATED", manual - generated)
 display("NOT IN MANUAL", generated - manual)

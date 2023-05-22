@@ -1,75 +1,80 @@
-NAME	:= ircserv
+NAME		:= ircserv
 
-S		:= srcs/
-O		:= objs/
-I		:= includes/
-D		:= deps/
+S			:= srcs/
+O			:= objs/
+I			:= includes/
+D			:= deps/
 
-SRCS	+= main.cpp
-SRCS	+= Server.cpp
-SRCS	+= Client.cpp
-SRCS	+= Channel.cpp
-SRCS	+= Init/InitCommandHandlerMap.cpp
-SRCS	+= Message/ParseMessage.cpp
-SRCS	+= Message/Reply.cpp
-SRCS	+= Message/Broadcast.cpp
-SRCS	+= Commands/ConnectionCommands/HandleCap.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMode.cpp
-SRCS	+= Commands/ConnectionCommands/HandleNick.cpp
-SRCS	+= Commands/ConnectionCommands/HandlePing.cpp
-SRCS	+= Commands/ConnectionCommands/HandleQuit.cpp
-SRCS	+= Commands/ConnectionCommands/HandleUser.cpp
-SRCS	+= Commands/ConnectionCommands/HandleWhois.cpp
-SRCS	+= Commands/ConnectionCommands/HandleMotd.cpp
-SRCS	+= Commands/SendingCommands/HandlePrivateMessage.cpp
-SRCS	+= Commands/ChannelCommands/HandleJoin.cpp
-SRCS	+= Commands/ChannelCommands/HandleKick.cpp
-SRCS	+= Commands/ChannelCommands/HandleTopic.cpp
-SRCS	+= Commands/ChannelCommands/HandleNames.cpp
-SRCS	+= Commands/ChannelCommands/HandlePart.cpp
-SRCS	+= Commands/ChannelCommands/HandleList.cpp
-SRCS	+= Commands/ChannelCommands/HandleInvite.cpp
-SRCS	+= Utils/ParseArgv.cpp
-SRCS	+= Utils/Utils.cpp
+GARBAGE		:= .vscode classes commands message
 
-CC		:= clang++
-CFLAGS	:= -g -Wall -Wextra -Werror -std=c++98 -I$I
+CXX			:= clang++ # TODO c++
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
-SRCS	:= $(foreach file,$(SRCS),$S$(file))
-FOLDERS := $(sort $(dir $(SRCS)))
-OBJS	:= $(SRCS:$S%=$O%.o)
-DEPS	:= $(SRCS:$S%=$D%.d)
+SRCS		+= srcs/clean.cpp
+SRCS		+= srcs/main.cpp
+SRCS		+= srcs/utils.cpp
+SRCS		+= srcs/classes/Channel.cpp
+SRCS		+= srcs/classes/Client.cpp
+SRCS		+= srcs/classes/Server.cpp
+SRCS		+= srcs/message/broadcast.cpp
+SRCS		+= srcs/message/reply.cpp
+SRCS		+= srcs/message/parseMessage.cpp
+SRCS		+= srcs/commands/handleAdmin.cpp
+SRCS		+= srcs/commands/handleInvite.cpp
+SRCS		+= srcs/commands/handleJoin.cpp
+SRCS		+= srcs/commands/handleKick.cpp
+SRCS		+= srcs/commands/handleList.cpp
+SRCS		+= srcs/commands/handleLusers.cpp
+SRCS		+= srcs/commands/handleMode.cpp
+SRCS		+= srcs/commands/handleMotd.cpp
+SRCS		+= srcs/commands/handleNames.cpp
+SRCS		+= srcs/commands/handleNick.cpp
+SRCS		+= srcs/commands/handleOper.cpp
+SRCS		+= srcs/commands/handlePart.cpp
+SRCS		+= srcs/commands/handlePing.cpp
+SRCS		+= srcs/commands/handlePrivateMessage.cpp
+SRCS		+= srcs/commands/handleQuit.cpp
+SRCS		+= srcs/commands/handleTime.cpp
+SRCS		+= srcs/commands/handleTopic.cpp
+SRCS		+= srcs/commands/handleUser.cpp
+SRCS		+= srcs/commands/handleVersion.cpp
+SRCS		+= srcs/commands/handleWhois.cpp
+SRCS		+= srcs/commands/ignoreCommand.cpp
 
-RM		:= rm -rf
-MKDIR	:= mkdir -p
+FILENAMES	:= $(basename $(SRCS))
+FOLDERS 	:= $(sort $(dir $(SRCS)))
+OBJS		:= $(FILENAMES:$S%=$O%.o)
+DEPS		:= $(FILENAMES:$S%=$D%.d)
 
-END		:= \033[0m
-RED		:= \033[0;91m
-GREEN	:= \033[0;92m
-MAGENTA	:= \033[0;95m
+RM			:= rm -rf
+MKDIR		:= mkdir -p
 
-.PHONY: all clean fclean re
+END			:= \033[0m
+RED			:= \033[31m
+GREEN		:= \033[32m
+BLUE		:= \033[34m
 
 all: $(NAME)
 
 $O:
 	$(MKDIR) $(FOLDERS:$(S)%=$(O)%)
 
-$(OBJS): $O%.o: $S% | $O
-	@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS): $O%.o: $S%.cpp | $O
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "$(GREEN)✓ $@$(END)"
 
-$(DEPS): $D%.d: $S%
+$(DEPS): $D%.d: $S%.cpp
 	@$(MKDIR) $(FOLDERS:$(S)%=$(D)%)
-	@$(CC) $(CFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
+	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CC) $^ -o $@
-	@echo "$(MAGENTA)$(NAME) is compiled$(END)"
+	@$(CXX) $^ -o $@
+	@echo "$(BLUE)$(NAME) is compiled.$(END)"
 
 clean:
 	@echo "$(RED)Removing $D and $O$(END)"
-	@$(RM) $D $O
+	@$(RM) $D $O ${GARBAGE}
 
 fclean: clean
 	@echo "$(RED)Removing executable$(END)"
@@ -77,5 +82,12 @@ fclean: clean
 
 re: fclean
 	@$(MAKE) all
+
+run: $(NAME)
+	@$(VALGRIND) ./$(NAME) 6667 password
+
+bonus: $(NAME)
+
+.PHONY: all bonus clean fclean re run
 
 -include $(DEPS)
