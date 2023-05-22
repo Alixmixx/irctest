@@ -7,7 +7,7 @@ class Server;
 
 class Client {
 public:
-	Client(Server* server, int socketFd);
+	Client(Server* server, int socketFd, sockaddr_in clientAddress);
 	~Client();
 
 	void setNickname(std::string nickname);
@@ -52,6 +52,8 @@ private:
 	std::string _realname;
 	std::string _hostname;
 	std::string _prefix;
+
+	sockaddr_in _clientAddress;
 
 	std::string _message;
 

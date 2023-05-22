@@ -1,10 +1,11 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-Client::Client(Server* server, int socketFd)
+Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
 	  _isRegistered(false),
 	  _isInvisible(false),
+	  _clientAddress(clientAddress),
 	  _server(server)
 {
 	time_t t0 = std::time(NULL);
