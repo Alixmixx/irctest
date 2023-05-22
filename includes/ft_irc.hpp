@@ -155,6 +155,7 @@ typedef enum Modes {
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERLOC1 "Ecole 42"
 #define SERVERLOC2 "96 Boulevard Bessieres, 75017 Paris, France"
+#define PASSWORD "miao"
 
 // TODO find best constants
 #define BACKLOG 128
@@ -195,10 +196,8 @@ void syscall(int returnValue, const char* funcName);
 // utils.cpp
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
-std::string				 concatenateArguments(std::vector<std::string> arguments, unsigned int start);
 std::string				 toLowerCase(std::string str);
 std::string				 toUpperCase(std::string str);
-std::string				 toString(Client* client);
 std::string				 toString(long number);
 std::string				 formatTime(time_t time);
 std::vector<std::string> split(const std::string& str, char delim);
