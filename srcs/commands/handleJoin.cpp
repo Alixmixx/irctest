@@ -1,6 +1,19 @@
 #include "Server.hpp"
 
-static void newChannel(Client* client, std::string channelName, std::string channelPassword)
+void Server::channelWelcomeMessage(Client *client, Channel *channel)
+{
+	/* if (channel->getTopic() == "")
+		return client->reply(RPL_NOTOPIC, channel->getName());*/
+	if (channel->getTopic() != "")
+	{
+		client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
+		client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
+	}
+	std::vector<std::string> argument(1, channel->getName());
+	handleNames(client, argument);
+}
+
+void Server::newChannel(Client* client, std::string channelName, std::string channelPassword)
 {
 	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
 		return client->reply(ERR_TOOMANYCHANNELS, channelName);
@@ -11,6 +24,8 @@ static void newChannel(Client* client, std::string channelName, std::string chan
 	channel->setPassword(channelPassword);
 	channel->addChannelUser(client, FOUNDER);
 	server->addChannel(channel);
+
+	channelWelcomeMessage(client, channel);
 }
 
 void Server::addClientToChannel(Client* client, Channel* channel, std::string channelPassword)
@@ -34,13 +49,8 @@ void Server::addClientToChannel(Client* client, Channel* channel, std::string ch
 		return;
 
 	channel->addChannelUser(client);
-	/* if (channel->getTopic() == "")
-		return client->reply(RPL_NOTOPIC, channel->getName());*/
-	if (channel->getTopic() != "")
-		client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
-	client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
-	std::vector<std::string> argument(1, channel->getName());
-	handleNames(client, argument);
+
+	channelWelcomeMessage(client, channel);
 }
 
 static std::string extractFromArgument(std::string& arguments)
@@ -89,22 +99,14 @@ void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 		}
 
 		if (arguments.size() > 1)
-		{
 			channelPassword = extractFromArgument(arguments[1]);
-		}
 		else
-		{
 			channelPassword = "";
-		}
 
 		Channel* channel = getChannel(channelName);
 		if (channel != NULL)
-		{
 			addClientToChannel(client, channel, channelPassword);
-		}
 		else
-		{
 			newChannel(client, channelName, channelPassword);
-		}
 	}
 }

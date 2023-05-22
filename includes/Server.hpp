@@ -80,6 +80,8 @@ private:
 	void broadcast(std::vector<Client*> recipients, std::string message, std::vector<Client*> except);
 
 	void addClientToChannel(Client* client, Channel* channel, std::string channelPassword);
+	void newChannel(Client* client, std::string channelName, std::string channelPassword);
+	void channelWelcomeMessage(Client *client, Channel *channel);
 	void acceptNewClient();
 	void readFromClient(Client* client);
 	void parseMessageFromClient(Client* client, std::string command);
