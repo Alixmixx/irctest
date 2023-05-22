@@ -86,6 +86,8 @@ std::string Client::getMessage() const { return (_message); }
 
 bool Client::isInvisible() const { return (_isInvisible); }
 
+bool Client::isPasswordCorrect() const { return (_isPasswordCorrect); }
+
 Server* Client::getServer() const { return (_server); }
 
 std::vector<Channel*> Client::getChannels() const { return (_channels); };

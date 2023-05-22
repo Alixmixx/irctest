@@ -26,6 +26,7 @@ public:
 	int					  getSocket() const;
 	bool				  isRegistered() const;
 	bool				  isInvisible() const;
+	bool				  isPasswordCorrect() const;
 	std::string 		  getNickname() const;
 	std::string 		  getUsername() const;
 	std::string 		  getRealname() const;

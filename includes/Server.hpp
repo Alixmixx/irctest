@@ -74,7 +74,6 @@ private:
 	void handleUser(Client* client, std::vector<std::string> arguments);
 	void handleVersion(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
-	void ignoreCommand(Client* client, std::vector<std::string> arguments);
 
 	void broadcast(std::vector<Client*> recipients, std::string message);
 	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);

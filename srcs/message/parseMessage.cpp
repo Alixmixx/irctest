@@ -30,6 +30,16 @@ static std::vector<std::string> splitMessage(std::string message)
 	return arguments;
 }
 
+static bool canExecute(Client *client, std::string command)
+{
+	if (command == "PASS")
+		return true;
+	else if (command == "NICK" || command == "USER")
+		return client->isPasswordCorrect();
+	else
+		return client->isRegistered();
+}
+
 void Server::parseMessageFromClient(Client* client, std::string message)
 {
 	std::vector<std::string> arguments = splitMessage(message);
@@ -39,6 +49,10 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		return;
 	}
 	std::string command = toUpperCase(arguments[0]);
+	if (command == "CAP" || command == "PONG")
+		return;
+	if (!canExecute(client, command))
+		return client->reply(ERR_NOTREGISTERED);
 	if (command != "PING")
 		client->setLastAction();
 	arguments.erase(arguments.begin());
