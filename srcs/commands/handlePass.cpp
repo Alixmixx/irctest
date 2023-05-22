@@ -1,9 +1,8 @@
 #include "Server.hpp"
 
-// TODO everything. I'm just pushing to merge
 void Server::handlePass(Client* client, std::vector<std::string> arguments)
 {
-	if (client->isRegistered())
+	if (client->isPasswordCorrect())
 		return client->reply(ERR_ALREADYREGISTRED);
 	if (arguments.empty())
 		return client->reply(ERR_NEEDMOREPARAMS, "PASS");
