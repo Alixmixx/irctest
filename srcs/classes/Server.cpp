@@ -100,7 +100,7 @@ void Server::removeClient(Client* client)
 	}
 
 	std::vector<Channel*> channels = client->getChannels();
-	for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+	for (std::vector<Channel*>::reverse_iterator it = channels.rbegin(); it != channels.rend(); ++it)
 		(*it)->removeClientFromChannel(client);
 }
 
