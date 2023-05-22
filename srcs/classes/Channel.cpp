@@ -4,13 +4,10 @@ Channel::Channel(Server* server, std::string& name)
 	: _name(name),
 	  _topic(""),
 	  _password(""),
-	  _mode(""),
-	  _key(""),
 	  _topicSetter(""),
 	  _topicTimestamp(std::time(NULL)),
-	  _isTopicProtected(false),
-	  _inviteOnly(false),
-	  _isSecret(false),
+	  _userLimit(MAX_USERS_PER_CHANNEL),
+	  _modes(0),
 	  _server(server)
 {
 }
@@ -29,13 +26,25 @@ const std::string& Channel::getTopic() const { return _topic; }
 
 const std::string& Channel::getPassword() const { return _password; }
 
-const std::string& Channel::getKey() const { return _key; }
-
 const std::string& Channel::getTopicSetter() const { return _topicSetter; }
 
-time_t Channel::getTopicTimestamp() const { return _topicTimestamp; }
+std::string Channel::getModeString() const
+{
+	std::string mode = "+";
+	if (isInviteOnly())
+		mode += "i";
+	if (isPasswordProtected())
+		mode += "k";
+	if (isUserLimitSet())
+		mode += "l";
+	if (isSecret())
+		mode += "s";
+	if (isTopicProtected())
+		mode += "t";
+	return (mode);
+}
 
-bool Channel::isTopicProtected() const { return (_isTopicProtected); }
+time_t Channel::getTopicTimestamp() const { return _topicTimestamp; }
 
 std::vector<Client*>& Channel::getChannelUsers() { return _channelUsers; }
 
@@ -61,11 +70,15 @@ bool Channel::isOnChannel(Client* client) const
 	return (false);
 }
 
-bool Channel::isPasswordProtected() const { return (_password != ""); }
+bool Channel::isInviteOnly() const { return (_modes & M_INVITE); }
 
-bool Channel::isSecret() const { return (_isSecret); }
+bool Channel::isPasswordProtected() const { return (_modes & M_KEY); }
 
-bool Channel::isInviteOnly() const { return (_inviteOnly); }
+bool Channel::isUserLimitSet() const { return (_modes & M_LIMITED); }
+
+bool Channel::isSecret() const { return (_modes & M_SECRET); }
+
+bool Channel::isTopicProtected() const { return (_modes & M_PROTECTED); }
 
 // Setters
 
@@ -78,11 +91,18 @@ void Channel::setTopic(Client* client, const std::string& topic)
 
 void Channel::setPassword(const std::string& password) { _password = password; }
 
-void Channel::setKey(const std::string& key) { _key = key; }
-
 void Channel::setClientMode(Client* client, int mode) { _channelUsersModes[client] = mode; }
 
-void Channel::setIsTopicProtected(bool isTopicProtected) { _isTopicProtected = isTopicProtected; }
+void Channel::setMode(int mode, bool sign)
+{
+	if (sign == PLUS)
+		_modes |= mode;
+	else if (sign == MINUS)
+		_modes &= ~mode;
+
+	if (mode & M_LIMITED)
+		_userLimit = _channelUsers.size();
+}
 
 // Methods
 

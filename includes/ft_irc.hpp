@@ -148,6 +148,17 @@ typedef enum Modes {
 	FOUNDER
 } Modes;
 
+typedef enum ChannelModes {
+	M_INVITE	= 1 << 0,
+	M_KEY		= 1 << 1,
+	M_LIMITED	= 1 << 2,
+	M_MODERATED	= 1 << 3,
+	M_OPERATOR	= 1 << 4,
+	M_PROTECTED	= 1 << 5,
+	M_SECRET	= 1 << 6,
+	M_BAN		= 1 << 7,
+} ChannelModes;
+
 #define NETWORKNAME "Oustanding"
 #define SERVERNAME "MiaoRC"
 #define SERVERVERSION "0.125.42b"
@@ -172,6 +183,9 @@ typedef enum Modes {
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
+
+#define PLUS true
+#define MINUS false
 
 class SystemError : public std::runtime_error {
 public:
