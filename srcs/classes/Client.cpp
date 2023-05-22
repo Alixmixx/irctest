@@ -1,11 +1,12 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-Client::Client(Server* server, int socketFd)
+Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 	: _clientSocket(socketFd),
 	  _isRegistered(false),
 	  _isInvisible(false),
 	  _isPasswordCorrect(false),
+	  _clientAddress(clientAddress),
 	  _server(server)
 {
 	time_t t0 = std::time(NULL);
@@ -68,6 +69,8 @@ void Client::leaveChannel(Channel* channel)
 int Client::getSocket() const { return (_clientSocket); }
 
 bool Client::isRegistered() const { return (_isRegistered); }
+
+sockaddr_in Client::getClientAddress() const { return (_clientAddress); }
 
 std::string Client::getNickname() const { return (_nickname); }
 

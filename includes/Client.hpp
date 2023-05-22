@@ -7,7 +7,7 @@ class Server;
 
 class Client {
 public:
-	Client(Server* server, int socketFd);
+	Client(Server* server, int socketFd, sockaddr_in clientAddress);
 	~Client();
 
 	void setNickname(std::string nickname);
@@ -32,10 +32,12 @@ public:
 	std::string 		  getHostname() const;
 	std::string 		  getPrefix() const;
 	std::string 		  getMessage() const;
-	Server*				  getServer() const;
 	std::vector<Channel*> getChannels() const;
 	time_t				  getSignonTime() const;
 	time_t				  getLastAction() const;
+	sockaddr_in    		  getClientAddress() const;
+	Server*				  getServer() const;
+
 
 	void reply(std::string replyMessage) const;
 	void reply(std::string replyMessage, ReplyCode replyCode) const;
@@ -54,13 +56,15 @@ private:
 	std::string _hostname;
 	std::string _prefix;
 
+	sockaddr_in _clientAddress;
+
 	std::string _message;
 
 	time_t _signonTime;
 	time_t _lastAction;
 
 	std::vector<Channel*> _channels;
-	Server*				  _server;
+	Server* _server;
 };
 
 std::ostream& operator<<(std::ostream& os, const Client& client);
