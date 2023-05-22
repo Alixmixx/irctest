@@ -34,10 +34,10 @@ void Server::addClientToChannel(Client* client, Channel* channel, std::string ch
 		return;
 
 	channel->addChannelUser(client);
-	if (channel->getTopic() == "")
-		return client->reply(RPL_NOTOPIC, channel->getName());
-
-	client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
+	/* if (channel->getTopic() == "")
+		return client->reply(RPL_NOTOPIC, channel->getName());*/
+	if (channel->getTopic() != "")
+		client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
 	client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
 	std::vector<std::string> argument(1, channel->getName());
 	handleNames(client, argument);
