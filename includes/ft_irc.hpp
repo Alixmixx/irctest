@@ -161,7 +161,7 @@ typedef enum Modes {
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
 #define MAX_EVENTS 32
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
 

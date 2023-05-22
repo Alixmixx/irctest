@@ -5,6 +5,7 @@ Client::Client(Server* server, int socketFd)
 	: _clientSocket(socketFd),
 	  _isRegistered(false),
 	  _isInvisible(false),
+	  _isPasswordCorrect(false),
 	  _server(server)
 {
 	time_t t0 = std::time(NULL);
@@ -44,6 +45,8 @@ void Client::setMessage(std::string message) { _message = message; }
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
 void Client::setLastAction() { _lastAction = std::time(NULL); }
+
+void Client::setPasswordCorrect() { _isPasswordCorrect = true; }
 
 void Client::addChannel(Channel* channel) { _channels.push_back(channel); }
 

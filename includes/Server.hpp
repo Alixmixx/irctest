@@ -65,6 +65,7 @@ private:
 	void handleNick(Client* client, std::vector<std::string> arguments);
 	void handleOper(Client* client, std::vector<std::string> arguments);
 	void handlePart(Client* client, std::vector<std::string> arguments);
+	void handlePass(Client* client, std::vector<std::string> arguments);
 	void handlePing(Client* client, std::vector<std::string> arguments);
 	void handlePrivateMessage(Client* client, std::vector<std::string> arguments);
 	void handleQuit(Client* client, std::vector<std::string> arguments);

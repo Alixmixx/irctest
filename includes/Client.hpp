@@ -18,6 +18,7 @@ public:
 	void setMessage(std::string message);
 	void setIsInvisible(bool invisible);
 	void setLastAction();
+	void setPasswordCorrect();
 
 	void addChannel(Channel* channel);
 	void leaveChannel(Channel* channel);
@@ -41,9 +42,11 @@ public:
 	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "") const;
 
 private:
-	int	 _clientSocket;
+	int	_clientSocket;
+
 	bool _isRegistered;
 	bool _isInvisible;
+	bool _isPasswordCorrect;
 
 	std::string _nickname;
 	std::string _username;

@@ -32,6 +32,7 @@ SRCS		+= srcs/commands/handleNames.cpp
 SRCS		+= srcs/commands/handleNick.cpp
 SRCS		+= srcs/commands/handleOper.cpp
 SRCS		+= srcs/commands/handlePart.cpp
+SRCS		+= srcs/commands/handlePass.cpp
 SRCS		+= srcs/commands/handlePing.cpp
 SRCS		+= srcs/commands/handlePrivateMessage.cpp
 SRCS		+= srcs/commands/handleQuit.cpp

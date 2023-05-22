@@ -8,7 +8,7 @@ from termcolor import colored
 IP = r"(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)"
 
 BACKLOG = 32
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 8192
 MAX_PORT = 65535
 
 
