@@ -96,7 +96,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_ENDOFWHOIS:
 		return reply(arg1 + " :End of /WHOIS list", replyCode);
 	case RPL_WHOISCHANNELS:
-		return reply(arg1 + " :End of /WHOIS list", replyCode);
+		return reply(arg1 + " :" + arg2, replyCode);
 	case RPL_LISTSTART:
 		return reply("Channel :Users Name", replyCode);
 	case RPL_LIST:

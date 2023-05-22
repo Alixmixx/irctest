@@ -7,7 +7,7 @@ class Server;
 
 class Client {
 public:
-	Client(Server* server, int socketFd, sockaddr_in clientAddress);
+	Client(Server* server, int socketFd);
 	~Client();
 
 	void setNickname(std::string nickname);
@@ -17,20 +17,24 @@ public:
 	void setHostname(std::string hostname);
 	void setMessage(std::string message);
 	void setIsInvisible(bool invisible);
+	void setLastAction();
+
 	void addChannel(Channel* channel);
 	void leaveChannel(Channel* channel);
 
-	int							getSocket() const;
-	bool						isRegistered() const;
-	bool						isInvisible() const;
-	std::string 				getNickname() const;
-	std::string 				getUsername() const;
-	std::string 				getRealname() const;
-	std::string 				getHostname() const;
-	std::string 				getPrefix() const;
-	std::string 				getMessage() const;
-	Server*						getServer() const;
-	std::vector<Channel*>		getChannels() const;
+	int					  getSocket() const;
+	bool				  isRegistered() const;
+	bool				  isInvisible() const;
+	std::string 		  getNickname() const;
+	std::string 		  getUsername() const;
+	std::string 		  getRealname() const;
+	std::string 		  getHostname() const;
+	std::string 		  getPrefix() const;
+	std::string 		  getMessage() const;
+	Server*				  getServer() const;
+	std::vector<Channel*> getChannels() const;
+	time_t				  getSignonTime() const;
+	time_t				  getLastAction() const;
 
 	void reply(std::string replyMessage) const;
 	void reply(std::string replyMessage, ReplyCode replyCode) const;
@@ -41,8 +45,6 @@ private:
 	bool _isRegistered;
 	bool _isInvisible;
 
-	struct sockaddr_in _clientAddress;
-
 	std::string _nickname;
 	std::string _username;
 	std::string _realname;
@@ -50,6 +52,9 @@ private:
 	std::string _prefix;
 
 	std::string _message;
+
+	time_t _signonTime;
+	time_t _lastAction;
 
 	std::vector<Channel*> _channels;
 	Server*				  _server;

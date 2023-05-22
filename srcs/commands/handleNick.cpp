@@ -26,7 +26,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 		while (getClient(nickname) != NULL)
 		{
 			if (client->isRegistered())
-				return client->reply(ERR_NICKNAMEINUSE, nickname);
+				return client->reply(ERR_NICKNAMEINUSE, nickname); // TODO remove?
 			nickname = arguments[0] + toString(suffix++);
 		}
 		if (client->isRegistered())

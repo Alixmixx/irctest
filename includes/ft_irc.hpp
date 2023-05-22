@@ -154,7 +154,7 @@ typedef enum Modes {
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERLOC1 "Ecole 42"
-#define SERVERLOC2 "96 Boulevard Bessieres, 75017"
+#define SERVERLOC2 "96 Boulevard Bessieres, 75017 Paris, France"
 
 // TODO find best constants
 #define BACKLOG 128

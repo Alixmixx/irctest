@@ -114,7 +114,7 @@
   reply: <nick> :End of /WHOIS list
 319:
   name: RPL_WHOISCHANNELS
-  reply: <nick> :End of /WHOIS list
+  reply: <nick> :<channels>
 321:
   name: RPL_LISTSTART
   reply: Channel :Users Name

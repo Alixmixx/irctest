@@ -1,18 +1,15 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-Client::Client(Server* server, int socketFd, struct sockaddr_in clientAddress)
+Client::Client(Server* server, int socketFd)
 	: _clientSocket(socketFd),
 	  _isRegistered(false),
 	  _isInvisible(false),
-	  _clientAddress(clientAddress),
-	  _nickname(""),
-	  _username(""),
-	  _realname(""),
-	  _hostname(""),
 	  _server(server)
 {
-	(void)_clientAddress;
+	time_t t0 = std::time(NULL);
+	_signonTime = t0;
+	_lastAction = t0;
 }
 
 Client::~Client()
@@ -45,6 +42,8 @@ void Client::setHostname(std::string hostname) { _hostname = hostname; }
 void Client::setMessage(std::string message) { _message = message; }
 
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
+
+void Client::setLastAction() { _lastAction = std::time(NULL); }
 
 void Client::addChannel(Channel* channel) { _channels.push_back(channel); }
 
@@ -84,6 +83,10 @@ bool Client::isInvisible() const { return (_isInvisible); }
 Server* Client::getServer() const { return (_server); }
 
 std::vector<Channel*> Client::getChannels() const { return (_channels); };
+
+time_t Client::getSignonTime() const { return _signonTime; };
+
+time_t Client::getLastAction() const { return _lastAction; };
 
 std::ostream& operator<<(std::ostream& os, const Client& client)
 {

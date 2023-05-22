@@ -149,7 +149,7 @@ void Server::acceptNewClient()
 
 	std::cout << BLUE << "Client connected." << RESET << std::endl;
 	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen), "accept");
-	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
+	_clients.push_back(new Client(this, newClientSocket));
 	if (_clients.size() > _maxUsers)
 		_maxUsers = _clients.size();
 	syscall(fcntl(newClientSocket, F_SETFL, O_NONBLOCK), "fcntl");
@@ -181,6 +181,7 @@ void Server::loop()
 			Client* client = getClient(_eventList[i].data.fd);
 			if (client == NULL)
 				panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
+			client->setLastAction();
 			if (_eventList[i].events & EPOLLIN)
 				readFromClient(client);
 			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
