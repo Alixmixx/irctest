@@ -1,5 +1,6 @@
 #include "Server.hpp"
 
+// TODO ERR_UMODEUNKNOWNFLAG for user modes
 void Server::handleMode(Client* client, std::vector<std::string> arguments) // TODO by Alix
 {
 	if (arguments.size() == 0)

@@ -181,7 +181,6 @@ void Server::loop()
 			Client* client = getClient(_eventList[i].data.fd);
 			if (client == NULL)
 				panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
-			client->setLastAction();
 			if (_eventList[i].events & EPOLLIN)
 				readFromClient(client);
 			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
