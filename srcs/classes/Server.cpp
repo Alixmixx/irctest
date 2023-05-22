@@ -12,7 +12,6 @@ Server::Server(unsigned short port, std::string password)
 	  _serverCreationTime(std::time(NULL))
 {
 	_commandHandlers["ADMIN"] = &Server::handleAdmin;
-	_commandHandlers["CAP"] = &Server::ignoreCommand;
 	_commandHandlers["INVITE"] = &Server::handleInvite;
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;
@@ -26,7 +25,6 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["PART"] = &Server::handlePart;
 	_commandHandlers["PASS"] = &Server::handlePass;
 	_commandHandlers["PING"] = &Server::handlePing;
-	_commandHandlers["PONG"] = &Server::ignoreCommand;
 	_commandHandlers["PRIVMSG"] = &Server::handlePrivateMessage;
 	_commandHandlers["QUIT"] = &Server::handleQuit;
 	_commandHandlers["TIME"] = &Server::handleTime;

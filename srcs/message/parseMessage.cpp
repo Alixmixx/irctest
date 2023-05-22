@@ -39,7 +39,9 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		return;
 	}
 	std::string command = toUpperCase(arguments[0]);
-	if (command != "PING")
+	if (command == "CAP")
+		return;
+	if (command != "PING" || command == "PONG")
 		client->setLastAction();
 	arguments.erase(arguments.begin());
 	std::map<std::string, CommandHandler>::iterator it = _commandHandlers.find(command);
