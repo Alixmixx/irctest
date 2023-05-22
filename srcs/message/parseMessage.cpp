@@ -71,7 +71,8 @@ void Server::readFromClient(Client* client)
 		return;
 	}
 
-	std::cout << RED << "Message from client " << client->getSocket() << ":\n"
+	if (message.find("PING") == std::string::npos)
+		std::cout << RED << "Message from client " << client->getSocket() << ":\n"
 			  << message << RESET;
 
 	size_t pos;

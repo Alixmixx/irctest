@@ -13,7 +13,7 @@ static void newChannel(Client* client, std::string channelName, std::string chan
 	server->addChannel(channel);
 }
 
-static void addToChannel(Client* client, Channel* channel, std::string channelPassword)
+void Server::addClientToChannel(Client* client, Channel* channel, std::string channelPassword)
 {
 	if (client->getChannels().size() >= MAX_CHANNELS_PER_CLIENT)
 		return client->reply(ERR_TOOMANYCHANNELS, channel->getName());
@@ -34,6 +34,13 @@ static void addToChannel(Client* client, Channel* channel, std::string channelPa
 		return;
 
 	channel->addChannelUser(client);
+	if (channel->getTopic() == "")
+		return client->reply(RPL_NOTOPIC, channel->getName());
+
+	client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
+	client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
+	std::vector<std::string> argument(1, channel->getName());
+	handleNames(client, argument);
 }
 
 static std::string extractFromArgument(std::string& arguments)
@@ -93,11 +100,7 @@ void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 		Channel* channel = getChannel(channelName);
 		if (channel != NULL)
 		{
-			addToChannel(client, channel, channelPassword);
-			if (channel->getTopic() == "")
-				client->reply(RPL_NOTOPIC, channel->getName());
-			else
-				client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
+			addClientToChannel(client, channel, channelPassword);
 		}
 		else
 		{
