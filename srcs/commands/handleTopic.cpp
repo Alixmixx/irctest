@@ -19,7 +19,7 @@ void Server::handleTopic(Client* client, std::vector<std::string> arguments)
 		else
 		{
 			client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
-			return client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), formatTime(channel->getTopicTimestamp()));
+			return client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
 		}
 	}
 

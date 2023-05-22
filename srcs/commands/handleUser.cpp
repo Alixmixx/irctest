@@ -9,7 +9,7 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
  		return client->reply(ERR_ALREADYREGISTRED);
 
 	client->setUsername(arguments[0]);
-	client->setHostname(toString(ntohl(client->getClientAddress().sin_addr.s_addr)));
+	client->setHostname(inet_ntoa(client->getClientAddress().sin_addr));
 	client->setRealname(arguments[3]);
 	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getUsername() != "" && client->getNickname() != "")

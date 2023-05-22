@@ -4,7 +4,8 @@
 void Client::reply(std::string replyMessage) const
 {
 	replyMessage += "\r\n";
-	std::cout << GREEN << "Message to client " << _clientSocket << ":\n" << replyMessage << RESET;
+	if (replyMessage.find("PONG") == std::string::npos)
+		std::cout << GREEN << "Message to client " << _clientSocket << ":\n" << replyMessage << RESET;
 	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), MSG_NOSIGNAL);
 }
 
