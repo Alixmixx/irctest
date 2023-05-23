@@ -94,15 +94,12 @@ while True:
                 receiver = connection.client_socket
                 name = "Server"
             if data:
-                print(colored(direction, color))
-                print(
-                    colored(
-                        "".join(
-                            chr(c) for c in data if c == 10 or c == 13 or 32 <= c <= 126
-                        ).strip(),
-                        color,
-                    )
-                )
+                s = "".join(
+                    chr(c) for c in data if c == 10 or c == 13 or 32 <= c <= 126
+                ).strip()
+                if "PING " not in s and "PONG " not in s:
+                    print(colored(direction, color))
+                    print(colored(s, color))
                 receiver.sendall(data)
             else:
                 print_info(f"{name} {connection.idx} disconnected.")
