@@ -2,6 +2,9 @@
 
 void Server::handleUser(Client* client, std::vector<std::string> arguments)
 {
+	if (client->getNickname() == "*")
+		return removeClient(client);
+
 	if (arguments.size() < 4)
  		return client->reply(ERR_NEEDMOREPARAMS, "USER");
 

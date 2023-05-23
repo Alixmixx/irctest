@@ -18,7 +18,11 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	if (arguments.empty() || arguments[0].empty())
 		client->reply(ERR_NONICKNAMEGIVEN);
 	else if (!isNicknameValid(arguments[0]))
+	{
+		if (!client->isRegistered())
+			client->setNickname("*");
 		client->reply(ERR_ERRONEUSNICKNAME, arguments[0]);
+	}
 	else
 	{
 		unsigned int suffix = 0;
