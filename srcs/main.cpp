@@ -18,13 +18,13 @@ int main(int argc, char** argv)
 		signal(SIGINT, signalHandler);
 		std::cout << BLUE << "Press Ctrl+C to exit." << RESET << std::endl;
 		server.loop();
+		std::cout << BLUE << "\rGood bye. 💞" << RESET << std::endl;
+		return EXIT_SUCCESS;
 	} catch (const SystemError &e) {
         std::perror(e.funcName);
 		return EXIT_FAILURE;
-    } catch (std::exception &e) {
+    } catch (const std::exception &e) {
         std::cout << e.what() << std::endl;
 		return OUTSTANDING_ERROR;
     }
-	std::cout << BLUE << "\rGood bye. 💞" << RESET << std::endl;
-	return EXIT_SUCCESS;
 }
