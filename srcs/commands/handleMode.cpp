@@ -83,7 +83,7 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 	/* if (target == NULL && arguments[0][0] != '#')
 		return client->reply(ERR_NOSUCHNICK, arguments[0]); // ? */
 
-	if (channel == NULL) // && arguments[0][0] == '#'
+	if (channel == NULL && arguments[0][0] == '#')
 		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
 	/* 	if (target)

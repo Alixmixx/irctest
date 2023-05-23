@@ -19,8 +19,8 @@ static std::string getChannelPrefix(int mode)
 {
 	if (mode == OPERATOR)
 		return "@";
-	if (mode == PROTECTED)
-		return "&";
+/* 	if (mode == PROTECTED)
+		return "&"; */
 	if (mode == FOUNDER)
 		return "~";
 	return "";
