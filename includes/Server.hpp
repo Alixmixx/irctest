@@ -24,7 +24,6 @@ public:
 	time_t				  getServerCreationTime() const;
 	const std::string	  getServerHostname() const;
 	const std::string	  getServerInfo() const;
-	const std::string	  getServerMotd() const;
 	const std::string	  getServerName() const;
 	const std::string	  getServerPassword() const;
 	const std::string	  getServerVersion() const;

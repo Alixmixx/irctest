@@ -1,19 +1,8 @@
 #include "Server.hpp"
 
-/*
-:liquid.oftc.net 352 axbrisse1 #lololol ~axbrisse 62.210.34.81 liquid.oftc.net axbrisse1 H :0 Axel BRISSE
-:liquid.oftc.net 352 axbrisse1 #lololol ~axbrisse 62.210.34.81 liquid.oftc.net axbrisse2 H@ :0 Axel BRISSE
-:liquid.oftc.net 315 axbrisse1 #lololol :End of /WHO list.
-
-352 WHOREPLY
-315 ENDOFWHO
-402 NOSUCHSERVER
-
-TODO correct ip
-TODO @ before op
-TODO WHO nickname
-TODO WHO mask
-*/
+// TODO full address instead of just IP address
+// /who erik example on octf:
+// * ~erik h-158-174-164-251.A357.priv.bahnhof.se kinetic.oftc.net erik H :3 Erik Meijer
 
 static std::string getChannelPrefix(int mode)
 {
@@ -39,7 +28,7 @@ void Server::handleWho(Client* client, std::vector<std::string> arguments)
 			std::vector<Client*> users = channel->getChannelUsers();
 			for (std::vector<Client*>::iterator it = users.begin(); it != users.end(); it++)
 			{
-				Client* user = *it;
+				Client*		user = *it;
 				std::string prefix = getChannelPrefix(channel->getChannelUserMode(user));
 				client->reply(RPL_WHOREPLY,
 							  name + " " + user->getUsername() + " " + user->getIp() + " " +
@@ -50,6 +39,12 @@ void Server::handleWho(Client* client, std::vector<std::string> arguments)
 	}
 	else
 	{
+		Client* target = getClient(name);
+		if (target != NULL)
+			client->reply(RPL_WHOREPLY,
+						  "* " + target->getUsername() + " " + target->getIp() + " " +
+							  SERVERHOSTNAME + " " + target->getNickname() + " H",
+						  target->getRealname());
 	}
 	client->reply(RPL_ENDOFWHO, name);
 }

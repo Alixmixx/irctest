@@ -40,7 +40,6 @@ public:
 	sockaddr_in    		  getClientAddress() const;
 	Server*				  getServer() const;
 
-
 	void reply(std::string replyMessage) const;
 	void reply(std::string replyMessage, ReplyCode replyCode) const;
 	void reply(ReplyCode replyCode, std::string arg1 = "", std::string arg2 = "", std::string arg3 = "", std::string arg4 = "") const;
