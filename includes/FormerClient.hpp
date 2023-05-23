@@ -6,7 +6,7 @@ class FormerClient {
 public:
 	FormerClient(std::string nickname, std::string username, std::string realname, time_t leaveTime,
 				 unsigned long ipAddress);
-	~FormerClient(){};
+	~FormerClient();
 
 	const std::string	nickname;
 	const std::string	username;

@@ -44,6 +44,7 @@ private:
 	const time_t	  _serverCreationTime;
 
 	std::vector<Client*>  _clients;
+	std::vector<FormerClient*>  _formerClients;
 	std::vector<Channel*> _channels;
 
 	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
@@ -72,9 +73,7 @@ private:
 	void handleWho(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);
 
-	void broadcast(std::vector<Client*> recipients, std::string message);
-	void broadcast(std::vector<Client*> recipients, std::string message, Client* except);
-	void broadcast(std::vector<Client*> recipients, std::string message, std::vector<Client*> except);
+	void broadcast(std::vector<Client*> recipients, std::string message, Client* except=NULL);
 
 	void addClientToChannel(Client* client, Channel* channel, std::string channelPassword);
 	void newChannel(Client* client, std::string channelName, std::string channelPassword);

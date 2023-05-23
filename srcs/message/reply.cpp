@@ -258,3 +258,10 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		std::exit(OUTSTANDING_ERROR);
 	}
 }
+
+void Server::broadcast(std::vector<Client*> recipients, std::string message, Client* except)
+{
+	for (std::vector<Client*>::const_iterator it = recipients.begin(); it != recipients.end(); ++it)
+		if ((*it) != except)
+			(*it)->reply(message);
+}
