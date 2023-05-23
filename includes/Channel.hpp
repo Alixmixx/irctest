@@ -2,9 +2,6 @@
 
 #include "ft_irc.hpp"
 
-class Client;
-class Server;
-
 class Channel {
 public:
 	Channel(Server* server, std::string& name, time_t creationTime);

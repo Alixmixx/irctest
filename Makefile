@@ -84,11 +84,8 @@ fclean: clean
 re: fclean
 	@$(MAKE) all
 
-run: $(NAME)
-	@$(VALGRIND) ./$(NAME) 6667 password
-
 bonus: $(NAME)
 
-.PHONY: all bonus clean fclean re run
+.PHONY: all bonus clean fclean re
 
 -include $(DEPS)

@@ -208,10 +208,12 @@ std::string toString(T x) {
 
 class Channel;
 class Client;
+class FormerClient;
 class Server;
 
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "FormerClient.hpp"
 #include "Server.hpp"
 
 // clean.cpp
@@ -225,6 +227,5 @@ bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 toLowerCase(std::string str);
 std::string				 toUpperCase(std::string str);
-std::string				 toString(long number);
 std::string				 formatTime(time_t time);
 std::vector<std::string> split(const std::string& str, char delim);

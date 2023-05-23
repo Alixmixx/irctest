@@ -14,13 +14,6 @@ std::vector<std::string> split(const std::string& str, char delim)
 	return result;
 }
 
-std::string toString(long number)
-{
-	std::stringstream ss;
-	ss << number;
-	return ss.str();
-}
-
 std::string formatTime(time_t time)
 {
 	std::tm* localTime = std::localtime(&time);

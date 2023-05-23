@@ -2,9 +2,6 @@
 
 #include "ft_irc.hpp"
 
-class Channel;
-class Client;
-
 class Server {
 public:
 	Server(unsigned short port, std::string password);

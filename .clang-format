@@ -5,6 +5,7 @@ AccessModifierOffset: -4
 ColumnLimit: 100
 PointerAlignment: Left
 AlignConsecutiveDeclarations: true
+AlignOperands: true
 BraceWrapping:
   AfterClass: false
   AfterControlStatement: true

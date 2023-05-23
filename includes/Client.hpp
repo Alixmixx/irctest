@@ -2,9 +2,6 @@
 
 #include "ft_irc.hpp"
 
-class Channel;
-class Server;
-
 class Client {
 public:
 	Client(Server* server, int socketFd, sockaddr_in clientAddress);
