@@ -66,3 +66,10 @@ std::string toUpperCase(std::string str)
 		*it = std::toupper(*it);
 	return str;
 }
+
+int stoi(std::string& s)
+{
+    int n;
+    std::istringstream(s) >> n;
+    return n;
+}
