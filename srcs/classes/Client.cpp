@@ -84,6 +84,8 @@ std::string Client::getPrefix() const { return (_prefix); }
 
 std::string Client::getMessage() const { return (_message); }
 
+std::string Client::getIp() const { return "127.0.0.1"; } // TODO
+
 bool Client::isInvisible() const { return (_isInvisible); }
 
 bool Client::isPasswordCorrect() const { return (_isPasswordCorrect); }

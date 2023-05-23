@@ -31,6 +31,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
 	_commandHandlers["VERSION"] = &Server::handleVersion;
+	_commandHandlers["WHO"] = &Server::handleWho;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
 }
 

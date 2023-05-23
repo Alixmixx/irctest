@@ -72,12 +72,7 @@ static std::string extractFromArgument(std::string& arguments)
 
 static bool checkChannelName(std::string& channelName)
 {
-	if (channelName[0] != '#' && channelName[0] != '&')
-	{
-		// client->reply(ERR_NOSUCHCHANNEL, channelName);
-		return (false);
-	}
-	return (true);
+	return channelName[0] == '#' || channelName[0] == '&';
 }
 
 void Server::handleJoin(Client* client, std::vector<std::string> arguments)
