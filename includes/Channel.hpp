@@ -38,8 +38,7 @@ public:
 
 	void removeClientFromChannel(Client* client);
 
-	void addChannelUser(Client* client);
-	void addChannelUser(Client* client, int mode);
+	void addChannelUser(Client* client, int mode=USER);
 
 	void addChannelOperator(Client* client);
 	void removeChannelOperator(Client* client);

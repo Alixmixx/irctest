@@ -111,13 +111,6 @@ void Channel::setMode(int mode, bool sign)
 
 // Methods
 
-void Channel::addChannelUser(Client* client)
-{
-	_channelUsers.push_back(client);
-	_channelUsersModes[client] = USER;
-	client->addChannel(this);
-}
-
 void Channel::addChannelUser(Client* client, int mode)
 {
 	_channelUsers.push_back(client);
