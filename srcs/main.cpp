@@ -8,10 +8,12 @@ int main(int argc, char** argv)
 		return argumentError("Usage: " + std::string(argv[0]) + " <port> <password>");
 	else if (!isPortNumberCorrect(argv[1]))
 		return argumentError("Invalid port number: " + std::string(argv[1]));
+	else if (argv[2][0] == '\0' )
+		return argumentError("Empty password");
 	else if (!isStringPrintable(argv[2]))
 		return argumentError("Invalid password: " + std::string(argv[2]));
 
-	Server server(atoi(argv[1]), argv[2]);
+	Server server(std::atoi(argv[1]), argv[2]);
 	try {
 		server.init();
 		std::cout << BLUE << "Listening on port " << server.getPort() << ". 👂" << RESET << std::endl;

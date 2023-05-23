@@ -48,7 +48,7 @@ bool isPortNumberCorrect(std::string port)
 {
 	if (port.size() == 0 || port.size() > 5 || port[0] == '0' || port.find_first_not_of("0123456789") != std::string::npos)
 		return false;
-	int n = atoi(port.c_str());
+	int n = std::atoi(port.c_str());
 	return n >= 0 && n <= 65535;
 }
 
