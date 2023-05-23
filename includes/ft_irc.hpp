@@ -75,6 +75,7 @@ typedef enum ReplyCode {
 	RPL_INVITING = 341,
 	RPL_SUMMONING = 342,
 	RPL_VERSION = 351,
+	RPL_WHOREPLY = 352,
 	RPL_NAMREPLY = 353,
 	RPL_LINKS = 364,
 	RPL_ENDOFLINKS = 365,
@@ -151,14 +152,14 @@ typedef enum Modes {
 } Modes;
 
 typedef enum ChannelModes {
-	M_INVITE	= 1 << 0,
-	M_KEY		= 1 << 1,
-	M_LIMITED	= 1 << 2,
-	M_MODERATED	= 1 << 3,
-	M_OPERATOR	= 1 << 4,
-	M_PROTECTED	= 1 << 5,
-	M_SECRET	= 1 << 6,
-	M_BAN		= 1 << 7,
+	M_INVITE = 1 << 0,
+	M_KEY = 1 << 1,
+	M_LIMITED = 1 << 2,
+	M_MODERATED = 1 << 3,
+	M_OPERATOR = 1 << 4,
+	M_PROTECTED = 1 << 5,
+	M_SECRET = 1 << 6,
+	M_BAN = 1 << 7,
 } ChannelModes;
 
 #define NETWORKNAME "Oustanding"
@@ -191,13 +192,23 @@ typedef enum ChannelModes {
 
 class SystemError : public std::runtime_error {
 public:
-	explicit SystemError(const char* funcName)
-		: std::runtime_error(funcName), funcName(funcName) {}
+	explicit SystemError(const char* funcName) : std::runtime_error(funcName), funcName(funcName) {}
 
 	virtual ~SystemError() throw() {}
 
 	const char* funcName;
 };
+
+template <typename T>
+std::string toString(T x) {
+	std::stringstream ss;
+	ss << x;
+	return ss.str();
+}
+
+class Channel;
+class Client;
+class Server;
 
 #include "Channel.hpp"
 #include "Client.hpp"

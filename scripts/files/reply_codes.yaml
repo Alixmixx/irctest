@@ -148,6 +148,9 @@
 351:
   name: RPL_VERSION
   reply: <version> <server> :<comments>
+352:
+  name: RPL_WHOREPLY
+  reply: <before> :0 <realname>
 353:
   name: RPL_NAMREPLY
   reply: <symbol> <channel> :<names>

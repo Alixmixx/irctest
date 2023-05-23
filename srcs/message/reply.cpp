@@ -5,23 +5,28 @@ void Client::reply(std::string replyMessage) const
 {
 	replyMessage += "\r\n";
 	if (replyMessage.find("PONG") == std::string::npos)
-		std::cout << GREEN << "Message to client " << _clientSocket << ":\n" << replyMessage << RESET;
+		std::cout << GREEN << "Message to client " << _clientSocket << ":\n"
+				  << replyMessage << RESET;
 	send(_clientSocket, replyMessage.c_str(), replyMessage.length(), MSG_NOSIGNAL);
 }
 
 void Client::reply(std::string replyMessage, ReplyCode replyCode) const
 {
 	std::stringstream ss;
-	ss << ":" << _server->getServerHostname() << " " << std::setfill('0') << std::setw(3) << replyCode << " " << _nickname << " " << replyMessage;
+	ss << ":" << _server->getServerHostname() << " " << std::setfill('0') << std::setw(3)
+	   << replyCode << " " << _nickname << " " << replyMessage;
 	reply(ss.str());
 }
 
-void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3, std::string arg4) const
+void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std::string arg3,
+				   std::string arg4) const
 {
 	switch (replyCode)
 	{
 	case RPL_WELCOME:
-		return reply(":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 + "]", replyCode);
+		return reply(":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 +
+						 "]",
+					 replyCode);
 	case RPL_YOURHOST:
 		return reply(":Your host is " + arg1 + ", running version " + arg2, replyCode);
 	case RPL_CREATED:
@@ -51,7 +56,9 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_STATSHLINE:
 		return reply("H " + arg1 + " * " + arg2, replyCode);
 	case RPL_LUSERCLIENT:
-		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 + " servers", replyCode);
+		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 +
+						 " servers",
+					 replyCode);
 	case RPL_LUSEROP:
 		return reply(arg1 + " :IRC operators online", replyCode);
 	case RPL_LUSERUNKNOWN:
@@ -122,6 +129,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :Summoning user to IRC", replyCode);
 	case RPL_VERSION:
 		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
+	case RPL_WHOREPLY:
+		return reply(arg1 + " :0 " + arg2, replyCode);
 	case RPL_NAMREPLY:
 		return reply(arg1 + " " + arg2 + " :" + arg3, replyCode);
 	case RPL_LINKS:
@@ -239,7 +248,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_CANTKILLSERVER:
 		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
+		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone",
+					 replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
 		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:

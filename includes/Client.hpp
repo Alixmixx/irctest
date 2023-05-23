@@ -33,6 +33,7 @@ public:
 	std::string 		  getHostname() const;
 	std::string 		  getPrefix() const;
 	std::string 		  getMessage() const;
+	std::string			  getIp() const;
 	std::vector<Channel*> getChannels() const;
 	time_t				  getSignonTime() const;
 	time_t				  getLastAction() const;
