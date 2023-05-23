@@ -15,7 +15,7 @@ void Server::handleTopic(Client* client, std::vector<std::string> arguments)
 	if (arguments.size() == 1)
 	{
 		if (channel->getTopic() == "")
-			return client->reply(RPL_NOTOPIC, channel->getName());
+			return; //client->reply(RPL_NOTOPIC, channel->getName());
 		else
 		{
 			client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());

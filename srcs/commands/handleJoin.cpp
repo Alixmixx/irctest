@@ -2,14 +2,11 @@
 
 void Server::channelWelcomeMessage(Client *client, Channel *channel)
 {
-	/* if (channel->getTopic() == "")
-		return client->reply(RPL_NOTOPIC, channel->getName());*/
-	if (channel->getTopic() != "")
-	{
-		client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());
-		client->reply(RPL_TOPICWHOTIME, channel->getName(), channel->getTopicSetter(), toString(channel->getTopicTimestamp()));
-	}
+	broadcast(channel->getChannelUsers(), client->getPrefix() + " JOIN " + channel->getName());
+	if (channel->getChannelUsers().size() == 1)
+		channel->setClientMode(client, FOUNDER);
 	std::vector<std::string> argument(1, channel->getName());
+	handleTopic(client, argument);
 	handleNames(client, argument);
 }
 
@@ -19,7 +16,7 @@ void Server::newChannel(Client* client, std::string channelName, std::string cha
 		return client->reply(ERR_TOOMANYCHANNELS, channelName);
 
 	Server*	 server = client->getServer();
-	Channel* channel = new Channel(server, channelName);
+	Channel* channel = new Channel(server, channelName, std::time(NULL));
 
 	channel->setPassword(channelPassword);
 	channel->addChannelUser(client, FOUNDER);

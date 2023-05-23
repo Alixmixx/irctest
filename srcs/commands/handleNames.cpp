@@ -29,20 +29,20 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 		}
 		switch (it->second)
 		{
+		case VOICE:
+			names += "+";	// voice sur irssi
+			break;
 		case MODERATOR:
-			names += "%";
+			names += "%";	// halfop sur irssi
 			break;
 		case OPERATOR:
-			names += "@";
-			break;
-		case PROTECTED:
-			names += "&";
+			names += "@";	// op sur irssi
 			break;
 		case FOUNDER:
-			names += "~";
+			names += "@";	// owner sur irssi mais donc toujours @ à la place de ~
 			break;
 		default:
-			names += "+";
+			names += "";	// user sur irssi
 			break;
 		}
 		names += it->first->getNickname();
