@@ -7,14 +7,15 @@ class Server;
 
 class Channel {
 public:
-	Channel(Server* server, std::string& name);
+	Channel(Server* server, std::string& name, time_t creationTime);
 	~Channel();
 
 	const std::string& getName() const;
 	const std::string& getTopic() const;
 	const std::string& getPassword() const;
+	time_t			   getCreationTime() const;
 	const std::string& getTopicSetter() const;
-	std::string getModeString() const;
+	std::string		   getModeString() const;
 	time_t			   getTopicTimestamp() const;
 
 	std::vector<Client*>&	getChannelUsers();
@@ -56,6 +57,7 @@ private:
 	std::string _name;
 	std::string _topic;
 	std::string _password;
+	time_t		_creationTime;
 
 	std::string _topicSetter;
 	time_t		_topicTimestamp;

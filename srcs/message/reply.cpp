@@ -113,6 +113,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(":End of /LIST", replyCode);
 	case RPL_CHANNELMODEIS:
 		return reply(arg1 + " " + arg2 + " " + arg3, replyCode);
+	case RPL_CREATIONTIME:
+		return reply(arg1 + " " + arg2, replyCode);
 	case RPL_NOTOPIC:
 		return reply(arg1 + " :No topic is set", replyCode);
 	case RPL_TOPIC:

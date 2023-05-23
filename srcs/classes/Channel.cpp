@@ -1,9 +1,10 @@
 #include "Channel.hpp"
 
-Channel::Channel(Server* server, std::string& name)
+Channel::Channel(Server* server, std::string& name, time_t creationTime)
 	: _name(name),
 	  _topic(""),
 	  _password(""),
+	  _creationTime(creationTime),
 	  _topicSetter(""),
 	  _topicTimestamp(std::time(NULL)),
 	  _userLimit(MAX_USERS_PER_CHANNEL),
@@ -21,6 +22,8 @@ Channel::~Channel()
 // Getters
 
 const std::string& Channel::getName() const { return _name; }
+
+time_t Channel::getCreationTime() const { return _creationTime; }
 
 const std::string& Channel::getTopic() const { return _topic; }
 
@@ -41,6 +44,8 @@ std::string Channel::getModeString() const
 		mode += "s";
 	if (isTopicProtected())
 		mode += "t";
+	if (mode == "+")
+		mode = "";  // TODO verifier si c'est bien ca
 	return (mode);
 }
 
@@ -85,7 +90,7 @@ bool Channel::isTopicProtected() const { return (_modes & M_PROTECTED); }
 void Channel::setTopic(Client* client, const std::string& topic)
 {
 	_topic = topic;
-	_topicSetter = client->getNickname();
+	_topicSetter = client->getPrefix().substr(1);
 	_topicTimestamp = std::time(NULL);
 }
 
