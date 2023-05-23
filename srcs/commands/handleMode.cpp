@@ -4,7 +4,6 @@
 
 void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::string> arguments)
 {
-	// Find out if we're adding or removing modes iterate + 1
 	std::string replyString = "";
 	std::string	 modeString = arguments[1];
 	bool		 sign = PLUS;
@@ -79,9 +78,9 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 
 	Client*	 target = getClient(arguments[0]);
 	Channel* channel = getChannel(arguments[0]);
-	(void)target;
-	/* if (target == NULL && arguments[0][0] != '#')
-		return client->reply(ERR_NOSUCHNICK, arguments[0]); // ? */
+
+	if (target == NULL && arguments[0][0] != '#')
+		return client->reply(ERR_NOSUCHNICK, arguments[0]);
 
 	if (channel == NULL && arguments[0][0] == '#')
 		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
@@ -107,9 +106,12 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 			return client->reply(RPL_CREATIONTIME, channel->getName(), toString(channel->getCreationTime()));
 		}
 
+		if (arguments.size() == 2 && arguments[1][0] == 'b')
+			return client->reply(RPL_ENDOFBANLIST, channel->getName());
+
 		if (channel->isOnChannel(client) == false || channel->getChannelUserMode(client) < OPERATOR)
 			return client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
-
+		
 		return setModeChannel(client, channel, arguments);
 	}
 }

@@ -9,7 +9,10 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
  		return client->reply(ERR_ALREADYREGISTRED);
 
 	client->setUsername(arguments[0]);
-	client->setHostname(inet_ntoa(client->getClientAddress().sin_addr));
+	struct hostent *host = gethostbyname(inet_ntoa(client->getClientAddress().sin_addr));
+	//if (host == NULL)
+		// blablabla      à proteger probablement. kick le client?
+	client->setHostname(host->h_name);
 	client->setRealname(arguments[3]);
 	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getUsername() != "" && client->getNickname() != "")

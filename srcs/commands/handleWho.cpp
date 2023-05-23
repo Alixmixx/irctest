@@ -31,7 +31,7 @@ void Server::handleWho(Client* client, std::vector<std::string> arguments)
 				Client*		user = *it;
 				std::string prefix = getChannelPrefix(channel->getChannelUserMode(user));
 				client->reply(RPL_WHOREPLY,
-							  name + " " + user->getUsername() + " " + user->getIp() + " " +
+							  name + " " + user->getUsername() + " " + user->getHostname() + " " +
 								  SERVERHOSTNAME + " " + user->getNickname() + " H" + prefix,
 							  user->getRealname());
 			}
@@ -42,7 +42,7 @@ void Server::handleWho(Client* client, std::vector<std::string> arguments)
 		Client* target = getClient(name);
 		if (target != NULL)
 			client->reply(RPL_WHOREPLY,
-						  "* " + target->getUsername() + " " + target->getIp() + " " +
+						  "* " + target->getUsername() + " " + target->getHostname() + " " +
 							  SERVERHOSTNAME + " " + target->getNickname() + " H",
 						  target->getRealname());
 	}
