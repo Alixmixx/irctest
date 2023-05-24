@@ -14,6 +14,19 @@ std::vector<std::string> split(const std::string& str, char delim)
 	return result;
 }
 
+std::string strjoin(const std::vector<std::string>& vec, char delim)
+{
+	std::string result;
+
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		if (i != 0)
+			result += delim;
+		result += vec[i];
+	}
+	return result;
+}
+
 std::string formatTime(time_t time)
 {
 	std::tm* localTime = std::localtime(&time);

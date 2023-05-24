@@ -147,7 +147,6 @@ typedef enum Modes {
 	VOICE,
 	MODERATOR,
 	OPERATOR,
-	//PROTECTED,
 	FOUNDER
 } Modes;
 
@@ -170,7 +169,6 @@ typedef enum ChannelModes {
 #define SERVERLOC1 "Ecole 42"
 #define SERVERLOC2 "75017 Paris, France"
 
-// TODO find best constants
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
 #define BUFFER_SIZE 1024
@@ -227,4 +225,5 @@ bool					 isStringPrintable(std::string str);
 std::string				 toLowerCase(std::string str);
 std::string				 toUpperCase(std::string str);
 std::string				 formatTime(time_t time);
+std::string				 strjoin(const std::vector<std::string>& vec, char delim);
 std::vector<std::string> split(const std::string& str, char delim);

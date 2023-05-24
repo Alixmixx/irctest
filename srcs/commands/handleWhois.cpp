@@ -1,17 +1,16 @@
 #include "Server.hpp"
 
-// TODO add @ before channels where target is operator
-static std::string getChannelsString(Client* target)
+static std::vector<std::string> getChannelsToReply(Client* client, Client* target)
 {
 	std::vector<Channel*> channels = target->getChannels();
-	std::string s;
-	for (size_t i = 0; i < channels.size(); ++i)
+	std::vector<std::string> channelsToReply;
+	for (std::vector<Channel*>::const_iterator it = channels.begin(); it != channels.end(); ++it)
 	{
-		if (i != 0)
-			s += " ";
-		s += channels[i]->getName();
+		Channel* channel = *it;
+		if (!channel->isSecret() || channel->getChannelUserMode(client) >= INVITED)
+			channelsToReply.push_back(channel->getChannelPrefix(target) + channel->getName());
 	}
-	return s;
+	return channelsToReply;
 }
 
 void Server::handleWhois(Client* client, std::vector<std::string> arguments)
@@ -31,7 +30,9 @@ void Server::handleWhois(Client* client, std::vector<std::string> arguments)
 	}
 	client->reply(RPL_WHOISUSER, target->getNickname(), target->getUsername(),
 				  target->getHostname(), target->getRealname());
-	client->reply(RPL_WHOISCHANNELS, target->getNickname(), getChannelsString(target));
+	std::vector<std::string> channelsToReply = getChannelsToReply(client, target);
+	if (!channelsToReply.empty())
+		client->reply(RPL_WHOISCHANNELS, target->getNickname(), strjoin(channelsToReply, ' '));
 	client->reply(RPL_WHOISSERVER, target->getNickname(), SERVERHOSTNAME, SERVERLOC2);
 	client->reply(RPL_WHOISACTUALLY, target->getNickname(), target->getHostname());
 	client->reply(RPL_WHOISIDLE, target->getNickname(), toString(std::time(NULL) - target->getLastAction()), toString(target->getSignonTime()));

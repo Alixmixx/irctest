@@ -20,6 +20,7 @@ public:
 	Client*					getHighestGradedUser();
 
 	int getChannelUserMode(Client* client) const;
+	std::string getChannelPrefix(Client* client) const;
 
 	bool isOnChannel(Client* client) const;
 

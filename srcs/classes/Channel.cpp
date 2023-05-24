@@ -63,6 +63,12 @@ int Channel::getChannelUserMode(Client* client) const
 	return (NOTINCHANNEL);
 }
 
+std::string Channel::getChannelPrefix(Client* client) const
+{
+	int mode = getChannelUserMode(client);
+	return mode == FOUNDER ? "~" : mode == OPERATOR ? "@" : "";
+}
+
 bool Channel::isOnChannel(Client* client) const
 {
 	std::vector<Client*>::const_iterator it = _channelUsers.begin();
