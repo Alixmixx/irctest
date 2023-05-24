@@ -2,11 +2,55 @@
 
 // TODO ERR_UMODEUNKNOWNFLAG for user modes
 
+void Server::setModeClient(Client* client, std::vector<std::string> arguments)
+{
+	std::string replyString = "";
+	std::string	 modeString = arguments[1];
+	bool		 sign = PLUS;
+	bool		 stringSign = PLUS;
+	short		 addToString = 0;
+	int			 first = 0;
+
+	for (size_t i = 0; i < modeString.length(); i++)
+	{
+		addToString = 0;
+		switch (modeString[i])
+		{
+		case '+':
+			sign = PLUS;
+			break;
+		case '-':
+			sign = MINUS;
+			break;
+		case 'i':
+			if (!(first & M_INVISIBLE) && (first |= M_INVISIBLE) && ++addToString) (sign == PLUS) ? client->setIsInvisible(true) : client->setIsInvisible(false);
+			break;
+		default:
+			if (!(first & M_ERROR) && (first |= M_ERROR)) client->reply(ERR_UNKNOWNMODE, std::string(1, modeString[i]));
+			break;
+		}
+		if (addToString)
+		{
+			if ((sign == PLUS && stringSign == MINUS)
+				|| (sign == MINUS && stringSign == PLUS)
+				|| (replyString.empty()))
+			{
+				stringSign = sign;
+				replyString += (sign == PLUS) ? '+' : '-';
+			}
+			replyString += modeString[i];
+		}
+	}
+	if (replyString != "")
+		client->reply(client->getPrefix() + " MODE " + client->getNickname() + " " + replyString);
+}
+
 void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::string> arguments)
 {
 	std::string replyString = "";
 	std::string	 modeString = arguments[1];
 	bool		 sign = PLUS;
+	bool		 stringSign = PLUS;
 	short		 addToString = 0;
 	int			 first = 0;
 	unsigned int clientNumber = 2;
@@ -17,10 +61,10 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 		switch (modeString[i])
 		{
 		case '+':
-			sign = PLUS && ++addToString;
+			sign = PLUS;
 			break;
 		case '-':
-			sign = MINUS && ++addToString;
+			sign = MINUS;
 			break;
 		case 'i':
 			if (!(first & M_INVITE) && (first |= M_INVITE) && ++addToString) channel->setMode(M_INVITE, sign);
@@ -61,14 +105,23 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 			if (!(first & M_PROTECTED) && (first |= M_PROTECTED) && ++addToString) channel->setMode(M_PROTECTED, sign);
 			break;
 		default:
-			addToString = 0; // client->reply(ERR_UNKNOWNMODE, modeString[i]);
+			if (!(first & M_ERROR) && (first |= M_ERROR)) client->reply(ERR_UNKNOWNMODE, std::string(1, modeString[i]));
 			break;
 		}
 		if (addToString)
+		{
+			if ((sign == PLUS && stringSign == MINUS)
+				|| (sign == MINUS && stringSign == PLUS)
+				|| (replyString.empty()))
+			{
+				stringSign = sign;
+				replyString += (sign == PLUS) ? '+' : '-';
+			}
 			replyString += modeString[i];
+		}
 	}
-	replyString = replyString.substr(0, replyString.find_last_not_of("+-") + 1);
-	broadcast(channel->getChannelUsers(), client->getPrefix() + " MODE " + channel->getName() + " " + replyString);
+	if (replyString != "")
+		broadcast(channel->getChannelUsers(), client->getPrefix() + " MODE " + channel->getName() + " " + replyString);
 }
 
 void Server::handleMode(Client* client, std::vector<std::string> arguments) // TODO by Alix
@@ -85,16 +138,16 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 	if (channel == NULL && arguments[0][0] == '#')
 		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
-	/* 	if (target)
-		{
-			if (target != client)
-				return client->reply(ERR_USERSDONTMATCH);
+	if (target)
+	{
+		if (target != client)
+			return client->reply(ERR_USERSDONTMATCH);
 
-			if (arguments.size() == 1)
-				return client->reply(RPL_UMODEIS, target->getModeString());
+		if (arguments.size() == 1)
+			return client->reply(RPL_UMODEIS, client->getModeString());
 
-			return setModeClient(client, arguments);
-		} */
+		return setModeClient(client, arguments);
+	}
 	if (channel)
 	{
 		if (channel->isOnChannel(client) == false && channel->isSecret() == true)
@@ -111,7 +164,7 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 
 		if (channel->isOnChannel(client) == false || channel->getChannelUserMode(client) < OPERATOR)
 			return client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
-		
+
 		return setModeChannel(client, channel, arguments);
 	}
 }

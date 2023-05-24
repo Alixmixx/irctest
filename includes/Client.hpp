@@ -31,6 +31,7 @@ public:
 	std::string 		  getPrefix() const;
 	std::string 		  getMessage() const;
 	std::string			  getIp() const;
+	std::string			  getModeString() const;
 	std::vector<Channel*> getChannels() const;
 	time_t				  getSignonTime() const;
 	time_t				  getLastAction() const;
@@ -43,6 +44,7 @@ public:
 
 private:
 	int	_clientSocket;
+	int	_modes;
 
 	bool _isRegistered;
 	bool _isInvisible;

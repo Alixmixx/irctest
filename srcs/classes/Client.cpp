@@ -2,8 +2,8 @@
 #include "Server.hpp"
 
 Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
-	: _clientSocket(socketFd), _isRegistered(false), _isInvisible(false), _isPasswordCorrect(false),
-	  _clientAddress(clientAddress), _server(server)
+	: _clientSocket(socketFd), _modes(0), _isRegistered(false), _isInvisible(false),
+	_isPasswordCorrect(false), _clientAddress(clientAddress), _server(server)
 {
 	time_t t0 = std::time(NULL);
 	_signonTime = t0;
@@ -85,6 +85,14 @@ std::string Client::getIp() const
 	unsigned long ip = _clientAddress.sin_addr.s_addr;
 	return toString(ip & 255) + "." + toString(ip >> 8 & 255) + "." +
 		   toString(ip >> 16 & 255) + "." + toString(ip >> 24 & 255);
+}
+
+std::string Client::getModeString() const
+{
+	std::string modeString = "+";
+	if (_isInvisible)
+		modeString += "i";
+	return (modeString);
 }
 
 bool Client::isInvisible() const { return (_isInvisible); }

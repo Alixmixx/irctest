@@ -44,8 +44,6 @@ std::string Channel::getModeString() const
 		mode += "s";
 	if (isTopicProtected())
 		mode += "t";
-	if (mode == "+")
-		mode = "";  // TODO verifier si c'est bien ca
 	return (mode);
 }
 
