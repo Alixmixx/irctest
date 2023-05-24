@@ -224,7 +224,6 @@ class Server;
 
 // clean.cpp
 int	 argumentError(std::string message);
-void panic(std::string message);
 void signalHandler(int signum);
 void syscall(int returnValue, const char* funcName);
 

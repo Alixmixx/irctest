@@ -35,7 +35,9 @@ Server::Server(unsigned short port, std::string password)
 Server::~Server()
 {
 	deleteVector(&_channels);
+	deleteVector(&_channelsToDelete);
 	deleteVector(&_clients);
+	deleteVector(&_clientsToDelete);
 	deleteVector(&_formerClients);
 	close(_serverSocket);
 	close(_epollFd);
