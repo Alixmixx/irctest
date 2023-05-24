@@ -40,5 +40,5 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	client->setNickname(nickname);
 
 	if (!client->isRegistered() && client->getUsername() != "")
-		WelcomeMessage(client);
+		welcomeMessage(client);
 }

@@ -50,7 +50,7 @@ private:
 	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
 	std::map<std::string, CommandHandler> _commandHandlers;
 
-	void WelcomeMessage(Client* client);
+	void welcomeMessage(Client* client);
 
 	void handleAdmin(Client* client, std::vector<std::string> arguments);
 	void handleInvite(Client* client, std::vector<std::string> arguments);

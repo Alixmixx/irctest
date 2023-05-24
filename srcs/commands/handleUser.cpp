@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::WelcomeMessage(Client* client)
+void Server::welcomeMessage(Client* client)
 {
 	client->setIsRegistered(true);
 	client->setNickname(client->getNickname());
@@ -28,5 +28,5 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 	client->setRealname(arguments[3]);
 	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getNickname() != "")
-		WelcomeMessage(client);
+		welcomeMessage(client);
 }
