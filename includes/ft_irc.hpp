@@ -168,12 +168,11 @@ typedef enum ChannelModes {
 #define SERVERHOSTNAME "irc.125.outstanding.gov"
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERLOC1 "Ecole 42"
-#define SERVERLOC2 "96 Boulevard Bessieres, 75017 Paris, France"
+#define SERVERLOC2 "75017 Paris, France"
 
 // TODO find best constants
 #define BACKLOG 128
 #define MAX_CLIENTS 1024
-#define MAX_EVENTS 32
 #define BUFFER_SIZE 1024
 #define MAX_CHANNELS_PER_CLIENT 10
 #define MAX_USERS_PER_CHANNEL 10
@@ -222,6 +221,7 @@ void signalHandler(int signum);
 void syscall(int returnValue, const char* funcName);
 
 // utils.cpp
+int 					 stoi(std::string& s);
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 toLowerCase(std::string str);

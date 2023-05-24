@@ -180,18 +180,17 @@ void Server::loop()
 				continue;
 			}
 			Client* client = getClient(_eventList[i].data.fd);
-			if (client == NULL)
-				panic("Unknown client: " + toString(_eventList[i].data.fd) + ".");
-			if (_eventList[i].events & EPOLLIN)
-				readFromClient(client);
-			else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
+			if (client != NULL)
 			{
-				std::vector<std::string> args;
-				args.push_back("Connection lost with client");
-				handleQuit(client, args);
+				if (_eventList[i].events & EPOLLIN)
+					readFromClient(client);
+				else if (_eventList[i].events & (EPOLLRDHUP | EPOLLHUP))
+				{
+					std::vector<std::string> args;
+					args.push_back("Connection lost with client");
+					handleQuit(client, args);
+				}
 			}
-			else
-				panic("Unknown event: " + toString(_eventList[i].events) + " on client " + toString(_eventList[i].data.fd) + ".");
 		}
 	}
 }

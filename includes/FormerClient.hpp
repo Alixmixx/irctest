@@ -4,13 +4,13 @@
 
 class FormerClient {
 public:
-	FormerClient(std::string nickname, std::string username, std::string realname, time_t leaveTime,
-				 unsigned long ipAddress);
+	FormerClient(std::string nickname, std::string username, std::string realname,
+				 std::string hostname, time_t leaveTime);
 	~FormerClient();
 
-	const std::string	nickname;
-	const std::string	username;
-	const std::string	realname;
-	const time_t		leaveTime;
-	const unsigned long ipAddress;
+	const std::string nickname;
+	const std::string username;
+	const std::string realname;
+	const std::string hostname;
+	const time_t	  leaveTime;
 };
