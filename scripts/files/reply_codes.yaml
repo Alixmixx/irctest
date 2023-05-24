@@ -85,6 +85,9 @@
 301:
   name: RPL_AWAY
   reply: <nick> :<away message>
+302:
+  name: RPL_USERHOST
+  reply: :<reply>
 305:
   name: RPL_UNAWAY
   reply: :You are no longer marked as being away
@@ -127,6 +130,9 @@
 324:
   name: RPL_CHANNELMODEIS
   reply: <channel> <mode> <mode params>
+329:
+  name: RPL_CREATIONTIME
+  reply: <channel> <creationtime>
 331:
   name: RPL_NOTOPIC
   reply: <channel> :No topic is set

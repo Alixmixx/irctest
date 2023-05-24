@@ -39,6 +39,7 @@ SRCS		+= srcs/commands/handleQuit.cpp
 SRCS		+= srcs/commands/handleTime.cpp
 SRCS		+= srcs/commands/handleTopic.cpp
 SRCS		+= srcs/commands/handleUser.cpp
+SRCS		+= srcs/commands/handleUserhost.cpp
 SRCS		+= srcs/commands/handleVersion.cpp
 SRCS		+= srcs/commands/handleWho.cpp
 SRCS		+= srcs/commands/handleWhois.cpp

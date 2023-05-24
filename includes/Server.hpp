@@ -71,6 +71,7 @@ private:
 	void handleTime(Client* client, std::vector<std::string> arguments);
 	void handleTopic(Client* client, std::vector<std::string> arguments);
 	void handleUser(Client* client, std::vector<std::string> arguments);
+	void handleUserhost(Client* client, std::vector<std::string> arguments);
 	void handleVersion(Client* client, std::vector<std::string> arguments);
 	void handleWho(Client* client, std::vector<std::string> arguments);
 	void handleWhois(Client* client, std::vector<std::string> arguments);

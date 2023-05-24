@@ -60,6 +60,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply("n/a", replyCode);
 	case RPL_AWAY:
 		return reply(arg1 + " :" + arg2, replyCode);
+	case RPL_USERHOST:
+		return reply(":" + arg1, replyCode);
 	case RPL_UNAWAY:
 		return reply(":You are no longer marked as being away", replyCode);
 	case RPL_NOWAWAY:

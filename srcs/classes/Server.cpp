@@ -30,6 +30,7 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["TIME"] = &Server::handleTime;
 	_commandHandlers["TOPIC"] = &Server::handleTopic;
 	_commandHandlers["USER"] = &Server::handleUser;
+	_commandHandlers["USERHOST"] = &Server::handleUserhost;
 	_commandHandlers["VERSION"] = &Server::handleVersion;
 	_commandHandlers["WHO"] = &Server::handleWho;
 	_commandHandlers["WHOIS"] = &Server::handleWhois;
