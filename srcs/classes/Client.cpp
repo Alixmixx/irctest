@@ -3,7 +3,7 @@
 
 Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 	: _clientSocket(socketFd), _modes(0), _isRegistered(false), _isInvisible(false),
-	  _isPasswordCorrect(false), _shouldBeDeleted(false), _clientAddress(clientAddress),
+	  _isPasswordCorrect(false), _clientAddress(clientAddress),
 	  _server(server)
 {
 	time_t t0 = std::time(NULL);
@@ -37,8 +37,6 @@ void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 void Client::setLastAction() { _lastAction = std::time(NULL); }
 
 void Client::setPasswordCorrect() { _isPasswordCorrect = true; }
-
-void Client::markForDeletion() { _shouldBeDeleted = true; }
 
 void Client::addChannel(Channel* channel) { _channels.push_back(channel); }
 
@@ -91,8 +89,6 @@ std::string Client::getModeString() const
 bool Client::isInvisible() const { return _isInvisible; }
 
 bool Client::isPasswordCorrect() const { return _isPasswordCorrect; }
-
-bool Client::shouldBeDeleted() const { return _shouldBeDeleted; }
 
 Server* Client::getServer() const { return _server; }
 

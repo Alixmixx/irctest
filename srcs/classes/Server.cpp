@@ -109,6 +109,7 @@ void Server::removeClient(Client* client)
 		if ((*it) == client)
 		{
 			_clients.erase(it);
+			_clientsToDelete.push_back(client);
 			break;
 		}
 	}
@@ -117,8 +118,6 @@ void Server::removeClient(Client* client)
 	for (std::vector<Channel*>::reverse_iterator it = channels.rbegin(); it != channels.rend();
 		 ++it)
 		(*it)->removeClientFromChannel(client);
-
-	client->markForDeletion();
 }
 
 void Server::addChannel(Channel* channel) { _channels.push_back(channel); }
@@ -208,10 +207,9 @@ void Server::loop()
 					args.push_back("Connection lost with client");
 					handleQuit(client, args);
 				}
-				if (client->shouldBeDeleted())
-					delete client;
 			}
 		}
+		deleteVector(&_clientsToDelete);
 		deleteVector(&_channelsToDelete);
 	}
 }

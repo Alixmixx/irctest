@@ -44,6 +44,7 @@ private:
 	const time_t	  _serverCreationTime;
 
 	std::vector<Client*>	   _clients;
+	std::vector<Client*>	   _clientsToDelete;
 	std::vector<FormerClient*> _formerClients;
 	std::vector<Channel*>	   _channels;
 	std::vector<Channel*>	   _channelsToDelete;
