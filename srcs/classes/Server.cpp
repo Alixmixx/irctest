@@ -93,6 +93,9 @@ void Server::welcomeMessage(Client* client)
 {
 	client->setIsRegistered(true);
 	client->setNickname(client->getNickname());
+	client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
+	client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
+	client->reply(RPL_CREATED, formatTime(_serverCreationTime));
 	handleLusers(client, std::vector<std::string>());
 	handleMotd(client, std::vector<std::string>());
 	std::cout << BLUE << *client << RESET << std::endl;
