@@ -1,44 +1,21 @@
 #include "Server.hpp"
 
-void Server::welcomeMessage(Client* client)
-{
-	client->setIsRegistered(true);
-	client->setNickname(client->getNickname());
-	client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
-	client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
-	client->reply(RPL_CREATED, formatTime(_serverCreationTime));
-	client->reply(RPL_MOTDSTART, SERVERNAME);
-
-	std::stringstream ss;
-	ss << MOTD;
-	while (ss.good())
-	{
-		std::string line;
-		std::getline(ss, line);
-		client->reply(RPL_MOTD, line);
-	}
-
-	client->reply(RPL_ENDOFMOTD);
-}
-
 void Server::handleUser(Client* client, std::vector<std::string> arguments)
 {
 	if (client->getNickname() == "*")
 		return removeClient(client);
 
 	if (arguments.size() < 4 || arguments[0] == "")
- 		return client->reply(ERR_NEEDMOREPARAMS, "USER");
+		return client->reply(ERR_NEEDMOREPARAMS, "USER");
 
 	if (client->isRegistered())
- 		return client->reply(ERR_ALREADYREGISTRED);
+		return client->reply(ERR_ALREADYREGISTRED);
 
-	client->setUsername("~" + arguments[0]); // the username provided by the client SHOULD be prefixed by a tilde ('~', 0x7E) to show that this value is user-set.
-	struct hostent *host = gethostbyname(inet_ntoa(client->getClientAddress().sin_addr));
-	//if (host == NULL)
-		// blablabla      à proteger probablement. kick le client?
-	client->setHostname(host->h_name);
+	client->setUsername("~" + arguments[0]);
+	char*			addr = inet_ntoa(client->getClientAddress().sin_addr);
+	struct hostent* host = gethostbyname(addr);
+	client->setHostname(host ? host->h_name : addr);
 	client->setRealname(arguments[3]);
-	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getNickname() != "")
 		welcomeMessage(client);
 }

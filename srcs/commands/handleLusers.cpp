@@ -2,20 +2,20 @@
 
 static int countInvisibleUsers(Server* server)
 {
-	int n = 0;
+	int					 n = 0;
 	std::vector<Client*> clients = server->getClients();
-	for (std::vector<Client*>::const_iterator client = clients.begin();
-		 client != clients.end(); ++client)
+	for (std::vector<Client*>::const_iterator client = clients.begin(); client != clients.end();
+		 ++client)
 		n += (*client)->isInvisible();
 	return n;
 }
 
 static int countUnknownConnections(Server* server)
 {
-	int n = 0;
+	int					 n = 0;
 	std::vector<Client*> clients = server->getClients();
-	for (std::vector<Client*>::const_iterator client = clients.begin();
-		 client != clients.end(); ++client)
+	for (std::vector<Client*>::const_iterator client = clients.begin(); client != clients.end();
+		 ++client)
 		n += !(*client)->isRegistered();
 	return n;
 }

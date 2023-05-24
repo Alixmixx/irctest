@@ -108,7 +108,6 @@ typedef enum ReplyCode {
 	ERR_NOTEXTTOSEND = 412,
 	ERR_WILDTOPLEVEL = 414,
 	ERR_UNKNOWNCOMMAND = 421,
-	ERR_NOMOTD = 422,
 	ERR_NOADMININFO = 423,
 	ERR_FILEERROR = 424,
 	ERR_NONICKNAMEGIVEN = 431,
@@ -173,7 +172,6 @@ typedef enum ChannelModes {
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERLOC1 "Ecole 42"
 #define SERVERLOC2 "75017 Paris, France"
-#define LOCALHOST "127.0.0.1"
 #define MOTD "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣿⣿⣆⠀⠀⠀\n⠀⢸⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⠋⢿⠀⠀⠀\n⠀⠈⣿⣿⣿⣦⣀⣀⣀⠤⠤⠤⠤⠤⠤⠤⢄⣀⣀⣴⣿⣿⠿⠏⢻⣤⣾⠀⠀⠀\n⠀⠀⠘⣿⣿⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⣿⣗⠀⠀⣠⣿⡟⠀⠀⠀\n⠀⠀⠀⢹⡟⢀⣤⣤⣴⡞⡀⢠⠀⣴⡀⠀⠀⠀⠀⠀⠀⠙⢿⣾⣿⣿⠁⠀⠀⠀\n⠀⠀⢠⣿⣷⣿⣿⣿⣿⠳⠃⢸⣿⣿⣿⣇⣀⠀⠀⠀⠀⠀⠘⣿⣿⣿⠀⠀⠀⠀\n⠀⠀⣾⣿⡟⢸⠉⣻⡿⠀⠀⠸⣿⣿⠋⣿⠉⣻⣿⣷⣄⠀⠀⠙⢿⡇⠀⠀⠀⠀\n⠀⠀⣿⣿⣿⣷⣿⢿⣥⣤⡀⠀⢿⣿⣷⣦⣾⣿⣿⣿⠏⠀⠀⠀⠘⣿⠀⠀⠀⠀\n⠀⠀⣷⣿⡿⠋⠀⢈⣹⣿⣅⡀⠀⠙⠻⢿⣿⣿⣿⣿⡇⠀⠀⠀⠀⢿⡀⠀⠀⠀\n⠀⠀⣷⣾⡇⠀⡼⠉⠀⠀⠀⠉⢆⠀⠀⠀⢿⣿⣿⠋⠀⠀⠀⠀⠀⠸⡇⠀⠀⠀\n⠀⠀⣿⣿⣿⣶⡃⠀⠀⠀⠀⠀⠀⠣⣀⣠⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⢿⠀⠀⠀\n⠀⠀⣿⣿⣿⣿⣿⣦⣤⣀⣀⡠⠀⠀⠈⠙⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⢸⡆⠀⠀\n⠀⠀⣿⣿⣿⣿⣿⣿⣷⣦⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠀⠀\n⠀⢠⣿⣿⣿⣿⣿⡿⠏⠉⠙⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣧⠀\n⠀⣸⣿⣿⣿⣿⣿⡷⠦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇\n⣰⣿⣿⣿⣿⣿⣿⣿⣶⡦⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹\n⠀⢰⣷⡀⠀⠀⣿⣿⠀⣠⣴⣾⣿⣶⣦⡀⠀⣶⣶⣶⣶⣶⡄⣶⣶⣶⣶⣶⡆⠀\n⠀⢸⣿⣿⣄⠀⣿⣿⣼⣿⠋⠀⠀⠈⠻⣿⡆⣿⣇⠀⠀⢹⣿⣿⣿⠀⠀⠀⠀⠀\n⠀⢸⣿⠙⣿⣦⣿⣿⣿⣇⠀⠀⠀⠀⠀⣿⡷⣿⣿⣤⣴⣿⠟⣿⣿⠿⠿⠿⠇⠀\n⠀⢸⣿⠀⠈⢿⣿⣿⠹⣿⣦⣀⣀⣠⣼⡿⠃⣿⡯⠉⠉⠁⠀⣿⣿⣀⣀⣀⡀⠀\n⠀⠘⠛⠀⠀⠀⠛⠛⠀⠈⠛⠻⠿⠟⠋⠁⠀⠛⠓⠀⠀⠀⠀⠛⠛⠛⠛⠛⠃⠀"
 
 #define BACKLOG 128
@@ -202,11 +200,18 @@ public:
 	const char* funcName;
 };
 
-template <typename T>
-std::string toString(T x) {
+template <typename T> std::string toString(T x)
+{
 	std::stringstream ss;
 	ss << x;
 	return ss.str();
+}
+
+template <typename T> void deleteVector(std::vector<T*>* vec)
+{
+	for (typename std::vector<T*>::iterator it = vec->begin(); it != vec->end(); it++)
+		delete *it;
+	vec->clear();
 }
 
 class Channel;
@@ -222,12 +227,11 @@ class Server;
 
 // clean.cpp
 int	 argumentError(std::string message);
-void panic(std::string message);
 void signalHandler(int signum);
 void syscall(int returnValue, const char* funcName);
 
 // utils.cpp
-int 					 stoi(std::string& s);
+int						 stoi(std::string& s);
 bool					 isPortNumberCorrect(std::string port);
 bool					 isStringPrintable(std::string str);
 std::string				 toLowerCase(std::string str);

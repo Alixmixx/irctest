@@ -43,11 +43,13 @@ private:
 	const std::string _serverPassword;
 	const time_t	  _serverCreationTime;
 
-	std::vector<Client*>  _clients;
-	std::vector<FormerClient*>  _formerClients;
-	std::vector<Channel*> _channels;
+	std::vector<Client*>	   _clients;
+	std::vector<Client*>	   _clientsToDelete;
+	std::vector<FormerClient*> _formerClients;
+	std::vector<Channel*>	   _channels;
+	std::vector<Channel*>	   _channelsToDelete;
 
-	typedef void (Server::*CommandHandler)(Client* client, std::vector<std::string> arguments);
+	typedef void (Server::*CommandHandler)(Client*, std::vector<std::string>);
 	std::map<std::string, CommandHandler> _commandHandlers;
 
 	void welcomeMessage(Client* client);
@@ -77,16 +79,16 @@ private:
 	void handleWhois(Client* client, std::vector<std::string> arguments);
 	void handleWhowas(Client* client, std::vector<std::string> arguments);
 
-	void broadcast(std::vector<Client*> recipients, std::string message, Client* except=NULL);
+	void broadcast(std::vector<Client*> recipients, std::string message, Client* except = NULL);
 
 	void addClientToChannel(Client* client, Channel* channel, std::string channelPassword);
 	void newChannel(Client* client, std::string channelName, std::string channelPassword);
-	void channelWelcomeMessage(Client *client, Channel *channel);
+	void channelWelcomeMessage(Client* client, Channel* channel);
 	void acceptNewClient();
 	void readFromClient(Client* client);
 	void parseMessageFromClient(Client* client, std::string command);
 	void removeClient(Client* client);
 
-	void setModeClient(Client *client, std::vector<std::string> arguments);
-	void setModeChannel(Client *client, Channel *channel, std::vector<std::string> arguments);
+	void setModeClient(Client* client, std::vector<std::string> arguments);
+	void setModeChannel(Client* client, Channel* channel, std::vector<std::string> arguments);
 };

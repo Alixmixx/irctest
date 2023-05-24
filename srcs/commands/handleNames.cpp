@@ -5,11 +5,11 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 	std::string symbol = "=";
 	std::string names = "";
 
-	if (channel->isSecret() == true && channel->isOnChannel(client) == true)
+	if (channel->isSecret() && channel->isOnChannel(client))
 		symbol = "@";
 	else if (channel->isSecret())
 		return;
-	else if (channel->isInviteOnly() == true)
+	else if (channel->isInviteOnly())
 		symbol = "*";
 
 	std::map<Client*, int>::iterator it = channel->getChannelUsersModes().begin();

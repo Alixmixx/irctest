@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::channelWelcomeMessage(Client *client, Channel *channel)
+void Server::channelWelcomeMessage(Client* client, Channel* channel)
 {
 	broadcast(channel->getChannelUsers(), client->getPrefix() + " JOIN " + channel->getName());
 	if (channel->getChannelUsers().size() == 1)

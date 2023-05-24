@@ -2,7 +2,7 @@
 
 static std::vector<std::string> getChannelsToReply(Client* client, Client* target)
 {
-	std::vector<Channel*> channels = target->getChannels();
+	std::vector<Channel*>	 channels = target->getChannels();
 	std::vector<std::string> channelsToReply;
 	for (std::vector<Channel*>::const_iterator it = channels.begin(); it != channels.end(); ++it)
 	{
@@ -35,6 +35,8 @@ void Server::handleWhois(Client* client, std::vector<std::string> arguments)
 		client->reply(RPL_WHOISCHANNELS, target->getNickname(), strjoin(channelsToReply, ' '));
 	client->reply(RPL_WHOISSERVER, target->getNickname(), SERVERHOSTNAME, SERVERLOC2);
 	client->reply(RPL_WHOISACTUALLY, target->getNickname(), target->getHostname());
-	client->reply(RPL_WHOISIDLE, target->getNickname(), toString(std::time(NULL) - target->getLastAction()), toString(target->getSignonTime()));
+	client->reply(RPL_WHOISIDLE, target->getNickname(),
+				  toString(std::time(NULL) - target->getLastAction()),
+				  toString(target->getSignonTime()));
 	client->reply(RPL_ENDOFWHOIS, target->getNickname());
 }

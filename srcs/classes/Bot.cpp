@@ -95,7 +95,7 @@ void Bot::run()
 	botAddress.sin_family = AF_INET;
 	botAddress.sin_port = htons(_serverPort);
 
-	syscall(inet_pton(AF_INET, LOCALHOST, &(botAddress.sin_addr)), "Invalid server IP address");
+	syscall(inet_pton(AF_INET, "127.0.0.1", &(botAddress.sin_addr)), "Invalid server IP address");
 
 	syscall(connect(_botSocket, (struct sockaddr*)&botAddress, sizeof(botAddress)),
 			"Invalid server IP address");

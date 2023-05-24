@@ -13,7 +13,7 @@ static bool isNicknameValid(std::string nickname)
 	return true;
 }
 
-void Server::handleNick(Client *client, std::vector<std::string> arguments)
+void Server::handleNick(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
 		return client->reply(ERR_NONICKNAMEGIVEN);
@@ -26,7 +26,7 @@ void Server::handleNick(Client *client, std::vector<std::string> arguments)
 	}
 
 	unsigned int suffix = 0;
-	std::string nickname = arguments[0];
+	std::string	 nickname = arguments[0];
 	while (getClient(nickname) != NULL)
 	{
 		if (client->isRegistered())

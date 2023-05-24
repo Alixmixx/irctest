@@ -3,7 +3,7 @@
 
 Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 	: _clientSocket(socketFd), _modes(0), _isRegistered(false), _isInvisible(false),
-	_isPasswordCorrect(false), _clientAddress(clientAddress), _server(server)
+	  _isPasswordCorrect(false), _clientAddress(clientAddress), _server(server)
 {
 	time_t t0 = std::time(NULL);
 	_signonTime = t0;
@@ -12,13 +12,8 @@ Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 
 Client::~Client()
 {
-	std::vector<Channel*>::iterator it = _channels.begin();
-	for (; it != _channels.end(); ++it)
-	{
-		(*it)->removeClientFromChannel(this);
-	}
-
 	close(_clientSocket);
+	std::cout << BLUE << "Client " << _clientSocket << " disconnected." << RESET << std::endl;
 }
 
 // Setters
@@ -36,8 +31,6 @@ void Client::setUsername(std::string username) { _username = username; }
 void Client::setRealname(std::string realname) { _realname = realname; }
 
 void Client::setHostname(std::string hostname) { _hostname = hostname; }
-
-void Client::setMessage(std::string message) { _message = message; }
 
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
@@ -62,29 +55,27 @@ void Client::leaveChannel(Channel* channel)
 
 // Getters
 
-int Client::getSocket() const { return (_clientSocket); }
+int Client::getSocket() const { return _clientSocket; }
 
-bool Client::isRegistered() const { return (_isRegistered); }
+bool Client::isRegistered() const { return _isRegistered; }
 
-sockaddr_in Client::getClientAddress() const { return (_clientAddress); }
+sockaddr_in Client::getClientAddress() const { return _clientAddress; }
 
-std::string Client::getNickname() const { return (_nickname); }
+std::string Client::getNickname() const { return _nickname; }
 
-std::string Client::getUsername() const { return (_username); }
+std::string Client::getUsername() const { return _username; }
 
-std::string Client::getRealname() const { return (_realname); }
+std::string Client::getRealname() const { return _realname; }
 
-std::string Client::getHostname() const { return (_hostname); }
+std::string Client::getHostname() const { return _hostname; }
 
-std::string Client::getPrefix() const { return (_prefix); }
-
-std::string Client::getMessage() const { return (_message); }
+std::string Client::getPrefix() const { return _prefix; }
 
 std::string Client::getIp() const
 {
 	unsigned long ip = _clientAddress.sin_addr.s_addr;
-	return toString(ip & 255) + "." + toString(ip >> 8 & 255) + "." +
-		   toString(ip >> 16 & 255) + "." + toString(ip >> 24 & 255);
+	return toString(ip & 255) + "." + toString(ip >> 8 & 255) + "." + toString(ip >> 16 & 255) +
+		   "." + toString(ip >> 24 & 255);
 }
 
 std::string Client::getModeString() const
@@ -92,16 +83,16 @@ std::string Client::getModeString() const
 	std::string modeString = "+";
 	if (_isInvisible)
 		modeString += "i";
-	return (modeString);
+	return modeString;
 }
 
-bool Client::isInvisible() const { return (_isInvisible); }
+bool Client::isInvisible() const { return _isInvisible; }
 
-bool Client::isPasswordCorrect() const { return (_isPasswordCorrect); }
+bool Client::isPasswordCorrect() const { return _isPasswordCorrect; }
 
-Server* Client::getServer() const { return (_server); }
+Server* Client::getServer() const { return _server; }
 
-std::vector<Channel*> Client::getChannels() const { return (_channels); };
+std::vector<Channel*> Client::getChannels() const { return _channels; };
 
 time_t Client::getSignonTime() const { return _signonTime; };
 
