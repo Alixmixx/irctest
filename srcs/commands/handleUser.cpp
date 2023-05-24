@@ -6,18 +6,16 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		return removeClient(client);
 
 	if (arguments.size() < 4 || arguments[0] == "")
- 		return client->reply(ERR_NEEDMOREPARAMS, "USER");
+		return client->reply(ERR_NEEDMOREPARAMS, "USER");
 
 	if (client->isRegistered())
- 		return client->reply(ERR_ALREADYREGISTRED);
+		return client->reply(ERR_ALREADYREGISTRED);
 
-	client->setUsername("~" + arguments[0]); // the username provided by the client SHOULD be prefixed by a tilde ('~', 0x7E) to show that this value is user-set.
-	struct hostent *host = gethostbyname(inet_ntoa(client->getClientAddress().sin_addr));
-	//if (host == NULL)
-		// blablabla      à proteger probablement. kick le client?
-	client->setHostname(host->h_name);
+	client->setUsername("~" + arguments[0]);
+	char*			addr = inet_ntoa(client->getClientAddress().sin_addr);
+	struct hostent* host = gethostbyname(addr);
+	client->setHostname(host ? host->h_name : addr);
 	client->setRealname(arguments[3]);
-	std::cout << BLUE << *client << RESET << std::endl;
 	if (client->getNickname() != "")
 		welcomeMessage(client);
 }

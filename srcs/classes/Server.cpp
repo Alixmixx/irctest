@@ -3,13 +3,8 @@
 extern bool run;
 
 Server::Server(unsigned short port, std::string password)
-	: _serverName(SERVERNAME),
-	  _serverHostname(SERVERHOSTNAME),
-	  _serverVersion(SERVERVERSION),
-	  _port(port),
-	  _maxUsers(0),
-	  _serverPassword(password),
-	  _serverCreationTime(std::time(NULL))
+	: _serverName(SERVERNAME), _serverHostname(SERVERHOSTNAME), _serverVersion(SERVERVERSION),
+	  _port(port), _maxUsers(0), _serverPassword(password), _serverCreationTime(std::time(NULL))
 {
 	_commandHandlers["ADMIN"] = &Server::handleAdmin;
 	_commandHandlers["INVITE"] = &Server::handleInvite;
@@ -39,6 +34,13 @@ Server::Server(unsigned short port, std::string password)
 
 Server::~Server()
 {
+	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
+		delete *it;
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
+		delete *it;
+	for (std::vector<FormerClient*>::iterator it = _formerClients.begin();
+		 it != _formerClients.end(); it++)
+		delete *it;
 	close(_serverSocket);
 	close(_epollFd);
 }
@@ -73,8 +75,7 @@ Channel* Server::getChannel(std::string channelName) const
 
 Client* Server::getClient(int socketFd) const
 {
-	for (std::vector<Client*>::const_iterator it = _clients.begin();
-		 it != _clients.end(); ++it)
+	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it)->getSocket() == socketFd)
 			return (*it);
@@ -98,6 +99,7 @@ void Server::welcomeMessage(Client* client)
 	client->setNickname(client->getNickname());
 	handleLusers(client, std::vector<std::string>());
 	handleMotd(client, std::vector<std::string>());
+	std::cout << BLUE << *client << RESET << std::endl;
 }
 
 void Server::removeClient(Client* client)
@@ -111,20 +113,19 @@ void Server::removeClient(Client* client)
 		if ((*it) == client)
 		{
 			_clients.erase(it);
-			std::cout << BLUE << "Client " << client->getSocket() << " disconnected." << RESET << std::endl;
 			break;
 		}
 	}
 
 	std::vector<Channel*> channels = client->getChannels();
-	for (std::vector<Channel*>::reverse_iterator it = channels.rbegin(); it != channels.rend(); ++it)
+	for (std::vector<Channel*>::reverse_iterator it = channels.rbegin(); it != channels.rend();
+		 ++it)
 		(*it)->removeClientFromChannel(client);
+
+	client->markForDeletion();
 }
 
-void Server::addChannel(Channel* channel)
-{
-	_channels.push_back(channel);
-}
+void Server::addChannel(Channel* channel) { _channels.push_back(channel); }
 
 void Server::removeChannel(Channel* channel)
 {
@@ -145,8 +146,10 @@ void Server::init()
 
 	// Server socket binding
 	_reuseAddr = 1;
-	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
-	syscall(bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)), "bind");
+	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)),
+			"setsockopt");
+	syscall(bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)),
+			"bind");
 	syscall(listen(_serverSocket, BACKLOG), "listen");
 
 	// Server socket epoll
@@ -163,7 +166,9 @@ void Server::acceptNewClient()
 	struct sockaddr_in newClientAddress;
 	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
 
-	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen), "accept");
+	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress,
+									 (socklen_t*)&newClientAddressLen),
+			"accept");
 	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
 	if (_clients.size() > _maxUsers)
 		_maxUsers = _clients.size();
@@ -171,7 +176,8 @@ void Server::acceptNewClient()
 	struct epoll_event ev;
 	ev.data.fd = newClientSocket;
 	ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
-	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
+	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)),
+			"setsockopt");
 	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientSocket, &ev), "epoll_ctl");
 	std::cout << BLUE << "Client " << newClientSocket << " connected." << RESET << std::endl;
 }
@@ -205,6 +211,8 @@ void Server::loop()
 					args.push_back("Connection lost with client");
 					handleQuit(client, args);
 				}
+				if (client->shouldBeDeleted())
+					delete client;
 			}
 		}
 	}

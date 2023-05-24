@@ -163,6 +163,6 @@ void Channel::removeClientFromChannel(Client* client)
 
 	client->leaveChannel(this);
 
-	if (getChannelUsers().size() == 0)
+	if (_channelUsers.empty())
 		_server->removeChannel(this);
 }
