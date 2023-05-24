@@ -42,6 +42,7 @@ SRCS		+= srcs/commands/handleUser.cpp
 SRCS		+= srcs/commands/handleVersion.cpp
 SRCS		+= srcs/commands/handleWho.cpp
 SRCS		+= srcs/commands/handleWhois.cpp
+SRCS		+= srcs/commands/handleWhowas.cpp
 
 FILENAMES	:= $(basename $(SRCS))
 FOLDERS 	:= $(sort $(dir $(SRCS)))

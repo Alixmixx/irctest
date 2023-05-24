@@ -30,7 +30,7 @@ static std::vector<std::string> splitMessage(std::string message)
 	return arguments;
 }
 
-static bool canExecute(Client *client, std::string command)
+static bool canExecute(Client* client, std::string command)
 {
 	if (command == "PASS")
 		return true;
@@ -86,7 +86,7 @@ void Server::readFromClient(Client* client)
 
 	if (message.find("PING") == std::string::npos)
 		std::cout << RED << "Message from client " << client->getSocket() << ":\n"
-			  << message << RESET;
+				  << message << RESET;
 
 	size_t pos;
 	while ((pos = message.find("\r\n")) != std::string::npos)
