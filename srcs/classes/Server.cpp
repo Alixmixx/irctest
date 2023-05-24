@@ -34,13 +34,9 @@ Server::Server(unsigned short port, std::string password)
 
 Server::~Server()
 {
-	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++)
-		delete *it;
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); it++)
-		delete *it;
-	for (std::vector<FormerClient*>::iterator it = _formerClients.begin();
-		 it != _formerClients.end(); it++)
-		delete *it;
+	deleteVector(&_channels);
+	deleteVector(&_clients);
+	deleteVector(&_formerClients);
 	close(_serverSocket);
 	close(_epollFd);
 }
@@ -130,6 +126,7 @@ void Server::addChannel(Channel* channel) { _channels.push_back(channel); }
 void Server::removeChannel(Channel* channel)
 {
 	_channels.erase(std::find(_channels.begin(), _channels.end(), channel));
+	_channelsToDelete.push_back(channel);
 }
 
 void Server::init()
@@ -215,5 +212,6 @@ void Server::loop()
 					delete client;
 			}
 		}
+		deleteVector(&_channelsToDelete);
 	}
 }

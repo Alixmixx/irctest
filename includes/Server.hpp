@@ -46,6 +46,7 @@ private:
 	std::vector<Client*>	   _clients;
 	std::vector<FormerClient*> _formerClients;
 	std::vector<Channel*>	   _channels;
+	std::vector<Channel*>	   _channelsToDelete;
 
 	typedef void (Server::*CommandHandler)(Client*, std::vector<std::string>);
 	std::map<std::string, CommandHandler> _commandHandlers;

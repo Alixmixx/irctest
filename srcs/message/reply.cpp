@@ -191,8 +191,6 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :Wildcard in toplevel domain", replyCode);
 	case ERR_UNKNOWNCOMMAND:
 		return reply(arg1 + " :Unknown command", replyCode);
-	case ERR_NOMOTD:
-		return reply(":MOTD File is missing", replyCode);
 	case ERR_NOADMININFO:
 		return reply(arg1 + " :No administrative info available", replyCode);
 	case ERR_FILEERROR:
