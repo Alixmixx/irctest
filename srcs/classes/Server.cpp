@@ -95,7 +95,7 @@ void Server::removeClient(Client* client)
 		if ((*it) == client)
 		{
 			_clients.erase(it);
-			std::cout << BLUE << "Client disconnected." << RESET << std::endl;
+			std::cout << BLUE << "Client " << client->getSocket() << " disconnected." << RESET << std::endl;
 			break;
 		}
 	}
@@ -147,7 +147,6 @@ void Server::acceptNewClient()
 	struct sockaddr_in newClientAddress;
 	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
 
-	std::cout << BLUE << "Client connected." << RESET << std::endl;
 	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress, (socklen_t*)&newClientAddressLen), "accept");
 	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
 	if (_clients.size() > _maxUsers)
@@ -158,6 +157,7 @@ void Server::acceptNewClient()
 	ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLHUP;
 	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)), "setsockopt");
 	syscall(epoll_ctl(_epollFd, EPOLL_CTL_ADD, newClientSocket, &ev), "epoll_ctl");
+	std::cout << BLUE << "Client " << newClientSocket << " connected." << RESET << std::endl;
 }
 
 void Server::loop()

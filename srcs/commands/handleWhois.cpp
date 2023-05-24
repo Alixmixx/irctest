@@ -1,7 +1,6 @@
 #include "Server.hpp"
 
 // TODO add @ before channels where target is operator
-// TODO handle other prefixes than #
 static std::string getChannelsString(Client* target)
 {
 	std::vector<Channel*> channels = target->getChannels();
