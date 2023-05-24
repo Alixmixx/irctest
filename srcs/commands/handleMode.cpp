@@ -49,6 +49,7 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 {
 	std::string replyString = "";
 	std::string	 modeString = arguments[1];
+	std::string	 targets = "";
 	bool		 sign = PLUS;
 	bool		 stringSign = PLUS;
 	short		 addToString = 0;
@@ -87,7 +88,12 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 			Client* target = getClient(arguments[clientNumber]);
 			if (target == NULL || !channel->isOnChannel(target))
 			{
-				client->reply(ERR_USERNOTINCHANNEL, arguments[clientNumber]);
+				addToString = 0;
+				break;
+			}
+			if (channel->getChannelUserMode(client) <= channel->getChannelUserMode(target))
+			{
+				client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
 				addToString = 0;
 				break;
 			}
@@ -95,6 +101,7 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 				channel->setClientMode(target, OPERATOR);
 			else if (sign == MINUS)
 				channel->setClientMode(target, USER);
+			targets += " " + target->getNickname();
 			addToString = 1;
 			break;
 		}
@@ -121,7 +128,7 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 		}
 	}
 	if (replyString != "")
-		broadcast(channel->getChannelUsers(), client->getPrefix() + " MODE " + channel->getName() + " " + replyString);
+		broadcast(channel->getChannelUsers(), client->getPrefix() + " MODE " + channel->getName() + " " + replyString + targets);
 }
 
 void Server::handleMode(Client* client, std::vector<std::string> arguments) // TODO by Alix

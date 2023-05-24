@@ -4,7 +4,7 @@
 
 class Server {
 public:
-	Server(unsigned short port, std::string password);
+	Server(short port, std::string password);
 	~Server();
 
 	void init();
@@ -17,7 +17,7 @@ public:
 	Client*				  getClient(int socketFd) const;
 	Client*				  getClient(std::string nickname) const;
 	std::vector<Client*>  getClients() const;
-	unsigned short		  getPort() const;
+	short				  getPort() const;
 	time_t				  getServerCreationTime() const;
 	const std::string	  getServerHostname() const;
 	const std::string	  getServerInfo() const;
@@ -37,7 +37,7 @@ private:
 	const std::string  _serverHostname;
 	const std::string  _serverInfo;
 	const std::string  _serverVersion;
-	unsigned short	   _port;
+	short	   _port;
 	unsigned int	   _maxUsers;
 
 	const std::string _serverPassword;

@@ -8,7 +8,8 @@ D			:= deps/
 GARBAGE		:= .vscode classes commands message
 
 CXX			:= c++
-CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
+CXXLIBS		:= -lcurl # -lcurl for bonus
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
 SRCS		+= srcs/clean.cpp
@@ -18,6 +19,7 @@ SRCS		+= srcs/classes/Channel.cpp
 SRCS		+= srcs/classes/Client.cpp
 SRCS		+= srcs/classes/FormerClient.cpp
 SRCS		+= srcs/classes/Server.cpp
+SRCS		+= srcs/classes/Bot.cpp
 SRCS		+= srcs/message/reply.cpp
 SRCS		+= srcs/message/parseMessage.cpp
 SRCS		+= srcs/commands/handleAdmin.cpp
@@ -72,7 +74,7 @@ $(DEPS): $D%.d: $S%.cpp
 	@$(CXX) $(CXXFLAGS) -MM -MF $@ -MT "$O$*.o $@" $<
 
 $(NAME): $(OBJS)
-	@$(CXX) $^ -o $@
+	@$(CXX) $(CXXFLAGS) $^ -o $@ $(CXXLIBS)
 	@echo "$(BLUE)$(NAME) is compiled.$(END)"
 
 clean:

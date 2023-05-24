@@ -1,28 +1,29 @@
 #pragma once
 
-#include <algorithm>
-#include <arpa/inet.h>
+#include <set>
+#include <map>
+#include <ctime>
+#include <vector>
 #include <cctype>
-#include <csignal>
 #include <cstdio>
+#include <string>
+#include <csignal>
 #include <cstdlib>
 #include <cstring>
-#include <ctime>
 #include <fcntl.h>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
-#include <map>
 #include <netdb.h>
-#include <netinet/in.h>
-#include <set>
 #include <sstream>
-#include <string>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <iostream>
 #include <unistd.h>
-#include <vector>
+#include <algorithm>
+#include <pthread.h>
+#include <sys/epoll.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 typedef enum ReplyCode {
 	RPL_WELCOME = 1,
@@ -172,6 +173,7 @@ typedef enum ChannelModes {
 #define SERVERMAIL "miao@outstanding.gov"
 #define SERVERLOC1 "Ecole 42"
 #define SERVERLOC2 "75017 Paris, France"
+#define LOCALHOST "127.0.0.1"
 #define MOTD "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣿⣿⣆⠀⠀⠀\n⠀⢸⣷⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⣿⣿⠋⢿⠀⠀⠀\n⠀⠈⣿⣿⣿⣦⣀⣀⣀⠤⠤⠤⠤⠤⠤⠤⢄⣀⣀⣴⣿⣿⠿⠏⢻⣤⣾⠀⠀⠀\n⠀⠀⠘⣿⣿⠙⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⣿⣗⠀⠀⣠⣿⡟⠀⠀⠀\n⠀⠀⠀⢹⡟⢀⣤⣤⣴⡞⡀⢠⠀⣴⡀⠀⠀⠀⠀⠀⠀⠙⢿⣾⣿⣿⠁⠀⠀⠀\n⠀⠀⢠⣿⣷⣿⣿⣿⣿⠳⠃⢸⣿⣿⣿⣇⣀⠀⠀⠀⠀⠀⠘⣿⣿⣿⠀⠀⠀⠀\n⠀⠀⣾⣿⡟⢸⠉⣻⡿⠀⠀⠸⣿⣿⠋⣿⠉⣻⣿⣷⣄⠀⠀⠙⢿⡇⠀⠀⠀⠀\n⠀⠀⣿⣿⣿⣷⣿⢿⣥⣤⡀⠀⢿⣿⣷⣦⣾⣿⣿⣿⠏⠀⠀⠀⠘⣿⠀⠀⠀⠀\n⠀⠀⣷⣿⡿⠋⠀⢈⣹⣿⣅⡀⠀⠙⠻⢿⣿⣿⣿⣿⡇⠀⠀⠀⠀⢿⡀⠀⠀⠀\n⠀⠀⣷⣾⡇⠀⡼⠉⠀⠀⠀⠉⢆⠀⠀⠀⢿⣿⣿⠋⠀⠀⠀⠀⠀⠸⡇⠀⠀⠀\n⠀⠀⣿⣿⣿⣶⡃⠀⠀⠀⠀⠀⠀⠣⣀⣠⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⢿⠀⠀⠀\n⠀⠀⣿⣿⣿⣿⣿⣦⣤⣀⣀⡠⠀⠀⠈⠙⠛⠛⠛⠁⠀⠀⠀⠀⠀⠀⢸⡆⠀⠀\n⠀⠀⣿⣿⣿⣿⣿⣿⣷⣦⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠀⠀\n⠀⢠⣿⣿⣿⣿⣿⡿⠏⠉⠙⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣧⠀\n⠀⣸⣿⣿⣿⣿⣿⡷⠦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇\n⣰⣿⣿⣿⣿⣿⣿⣿⣶⡦⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹\n⠀⢰⣷⡀⠀⠀⣿⣿⠀⣠⣴⣾⣿⣶⣦⡀⠀⣶⣶⣶⣶⣶⡄⣶⣶⣶⣶⣶⡆⠀\n⠀⢸⣿⣿⣄⠀⣿⣿⣼⣿⠋⠀⠀⠈⠻⣿⡆⣿⣇⠀⠀⢹⣿⣿⣿⠀⠀⠀⠀⠀\n⠀⢸⣿⠙⣿⣦⣿⣿⣿⣇⠀⠀⠀⠀⠀⣿⡷⣿⣿⣤⣴⣿⠟⣿⣿⠿⠿⠿⠇⠀\n⠀⢸⣿⠀⠈⢿⣿⣿⠹⣿⣦⣀⣀⣠⣼⡿⠃⣿⡯⠉⠉⠁⠀⣿⣿⣀⣀⣀⡀⠀\n⠀⠘⠛⠀⠀⠀⠛⠛⠀⠈⠛⠻⠿⠟⠋⠁⠀⠛⠓⠀⠀⠀⠀⠛⠛⠛⠛⠛⠃⠀"
 
 #define BACKLOG 128
@@ -216,6 +218,7 @@ class Server;
 #include "Client.hpp"
 #include "FormerClient.hpp"
 #include "Server.hpp"
+#include "Bot.hpp"
 
 // clean.cpp
 int	 argumentError(std::string message);

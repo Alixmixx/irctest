@@ -2,7 +2,7 @@
 
 extern bool run;
 
-Server::Server(unsigned short port, std::string password)
+Server::Server(short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
 	  _serverVersion(SERVERVERSION),
@@ -51,7 +51,7 @@ const std::string Server::getServerPassword() const { return (_serverPassword); 
 
 time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
-unsigned short Server::getPort() const { return (_port); }
+short Server::getPort() const { return (_port); }
 
 std::vector<Client*> Server::getClients() const { return (_clients); }
 
@@ -164,6 +164,9 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
+	// Bot thread bot(name, prompt, serverPort, serverPassword);
+	Bot bot("Bot", "with emojis, ", _port, _serverPassword);
+
 	while (run)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
