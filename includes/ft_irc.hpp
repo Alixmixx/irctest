@@ -15,6 +15,7 @@
 #include <map>
 #include <netdb.h>
 #include <netinet/in.h>
+#include <set>
 #include <sstream>
 #include <string>
 #include <sys/epoll.h>
