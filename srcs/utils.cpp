@@ -42,7 +42,7 @@ bool isPortNumberCorrect(std::string port)
 	if (port.size() == 0 || port.size() > 5 || port[0] == '0' || port.find_first_not_of("0123456789") != std::string::npos)
 		return false;
 	int n = std::atoi(port.c_str());
-	return n >= 0 && n <= 65535;
+	return n >= 1024 && n <= 65535; // Port numbers 0 to 1024 are reserved for privileged services and designated as well-known ports. This list of port numbers are specified in RFC 1700.
 }
 
 bool isStringPrintable(std::string str)

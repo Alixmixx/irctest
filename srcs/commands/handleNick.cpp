@@ -16,27 +16,29 @@ static bool isNicknameValid(std::string nickname)
 void Server::handleNick(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty() || arguments[0].empty())
-		client->reply(ERR_NONICKNAMEGIVEN);
-	else if (!isNicknameValid(arguments[0]))
+		return client->reply(ERR_NONICKNAMEGIVEN);
+
+	if (!isNicknameValid(arguments[0]))
 	{
 		if (!client->isRegistered())
 			client->setNickname("*");
-		client->reply(ERR_ERRONEUSNICKNAME, arguments[0]);
+		return client->reply(ERR_ERRONEUSNICKNAME, arguments[0]);
 	}
-	else
+
+	unsigned int suffix = 0;
+	std::string nickname = arguments[0];
+	while (getClient(nickname) != NULL)
 	{
-		unsigned int suffix = 0;
-		std::string nickname = arguments[0];
-		while (getClient(nickname) != NULL)
-		{
-			if (client->isRegistered())
-				return client->reply(ERR_NICKNAMEINUSE, nickname);
-			nickname = arguments[0] + toString(suffix++);
-		}
 		if (client->isRegistered())
-			broadcast(_clients, client->getPrefix() + " NICK " + nickname);
-		else if (suffix)
-			client->reply(":" + arguments[0] + " NICK " + nickname);
-		client->setNickname(nickname);
+			return client->reply(ERR_NICKNAMEINUSE, nickname);
+		nickname = arguments[0] + toString(suffix++);
 	}
+	if (client->isRegistered())
+		broadcast(_clients, client->getPrefix() + " NICK " + nickname);
+	else if (suffix)
+		client->reply(":" + arguments[0] + " NICK " + nickname);
+	client->setNickname(nickname);
+
+	if (!client->isRegistered() && client->getUsername() != "")
+		WelcomeMessage(client);
 }

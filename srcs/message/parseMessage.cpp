@@ -80,9 +80,8 @@ void Server::readFromClient(Client* client)
 	if (message.empty())
 	{
 		std::vector<std::string> args;
-		args.push_back("Empty message from client");
-		handleQuit(client, args);
-		return;
+		args.push_back("Connection lost with client");
+		return handleQuit(client, args);
 	}
 
 	if (message.find("PING") == std::string::npos)
