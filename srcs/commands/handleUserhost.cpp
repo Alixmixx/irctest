@@ -10,7 +10,6 @@ void Server::handleUserhost(Client* client, std::vector<std::string> arguments)
 		if (i >= arguments.size())
 			break;
 		std::string nickname = arguments[i];
-		std::cout << nickname << "\n";
 		Client* target = getClient(nickname);
 		if (target != NULL)
 			userhosts.push_back(target->getNickname() + "=+" + target->getHostname());
