@@ -37,7 +37,11 @@ Server::Server(unsigned short port, std::string password)
 	_commandHandlers["WHOWAS"] = &Server::handleWhowas;
 }
 
-Server::~Server() {}
+Server::~Server()
+{
+	close(_serverSocket);
+	close(_epollFd);
+}
 
 const std::string Server::getServerName() const { return (_serverName); }
 
