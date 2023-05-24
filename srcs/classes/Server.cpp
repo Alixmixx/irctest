@@ -88,6 +88,14 @@ Client* Server::getClient(std::string nickname) const
 	return (NULL);
 }
 
+void Server::welcomeMessage(Client* client)
+{
+	client->setIsRegistered(true);
+	client->setNickname(client->getNickname());
+	handleLusers(client, std::vector<std::string>());
+	handleMotd(client, std::vector<std::string>());
+}
+
 void Server::removeClient(Client* client)
 {
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
