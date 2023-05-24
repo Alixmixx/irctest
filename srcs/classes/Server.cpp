@@ -98,6 +98,8 @@ void Server::welcomeMessage(Client* client)
 
 void Server::removeClient(Client* client)
 {
+	client->setMessage("");
+
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
 
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
