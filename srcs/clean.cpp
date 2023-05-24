@@ -8,12 +8,6 @@ int argumentError(std::string message)
 	return ARGUMENT_ERROR;
 }
 
-void panic(std::string message)
-{
-	std::cerr << message << std::endl;
-	std::exit(EXIT_FAILURE);
-}
-
 void signalHandler(int signum)
 {
 	(void)signum;

@@ -1,14 +1,8 @@
 #include "Channel.hpp"
 
 Channel::Channel(Server* server, std::string& name, time_t creationTime)
-	: _name(name),
-	  _topic(""),
-	  _password(""),
-	  _creationTime(creationTime),
-	  _topicSetter(""),
-	  _topicTimestamp(std::time(NULL)),
-	  _userLimit(MAX_USERS_PER_CHANNEL),
-	  _modes(0),
+	: _name(name), _topic(""), _password(""), _creationTime(creationTime), _topicSetter(""),
+	  _topicTimestamp(std::time(NULL)), _userLimit(MAX_USERS_PER_CHANNEL), _modes(0),
 	  _server(server)
 {
 }
@@ -127,7 +121,8 @@ Client* Channel::getHighestGradedUser()
 	int		grade = INVITED;
 	Client* client = NULL;
 
-	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
+	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin();
+		 it != _channelUsersModes.end(); it++)
 	{
 		if (it->second > grade && it->second != FOUNDER)
 		{
@@ -150,7 +145,8 @@ void Channel::removeClientFromChannel(Client* client)
 		}
 	}
 
-	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
+	for (std::map<Client*, int>::iterator it = _channelUsersModes.begin();
+		 it != _channelUsersModes.end(); it++)
 	{
 		if (it->first == client)
 		{

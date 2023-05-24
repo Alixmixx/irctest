@@ -198,16 +198,14 @@ public:
 	const char* funcName;
 };
 
-template <typename T>
-std::string toString(T x)
+template <typename T> std::string toString(T x)
 {
 	std::stringstream ss;
 	ss << x;
 	return ss.str();
 }
 
-template <typename T>
-void deleteVector(std::vector<T*>* vec)
+template <typename T> void deleteVector(std::vector<T*>* vec)
 {
 	for (typename std::vector<T*>::iterator it = vec->begin(); it != vec->end(); it++)
 		delete *it;

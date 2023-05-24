@@ -19,7 +19,7 @@ public:
 	std::map<Client*, int>& getChannelUsersModes();
 	Client*					getHighestGradedUser();
 
-	int getChannelUserMode(Client* client) const;
+	int			getChannelUserMode(Client* client) const;
 	std::string getChannelPrefix(Client* client) const;
 
 	bool isOnChannel(Client* client) const;
@@ -39,7 +39,7 @@ public:
 
 	void removeClientFromChannel(Client* client);
 
-	void addChannelUser(Client* client, int mode=USER);
+	void addChannelUser(Client* client, int mode = USER);
 
 	void addChannelOperator(Client* client);
 	void removeChannelOperator(Client* client);
@@ -60,7 +60,7 @@ private:
 	time_t		_topicTimestamp;
 	int			_userLimit;
 
-	int			_modes;
+	int _modes;
 
 	Server*				   _server;
 	std::map<Client*, int> _channelUsersModes;

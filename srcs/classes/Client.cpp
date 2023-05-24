@@ -3,15 +3,15 @@
 
 Client::Client(Server* server, int socketFd, sockaddr_in clientAddress)
 	: _clientSocket(socketFd), _modes(0), _isRegistered(false), _isInvisible(false),
-	  _isPasswordCorrect(false), _clientAddress(clientAddress),
-	  _server(server)
+	  _isPasswordCorrect(false), _clientAddress(clientAddress), _server(server)
 {
 	time_t t0 = std::time(NULL);
 	_signonTime = t0;
 	_lastAction = t0;
 }
 
-Client::~Client() {
+Client::~Client()
+{
 	close(_clientSocket);
 	std::cout << BLUE << "Client " << _clientSocket << " disconnected." << RESET << std::endl;
 }
