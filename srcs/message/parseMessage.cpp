@@ -66,34 +66,32 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 // TODO tres tard ~ reflechir si IRSSI/netcat peut faire exploser le serveur avec des char choulous
 void Server::readFromClient(Client* client)
 {
-	std::string message = client->getMessage();
-	char		buffer[BUFFER_SIZE] = {0};
-	int			recvSize;
+	char buffer[BUFFER_SIZE] = {0};
+	int	 recvSize;
 
 	do
 	{
 		syscall(recvSize = recv(client->getSocket(), buffer, BUFFER_SIZE - 1, 0), "recv");
 		buffer[recvSize] = '\0';
-		message += buffer;
+		client->_message += buffer;
 	} while (recvSize == BUFFER_SIZE - 1);
 
-	if (message.empty())
+	if (client->_message.empty())
 	{
 		std::vector<std::string> args;
 		args.push_back("Connection lost with client");
 		return handleQuit(client, args);
 	}
 
-	if (message.find("PING") == std::string::npos)
+	if (client->_message.find("PING") == std::string::npos)
 		std::cout << RED << "Message from client " << client->getSocket() << ":\n"
-				  << message << RESET;
+				  << client->_message << RESET;
 
 	size_t pos;
-	while ((pos = message.find("\r\n")) != std::string::npos)
+	while ((pos = client->_message.find("\r\n")) != std::string::npos)
 	{
-		std::string line = message.substr(0, pos);
-		message = message.substr(pos + 2);
+		std::string line = client->_message.substr(0, pos);
+		client->_message = client->_message.substr(pos + 2);
 		parseMessageFromClient(client, line);
 	}
-	client->setMessage(message);
 }

@@ -10,7 +10,7 @@ void Server::handlePass(Client* client, std::vector<std::string> arguments)
 	{
 		client->reply(ERR_PASSWDMISMATCH);
 		client->reply("ERROR :Invalid password");
-		client->setMessage("");
+		client->_message = "";
 		return removeClient(client);
 	}
 	client->setPasswordCorrect();

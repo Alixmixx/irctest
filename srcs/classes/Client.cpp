@@ -37,8 +37,6 @@ void Client::setRealname(std::string realname) { _realname = realname; }
 
 void Client::setHostname(std::string hostname) { _hostname = hostname; }
 
-void Client::setMessage(std::string message) { _message = message; }
-
 void Client::setIsInvisible(bool invisible) { _isInvisible = invisible; }
 
 void Client::setLastAction() { _lastAction = std::time(NULL); }
@@ -77,8 +75,6 @@ std::string Client::getRealname() const { return (_realname); }
 std::string Client::getHostname() const { return (_hostname); }
 
 std::string Client::getPrefix() const { return (_prefix); }
-
-std::string Client::getMessage() const { return (_message); }
 
 std::string Client::getIp() const
 {

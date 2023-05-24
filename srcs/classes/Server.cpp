@@ -102,7 +102,7 @@ void Server::welcomeMessage(Client* client)
 
 void Server::removeClient(Client* client)
 {
-	client->setMessage("");
+	client->_message = "";
 
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
 
