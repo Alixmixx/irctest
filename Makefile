@@ -7,7 +7,7 @@ D			:= deps/
 
 GARBAGE		:= .vscode classes commands message
 
-CXX			:= clang++ # TODO c++
+CXX			:= c++
 CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g3 -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 

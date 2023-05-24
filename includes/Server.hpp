@@ -87,5 +87,6 @@ private:
 	void parseMessageFromClient(Client* client, std::string command);
 	void removeClient(Client* client);
 
+	void setModeClient(Client *client, std::vector<std::string> arguments);
 	void setModeChannel(Client *client, Channel *channel, std::vector<std::string> arguments);
 };

@@ -161,6 +161,8 @@ typedef enum ChannelModes {
 	M_PROTECTED = 1 << 5,
 	M_SECRET = 1 << 6,
 	M_BAN = 1 << 7,
+	M_INVISIBLE = 1 << 8,
+	M_ERROR = 1 << 9
 } ChannelModes;
 
 #define NETWORKNAME "Oustanding"
