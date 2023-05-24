@@ -11,7 +11,7 @@ void Server::handleWhowas(Client* client, std::vector<std::string> arguments)
 		it != _formerClients.rend(); ++it)
 	{
 		FormerClient* target = *it;
-		if (target->nickname == nickname)
+		if (toLowerCase(target->nickname) == toLowerCase(nickname))
 		{
 			client->reply(RPL_WHOWASUSER, target->nickname, target->username, target->hostname, target->realname);
 			client->reply(RPL_WHOISSERVER, target->nickname, SERVERHOSTNAME, SERVERLOC2);
