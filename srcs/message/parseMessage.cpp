@@ -94,6 +94,8 @@ void Server::readFromClient(Client* client)
 		std::string line = message.substr(0, pos);
 		message = message.substr(pos + 2);
 		parseMessageFromClient(client, line);
+		if (client->getMessage() == "ERROR :Invalid password")
+			break;
 	}
 	client->setMessage(message);
 }

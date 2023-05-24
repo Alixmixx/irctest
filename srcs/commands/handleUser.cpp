@@ -6,7 +6,19 @@ void Server::welcomeMessage(Client* client)
 	client->setNickname(client->getNickname());
 	client->reply(RPL_WELCOME, NETWORKNAME, client->getNickname(), client->getUsername(), client->getHostname());
 	client->reply(RPL_YOURHOST, SERVERNAME, SERVERVERSION);
-	return client->reply(RPL_CREATED, formatTime(_serverCreationTime));
+	client->reply(RPL_CREATED, formatTime(_serverCreationTime));
+	client->reply(RPL_MOTDSTART, SERVERNAME);
+
+	std::stringstream ss;
+	ss << MOTD;
+	while (ss.good())
+	{
+		std::string line;
+		std::getline(ss, line);
+		client->reply(RPL_MOTD, line);
+	}
+
+	client->reply(RPL_ENDOFMOTD);
 }
 
 void Server::handleUser(Client* client, std::vector<std::string> arguments)

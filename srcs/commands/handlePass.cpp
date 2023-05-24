@@ -7,6 +7,11 @@ void Server::handlePass(Client* client, std::vector<std::string> arguments)
 	if (arguments.empty())
 		return client->reply(ERR_NEEDMOREPARAMS, "PASS");
 	if (arguments[0] != _serverPassword)
-		return client->reply(ERR_PASSWDMISMATCH);
+	{
+		client->reply(ERR_PASSWDMISMATCH);
+		client->reply("ERROR :Invalid password");
+		client->setMessage("ERROR :Invalid password");
+		return removeClient(client);
+	}
 	client->setPasswordCorrect();
 }
