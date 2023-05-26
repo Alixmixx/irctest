@@ -31,5 +31,5 @@ void Server::handleKick(Client* client, std::vector<std::string> arguments)
 											  " " + target->getNickname() +
 											  (arguments[2] == ":" ? "" : " :" + arguments[2]));
 	channel->removeClientFromChannel(target); // not sure
-	channel->setClientMode(target, BANNED);
+	channel->setClientMode(target, NOTINCHANNEL);
 }

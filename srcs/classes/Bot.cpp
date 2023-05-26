@@ -1,38 +1,48 @@
 #include "Bot.hpp"
 #include <curl/curl.h>
 
-Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword)
-	: _serverPort(_serverPort), _botName(botName), _botPrompt(botPrompt),
-	  _serverPassword(serverPassword)
+extern bool run;
+
+Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword, pthread_mutex_t mutexBot)
+	: _serverPort(_serverPort),
+	  _botName(botName),
+	  _botPrompt(botPrompt),
+	  _serverPassword(serverPassword),
+	  _mutexBot(mutexBot)
 {
 	if (pthread_create(&_threadBot, NULL, threadBot, this))
 		throw std::runtime_error("Failed to create thread");
 
-    pthread_detach(_threadBot);
+	if (pthread_detach(_threadBot))
+		throw std::runtime_error("Failed to detach thread");
 }
 
-Bot::~Bot() {}
+Bot::~Bot()
+{
+	close(_botSocket);
+	std::cout << RED << "Bot " << _botName << " disconnected." << RESET << std::endl;
+}
 
-static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output)
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, std::string *output)
 {
 	size_t totalSize = size * nmemb;
-	output->append((char*)contents, totalSize);
+	output->append((char *)contents, totalSize);
 	return totalSize;
 }
 
-std::string Bot::GetChatGPTResponse(const std::string& input)
+std::string Bot::GetChatGPTResponse(const std::string &input)
 {
 	std::string response;
 
 	// Initialize cURL
-	CURL* curl = curl_easy_init();
+	CURL *curl = curl_easy_init();
 	if (curl)
 	{
 		// Set the API endpoint URL
 		const std::string apiUrl = "https://api.openai.com/v1/chat/completions";
 
 		// Set the request headers
-		struct curl_slist* headers = NULL;
+		struct curl_slist *headers = NULL;
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 		headers = curl_slist_append(
 			headers, "Authorization: Bearer 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");
@@ -52,8 +62,8 @@ std::string Bot::GetChatGPTResponse(const std::string& input)
 
 		// Perform the request
 		CURLcode res = curl_easy_perform(curl);
-        if (res != CURLE_OK)
-            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+		if (res != CURLE_OK)
+			std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 
 		// Clean up
 		curl_slist_free_all(headers);
@@ -73,16 +83,16 @@ void Bot::sendBotInit()
 	send(_botSocket, login.c_str(), login.length(), 0);
 }
 
-void* threadBot(void* botPtr)
+void *threadBot(void *botPtr)
 {
 	sleep(2);
-	Bot* bot = static_cast<Bot*>(botPtr);
+	Bot *bot = static_cast<Bot *>(botPtr);
 
-	bot->run();
-    return NULL;
+	bot->runBot();
+	exit(0);
 }
 
-void Bot::run()
+void Bot::runBot()
 {
 	_botSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_botSocket == -1)
@@ -97,7 +107,7 @@ void Bot::run()
 
 	syscall(inet_pton(AF_INET, "127.0.0.1", &(botAddress.sin_addr)), "Invalid server IP address");
 
-	syscall(connect(_botSocket, (struct sockaddr*)&botAddress, sizeof(botAddress)),
+	syscall(connect(_botSocket, (struct sockaddr *)&botAddress, sizeof(botAddress)),
 			"Invalid server IP address");
 
 	sendBotInit();
@@ -123,7 +133,7 @@ void Bot::run()
 			continue;
 
 		// Get request from message
-        std::string prefix = "PRIVMSG " + _botName + " :";
+		std::string prefix = "PRIVMSG " + _botName + " :";
 		std::string request = clientMessage.substr(clientMessage.find(prefix) + prefix.length());
 		request = request.substr(0, request.find("\r\n"));
 		if (request.empty())
@@ -142,8 +152,9 @@ void Bot::run()
 			close(_botSocket);
 			return;
 		}
-	}
 
-	close(_botSocket);
+		if (!isRunning(_mutexBot))
+			return;
+	}
 	return;
 }

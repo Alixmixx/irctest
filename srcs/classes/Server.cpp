@@ -62,13 +62,13 @@ time_t Server::getServerCreationTime() const { return (_serverCreationTime); }
 
 short Server::getPort() const { return (_port); }
 
-std::vector<Client*> Server::getClients() const { return (_clients); }
+std::vector<Client *> Server::getClients() const { return (_clients); }
 
-std::vector<Channel*> Server::getChannels() const { return (_channels); }
+std::vector<Channel *> Server::getChannels() const { return (_channels); }
 
-Channel* Server::getChannel(std::string channelName) const
+Channel *Server::getChannel(std::string channelName) const
 {
-	for (std::vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+	for (std::vector<Channel *>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
 		if (toLowerCase((*it)->getName()) == toLowerCase(channelName))
 			return (*it);
@@ -76,9 +76,9 @@ Channel* Server::getChannel(std::string channelName) const
 	return (NULL);
 }
 
-Client* Server::getClient(int socketFd) const
+Client *Server::getClient(int socketFd) const
 {
-	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::vector<Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it)->getSocket() == socketFd)
 			return (*it);
@@ -86,9 +86,9 @@ Client* Server::getClient(int socketFd) const
 	return (NULL);
 }
 
-Client* Server::getClient(std::string nickname) const
+Client *Server::getClient(std::string nickname) const
 {
-	for (std::vector<Client*>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::vector<Client *>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if (toLowerCase((*it)->getNickname()) == toLowerCase(nickname))
 			return (*it);
@@ -96,7 +96,7 @@ Client* Server::getClient(std::string nickname) const
 	return (NULL);
 }
 
-void Server::welcomeMessage(Client* client)
+void Server::welcomeMessage(Client *client)
 {
 	client->setIsRegistered(true);
 	client->setNickname(client->getNickname());
@@ -108,13 +108,14 @@ void Server::welcomeMessage(Client* client)
 	std::cout << BLUE << *client << RESET << std::endl;
 }
 
-void Server::removeClient(Client* client)
+void Server::removeClient(Client *client)
 {
 	client->_message = "";
 
 	epoll_ctl(_epollFd, EPOLL_CTL_DEL, client->getSocket(), NULL);
+	close(client->getSocket());
 
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if ((*it) == client)
 		{
@@ -124,15 +125,14 @@ void Server::removeClient(Client* client)
 		}
 	}
 
-	std::vector<Channel*> channels = client->getChannels();
-	for (std::vector<Channel*>::reverse_iterator it = channels.rbegin(); it != channels.rend();
-		 ++it)
+	std::vector<Channel *> channels = client->getChannels();
+	for (std::vector<Channel *>::reverse_iterator it = channels.rbegin(); it != channels.rend(); ++it)
 		(*it)->removeClientFromChannel(client);
 }
 
-void Server::addChannel(Channel* channel) { _channels.push_back(channel); }
+void Server::addChannel(Channel *channel) { _channels.push_back(channel); }
 
-void Server::removeChannel(Channel* channel)
+void Server::removeChannel(Channel *channel)
 {
 	_channels.erase(std::find(_channels.begin(), _channels.end(), channel));
 	_channelsToDelete.push_back(channel);
@@ -154,7 +154,7 @@ void Server::init()
 	_reuseAddr = 1;
 	syscall(setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &_reuseAddr, sizeof(_reuseAddr)),
 			"setsockopt");
-	syscall(bind(_serverSocket, (const struct sockaddr*)&_serverAddress, sizeof(_serverAddress)),
+	syscall(bind(_serverSocket, (const struct sockaddr *)&_serverAddress, sizeof(_serverAddress)),
 			"bind");
 	syscall(listen(_serverSocket, BACKLOG), "listen");
 
@@ -168,13 +168,11 @@ void Server::init()
 
 void Server::acceptNewClient()
 {
-	int				   newClientSocket;
+	int newClientSocket;
 	struct sockaddr_in newClientAddress;
-	socklen_t		   newClientAddressLen = sizeof(newClientAddress);
+	socklen_t newClientAddressLen = sizeof(newClientAddress);
 
-	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr*)&newClientAddress,
-									 (socklen_t*)&newClientAddressLen),
-			"accept");
+	syscall(newClientSocket = accept(_serverSocket, (struct sockaddr *)&newClientAddress, (socklen_t *)&newClientAddressLen), "accept");
 	_clients.push_back(new Client(this, newClientSocket, newClientAddress));
 	if (_clients.size() > _maxUsers)
 		_maxUsers = _clients.size();
@@ -190,13 +188,20 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
+	pthread_mutex_t mutex;
+	if (pthread_mutex_init(&mutex, NULL) != 0)
+		throw SystemError("pthread_mutex_init");
 	// Bot thread bot(name, prompt, serverPort, serverPassword);
-	Bot bot("Bot", "with emojis, ", _port, _serverPassword);
+	Bot bot("Bot", "with emojis, ", _port, _serverPassword, mutex);
 	// Leaks pthread detach lorenzo
-
-	while (run)
+	while (true)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
+		if (!isRunning(mutex))
+		{
+			std::cout << RED << "Server shutting down..." << RESET << std::endl;
+			break;
+		}
 		if (nfds < 0)
 		{
 			if (!run)
@@ -210,7 +215,7 @@ void Server::loop()
 				this->acceptNewClient();
 				continue;
 			}
-			Client* client = getClient(_eventList[i].data.fd);
+			Client *client = getClient(_eventList[i].data.fd);
 			if (client != NULL)
 			{
 				if (_eventList[i].events & EPOLLIN)
@@ -226,4 +231,6 @@ void Server::loop()
 		deleteVector(&_clientsToDelete);
 		deleteVector(&_channelsToDelete);
 	}
+
+	pthread_mutex_destroy(&mutex);
 }

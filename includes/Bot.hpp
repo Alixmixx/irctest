@@ -6,9 +6,9 @@
 class Bot
 {
 	public:
-		Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword);
+		Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword, pthread_mutex_t mutexBot);
 		~Bot();
-		void run();
+		void runBot();
 		void sendBotInit();
 		std::string GetChatGPTResponse(const std::string& input);
 
@@ -19,6 +19,7 @@ class Bot
 		std::string _botPrompt;
 		std::string _serverPassword;
 		pthread_t _threadBot;
+		pthread_mutex_t _mutexBot;
 };
 
 void *threadBot(void *botPtr);

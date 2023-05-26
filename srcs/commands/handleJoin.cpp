@@ -5,6 +5,8 @@ void Server::channelWelcomeMessage(Client* client, Channel* channel)
 	broadcast(channel->getChannelUsers(), client->getPrefix() + " JOIN " + channel->getName());
 	if (channel->getChannelUsers().size() == 1)
 		channel->setClientMode(client, FOUNDER);
+	else
+		channel->setClientMode(client, USER);
 	std::vector<std::string> argument(1, channel->getName());
 	handleTopic(client, argument);
 	handleNames(client, argument);

@@ -150,11 +150,16 @@ void Channel::removeClientFromChannel(Client* client)
 	{
 		if (it->first == client)
 		{
-			if (it->second == FOUNDER && getChannelUsers().size() > 1)
-				setClientMode(getHighestGradedUser(), FOUNDER);
-			_channelUsersModes.erase(it);
+			it->second = NOTINCHANNEL;
 			break;
 		}
+		// if (it->first == client)
+		// {
+		// 	if (it->second == FOUNDER && getChannelUsers().size() > 1)
+		// 		setClientMode(getHighestGradedUser(), FOUNDER);
+		// 	_channelUsersModes.erase(it);
+		// 	break;
+		// }
 	}
 
 	client->leaveChannel(this);

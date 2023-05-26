@@ -25,7 +25,8 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-typedef enum ReplyCode {
+typedef enum ReplyCode
+{
 	RPL_WELCOME = 1,
 	RPL_YOURHOST = 2,
 	RPL_CREATED = 3,
@@ -141,7 +142,8 @@ typedef enum ReplyCode {
 	ERR_USERSDONTMATCH = 502,
 } ReplyCode;
 
-typedef enum Modes {
+typedef enum Modes
+{
 	BANNED,
 	NOTINCHANNEL,
 	INVITED,
@@ -152,7 +154,8 @@ typedef enum Modes {
 	FOUNDER
 } Modes;
 
-typedef enum ChannelModes {
+typedef enum ChannelModes
+{
 	M_INVITE = 1 << 0,
 	M_KEY = 1 << 1,
 	M_LIMITED = 1 << 2,
@@ -191,25 +194,28 @@ typedef enum ChannelModes {
 #define PLUS true
 #define MINUS false
 
-class SystemError : public std::runtime_error {
+class SystemError : public std::runtime_error
+{
 public:
-	explicit SystemError(const char* funcName) : std::runtime_error(funcName), funcName(funcName) {}
+	explicit SystemError(const char *funcName) : std::runtime_error(funcName), funcName(funcName) {}
 
 	virtual ~SystemError() throw() {}
 
-	const char* funcName;
+	const char *funcName;
 };
 
-template <typename T> std::string toString(T x)
+template <typename T>
+std::string toString(T x)
 {
 	std::stringstream ss;
 	ss << x;
 	return ss.str();
 }
 
-template <typename T> void deleteVector(std::vector<T*>* vec)
+template <typename T>
+void deleteVector(std::vector<T *> *vec)
 {
-	for (typename std::vector<T*>::iterator it = vec->begin(); it != vec->end(); it++)
+	for (typename std::vector<T *>::iterator it = vec->begin(); it != vec->end(); it++)
 		delete *it;
 	vec->clear();
 }
@@ -226,16 +232,17 @@ class Server;
 #include "Bot.hpp"
 
 // clean.cpp
-int	 argumentError(std::string message);
+int argumentError(std::string message);
 void signalHandler(int signum);
-void syscall(int returnValue, const char* funcName);
+void syscall(int returnValue, const char *funcName);
 
 // utils.cpp
-int						 stoi(std::string& s);
-bool					 isPortNumberCorrect(std::string port);
-bool					 isStringPrintable(std::string str);
-std::string				 toLowerCase(std::string str);
-std::string				 toUpperCase(std::string str);
-std::string				 formatTime(time_t time);
-std::string				 strjoin(const std::vector<std::string>& vec, char delim);
-std::vector<std::string> split(const std::string& str, char delim);
+bool isRunning(pthread_mutex_t &mutex);
+int stoi(std::string &s);
+bool isPortNumberCorrect(std::string port);
+bool isStringPrintable(std::string str);
+std::string toLowerCase(std::string str);
+std::string toUpperCase(std::string str);
+std::string formatTime(time_t time);
+std::string strjoin(const std::vector<std::string> &vec, char delim);
+std::vector<std::string> split(const std::string &str, char delim);

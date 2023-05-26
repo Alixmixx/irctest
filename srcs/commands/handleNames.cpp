@@ -17,12 +17,12 @@ static void showChannelUsers(Channel* channel, Client* client, bool showInvisibl
 	{
 		if (it != channel->getChannelUsersModes().begin())
 			names += " ";
-		if (it->first->isInvisible() && !showInvisible)
+		if (it->second == BANNED || it->second == NOTINCHANNEL || it->second == INVITED)
 		{
 			it++;
 			continue;
 		}
-		if (it->second == BANNED || it->second == NOTINCHANNEL || it->second == INVITED)
+		if (it->first->isInvisible() && !showInvisible)
 		{
 			it++;
 			continue;
