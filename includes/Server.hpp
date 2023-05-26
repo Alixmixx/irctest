@@ -2,6 +2,8 @@
 
 #include "ft_irc.hpp"
 
+class Bot;
+
 class Server {
 public:
 	Server(short port, std::string password);
@@ -42,6 +44,7 @@ private:
 
 	const std::string _serverPassword;
 	const time_t	  _serverCreationTime;
+	Bot*			  _bot;
 
 	std::vector<Client*>	   _clients;
 	std::vector<Client*>	   _clientsToDelete;

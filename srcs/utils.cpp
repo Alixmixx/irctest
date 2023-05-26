@@ -2,18 +2,6 @@
 
 extern bool run;
 
-bool isRunning(pthread_mutex_t& mutex)
-{
-	pthread_mutex_lock(&mutex);
-	if (!run)
-	{
-		pthread_mutex_unlock(&mutex);
-		return false;
-	}
-	pthread_mutex_unlock(&mutex);
-	return true;
-}
-
 std::vector<std::string> split(const std::string& str, char delim)
 {
 	std::vector<std::string> result;

@@ -3,12 +3,11 @@
 
 extern bool run;
 
-Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword, pthread_mutex_t mutexBot)
+Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::string serverPassword)
 	: _serverPort(_serverPort),
 	  _botName(botName),
 	  _botPrompt(botPrompt),
-	  _serverPassword(serverPassword),
-	  _mutexBot(mutexBot)
+	  _serverPassword(serverPassword)
 {
 	if (pthread_create(&_threadBot, NULL, threadBot, this))
 		throw std::runtime_error("Failed to create thread");
@@ -19,7 +18,6 @@ Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::str
 
 Bot::~Bot()
 {
-	close(_botSocket);
 	std::cout << RED << "Bot " << _botName << " disconnected." << RESET << std::endl;
 }
 
@@ -85,11 +83,11 @@ void Bot::sendBotInit()
 
 void *threadBot(void *botPtr)
 {
-	sleep(2);
 	Bot *bot = static_cast<Bot *>(botPtr);
 
 	bot->runBot();
-	exit(0);
+	std::cout << "LORENZO SUCE 2" << std::endl;
+	pthread_exit(NULL);
 }
 
 void Bot::runBot()
@@ -119,18 +117,25 @@ void Bot::runBot()
 		if (recv(_botSocket, buffer, BUFFER_SIZE, 0) <= 0)
 		{
 			std::cerr << "Connection closed by server" << std::endl;
-			close(_botSocket);
 			return;
 		}
+
+		// Check if message is a PRIVMSG
+		std::string clientMessage(buffer);
+		std::cout << clientMessage << std::endl;
+		if (clientMessage == "Botshutdown\r\n")
+		{
+			close(_botSocket);
+			std::cout << "Bot shutdown" << std::endl;
+			return;
+		}
+
+		if (clientMessage.find("PRIVMSG " + _botName) == std::string::npos)
+			continue;
 
 		// Get client nickname
 		std::string clientNickname(buffer);
 		clientNickname = clientNickname.substr(1, clientNickname.find("!") - 1);
-
-		// Check if message is a PRIVMSG
-		std::string clientMessage(buffer);
-		if (clientMessage.find("PRIVMSG " + _botName) == std::string::npos)
-			continue;
 
 		// Get request from message
 		std::string prefix = "PRIVMSG " + _botName + " :";
@@ -149,12 +154,8 @@ void Bot::runBot()
 		if (send(_botSocket, response.c_str(), response.length(), 0) <= 0)
 		{
 			std::cerr << "Failed to send data to server" << std::endl;
-			close(_botSocket);
 			return;
 		}
-
-		if (!isRunning(_mutexBot))
-			return;
 	}
 	return;
 }

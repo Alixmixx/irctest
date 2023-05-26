@@ -46,6 +46,7 @@ Server::~Server()
 	deleteVector(&_formerClients);
 	close(_serverSocket);
 	close(_epollFd);
+	delete _bot;
 }
 
 const std::string Server::getServerName() const { return (_serverName); }
@@ -188,24 +189,19 @@ void Server::acceptNewClient()
 
 void Server::loop()
 {
-	pthread_mutex_t mutex;
-	if (pthread_mutex_init(&mutex, NULL) != 0)
-		throw SystemError("pthread_mutex_init");
 	// Bot thread bot(name, prompt, serverPort, serverPassword);
-	Bot bot("Bot", "with emojis, ", _port, _serverPassword, mutex);
+	_bot = new Bot("Bot", "with emojis, ", _port, _serverPassword);
 	// Leaks pthread detach lorenzo
-	while (true)
+	while (run)
 	{
 		int nfds = epoll_wait(_epollFd, _eventList, MAX_CLIENTS, -1);
-		if (!isRunning(mutex))
-		{
-			std::cout << RED << "Server shutting down..." << RESET << std::endl;
-			break;
-		}
 		if (nfds < 0)
 		{
 			if (!run)
-				return;
+			{
+				std::cout << "ALIX SUCE" << std::endl;
+				break; // leaks
+			}
 			throw SystemError("epoll_wait");
 		}
 		for (int i = 0; i < nfds; ++i)
@@ -231,6 +227,6 @@ void Server::loop()
 		deleteVector(&_clientsToDelete);
 		deleteVector(&_channelsToDelete);
 	}
-
-	pthread_mutex_destroy(&mutex);
+	std::cout << "LORENZO SUCE" << std::endl;
+	send(getClient("Bot")->getSocket(), "Botshutdown\r\n", 14, 0);
 }

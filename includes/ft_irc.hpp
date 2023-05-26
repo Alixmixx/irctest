@@ -237,7 +237,6 @@ void signalHandler(int signum);
 void syscall(int returnValue, const char *funcName);
 
 // utils.cpp
-bool isRunning(pthread_mutex_t &mutex);
 int stoi(std::string &s);
 bool isPortNumberCorrect(std::string port);
 bool isStringPrintable(std::string str);
