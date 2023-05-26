@@ -9,11 +9,6 @@ Bot::Bot(std::string botName, std::string botPrompt, short _serverPort, std::str
 	  _botPrompt(botPrompt),
 	  _serverPassword(serverPassword)
 {
-	if (pthread_create(&_threadBot, NULL, threadBot, this))
-		throw std::runtime_error("Failed to create thread");
-
-	if (pthread_detach(_threadBot))
-		throw std::runtime_error("Failed to detach thread");
 }
 
 Bot::~Bot()
@@ -43,7 +38,7 @@ std::string Bot::GetChatGPTResponse(const std::string &input)
 		struct curl_slist *headers = NULL;
 		headers = curl_slist_append(headers, "Content-Type: application/json");
 		headers = curl_slist_append(
-			headers, "Authorization: Bearer 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");
+			headers, "Authorization: Bearer sk-tb543qxcMOK7BO5Rqoj0T3BlbkFJOcxrAfRpiav24dNZiJL//V");
 
 		// Set the request payload
 		const std::string payload =
@@ -86,7 +81,6 @@ void *threadBot(void *botPtr)
 	Bot *bot = static_cast<Bot *>(botPtr);
 
 	bot->runBot();
-	std::cout << "LORENZO SUCE 2" << std::endl;
 	pthread_exit(NULL);
 }
 
@@ -122,11 +116,9 @@ void Bot::runBot()
 
 		// Check if message is a PRIVMSG
 		std::string clientMessage(buffer);
-		std::cout << clientMessage << std::endl;
 		if (clientMessage == "Botshutdown\r\n")
 		{
 			close(_botSocket);
-			std::cout << "Bot shutdown" << std::endl;
 			return;
 		}
 
@@ -147,13 +139,22 @@ void Bot::runBot()
 		std::string responseGPT = GetChatGPTResponse(_botPrompt + request);
 
 		// Need to parse responseGPT to get the response and errors, not done yet lorenzo
-		responseGPT = responseGPT.substr(responseGPT.find("content") + 10);
-		responseGPT = responseGPT.substr(0, responseGPT.find("\""));
+		if (responseGPT.find("error") != std::string::npos)
+		{
+			responseGPT = "Error : could not connect to GPT-3 API";
+		}
+		else
+		{
+			responseGPT = responseGPT.substr(responseGPT.find("content") + 10);
+			responseGPT = responseGPT.substr(0, responseGPT.find("\""));
+		}
+
 		std::string response = "PRIVMSG " + clientNickname + " :" + responseGPT + "\r\n";
 
 		if (send(_botSocket, response.c_str(), response.length(), 0) <= 0)
 		{
 			std::cerr << "Failed to send data to server" << std::endl;
+			close(_botSocket);
 			return;
 		}
 	}
