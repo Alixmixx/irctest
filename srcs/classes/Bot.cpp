@@ -133,9 +133,18 @@ void Bot::runBot()
 		std::string prefix = "PRIVMSG " + _botName + " :";
 		std::string request = clientMessage.substr(clientMessage.find(prefix) + prefix.length());
 		request = request.substr(0, request.find("\r\n"));
+		for (size_t i = 0; i < request.length(); i++)
+		{
+			if (request[i] == '\"' || request[i] == '\'' || request[i] == '\\')
+			{
+				request.replace(i, 1, "");
+				i--;
+			}
+		}
 		if (request.empty())
 			continue;
 
+		std::cout << "Request from " << clientNickname << " : " << request << std::endl;
 		std::string responseGPT = GetChatGPTResponse(_botPrompt + request);
 
 		// Need to parse responseGPT to get the response and errors, not done yet lorenzo

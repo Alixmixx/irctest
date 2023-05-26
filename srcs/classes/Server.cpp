@@ -190,7 +190,7 @@ void Server::loop()
 {
 	// Bot thread bot(name, prompt, serverPort, serverPassword);
 	pthread_t botThread;
-	Bot bot("Bot", "with emojis, ", _port, _serverPassword);
+	Bot bot("Botmoji", "with emojis, ", _port, _serverPassword);
 	// Leaks pthread detach lorenzo
 	pthread_create(&botThread, NULL, threadBot, &bot);
 
@@ -226,6 +226,6 @@ void Server::loop()
 		deleteVector(&_clientsToDelete);
 		deleteVector(&_channelsToDelete);
 	}
-	send(getClient("Bot")->getSocket(), "Botshutdown\r\n", 14, 0);
+	send(getClient("Botmoji")->getSocket(), "Botshutdown\r\n", 14, 0);
 	pthread_join(botThread, NULL);
 }
