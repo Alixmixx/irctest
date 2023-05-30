@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleUserhost(Client* client, std::vector<std::string> arguments)
+void Server::handleUserhost(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 		return client->reply(ERR_NEEDMOREPARAMS, "USERHOST");
@@ -10,9 +10,10 @@ void Server::handleUserhost(Client* client, std::vector<std::string> arguments)
 		if (i >= arguments.size())
 			break;
 		std::string nickname = arguments[i];
-		Client* target = getClient(nickname);
+		Client *target = getClient(nickname);
 		if (target != NULL)
-			userhosts.push_back(target->getNickname() + "=+" + target->getHostname());
+			userhosts.push_back(target->getNickname() + "=+" + target->getUsername() + "@" + target->getHostname());
+			// * if operator mettre * avant =
 	}
 	client->reply(RPL_USERHOST, strjoin(userhosts, ' '));
 }

@@ -104,10 +104,10 @@ void Bot::runBot()
 
 	sendBotInit();
 
-	char buffer[BUFFER_SIZE];
+	char buffer[BUFFER_SIZE] = {0};
 	while (true)
 	{
-		memset(buffer, 0, BUFFER_SIZE);
+		std::fill(buffer, buffer + BUFFER_SIZE, 0);
 		if (recv(_botSocket, buffer, BUFFER_SIZE, 0) <= 0)
 		{
 			std::cerr << "Connection closed by server" << std::endl;

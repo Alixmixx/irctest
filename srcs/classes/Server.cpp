@@ -6,6 +6,8 @@ Server::Server(short port, std::string password)
 	: _serverName(SERVERNAME),
 	  _serverHostname(SERVERHOSTNAME),
 	  _serverVersion(SERVERVERSION),
+	  _motd(""),
+	  _motdCreationTime(0),
 	  _port(port),
 	  _maxUsers(0),
 	  _serverPassword(password),

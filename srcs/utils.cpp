@@ -2,11 +2,11 @@
 
 extern bool run;
 
-std::vector<std::string> split(const std::string& str, char delim)
+std::vector<std::string> split(const std::string &str, char delim)
 {
 	std::vector<std::string> result;
-	std::stringstream		 ss(str);
-	std::string				 token;
+	std::stringstream ss(str);
+	std::string token;
 
 	while (std::getline(ss, token, delim))
 	{
@@ -16,7 +16,7 @@ std::vector<std::string> split(const std::string& str, char delim)
 	return result;
 }
 
-std::string strjoin(const std::vector<std::string>& vec, char delim)
+std::string strjoin(const std::vector<std::string> &vec, char delim)
 {
 	std::string result;
 
@@ -31,12 +31,12 @@ std::string strjoin(const std::vector<std::string>& vec, char delim)
 
 std::string formatTime(time_t time)
 {
-	std::tm* localTime = std::localtime(&time);
+	std::tm *localTime = std::localtime(&time);
 
-	const char* dayNames[] = {
+	const char *dayNames[] = {
 		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
-	const char* monthNames[] = {
+	const char *monthNames[] = {
 		"January", "February", "March", "April", "May", "June",
 		"July", "August", "September", "October", "November", "December"};
 
@@ -82,9 +82,27 @@ std::string toUpperCase(std::string str)
 	return str;
 }
 
-int stoi(std::string& s)
+int stoi(std::string &s)
 {
-    int n;
-    std::istringstream(s) >> n;
-    return n;
+	int n;
+	std::istringstream(s) >> n;
+	return n;
+}
+
+bool isFileModified(const char *filename, time_t &lastLectureTime)
+{
+	struct stat fileStat;
+	int fd = open(filename, O_RDONLY);
+	if (fd != -1)
+	{
+		if (fstat(fd, &fileStat) == 0 && fileStat.st_mtime > lastLectureTime)
+		{
+			close(fd);
+			lastLectureTime = fileStat.st_mtime;
+			return true;
+		}
+		close(fd);
+		return false;
+	}
+	return true;
 }

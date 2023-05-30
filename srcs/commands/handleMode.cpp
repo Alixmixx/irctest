@@ -2,14 +2,14 @@
 
 // TODO ERR_UMODEUNKNOWNFLAG for user modes
 
-void Server::setModeClient(Client* client, std::vector<std::string> arguments)
+void Server::setModeClient(Client *client, std::vector<std::string> arguments)
 {
 	std::string replyString = "";
 	std::string modeString = arguments[1];
-	bool		sign = PLUS;
-	bool		stringSign = PLUS;
-	short		addToString = 0;
-	int			first = 0;
+	bool sign = PLUS;
+	bool stringSign = PLUS;
+	short addToString = 0;
+	int first = 0;
 
 	for (size_t i = 0; i < modeString.length(); i++)
 	{
@@ -46,15 +46,15 @@ void Server::setModeClient(Client* client, std::vector<std::string> arguments)
 		client->reply(client->getPrefix() + " MODE " + client->getNickname() + " " + replyString);
 }
 
-void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::string> arguments)
+void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::string> arguments)
 {
-	std::string	 replyString = "";
-	std::string	 modeString = arguments[1];
-	std::string	 targets = "";
-	bool		 sign = PLUS;
-	bool		 stringSign = PLUS;
-	short		 addToString = 0;
-	int			 first = 0;
+	std::string replyString = "";
+	std::string modeString = arguments[1];
+	std::string targets = "";
+	bool sign = PLUS;
+	bool stringSign = PLUS;
+	short addToString = 0;
+	int first = 0;
 	unsigned int clientNumber = 2;
 
 	for (size_t i = 0; i < modeString.length(); i++)
@@ -68,6 +68,47 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 		case '-':
 			sign = MINUS;
 			break;
+		case 'b':
+		{
+			if (arguments.size() <= clientNumber)
+			{
+				addToString = 0;
+				if (!(first & M_BAN) && (first |= M_BAN))
+				{
+					for (std::vector<std::string>::iterator it = channel->getBanList().begin(); it != channel->getBanList().end(); it++)
+						client->reply(RPL_BANLIST, channel->getName(), *it);
+					client->reply(RPL_ENDOFBANLIST, channel->getName());
+				}
+				break;
+			}
+			std::string mask = arguments[clientNumber];
+			clientNumber++;
+			if (mask.find('!') == std::string::npos)
+				mask += "!*@*";
+			else if (mask.find('@') == std::string::npos)
+			{
+				if (mask.end()[-1] == '!')
+					mask += "*@*";
+				else
+					mask += "@*";
+			}
+			else
+			{
+				size_t pos = mask.find("!@");
+				if (pos != std::string::npos)
+					mask.replace(pos, 2, "!*@");
+				if (mask.end()[-1] == '@')
+					mask += "*";
+			}
+			std::vector<std::string> &banList = channel->getBanList();
+			if (sign == PLUS)
+				banList.push_back(mask);
+			else if (sign == MINUS)
+				banList.erase(std::remove(banList.begin(), banList.end(), mask), banList.end());
+			targets += " " + mask;
+			addToString = 1;
+			break;
+		}
 		case 'i':
 			if (!(first & M_INVITE) && (first |= M_INVITE) && ++addToString)
 				channel->setMode(M_INVITE, sign);
@@ -84,13 +125,15 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 			if (!(first & M_MODERATED) && (first |= M_MODERATED) && ++addToString)
 				channel->setMode(M_MODERATED, sign);
 			break;
-		case 'o': {
+		case 'o':
+		{
 			if (arguments.size() <= clientNumber)
 			{
 				addToString = 0;
 				break;
 			}
-			Client* target = getClient(arguments[clientNumber]);
+			Client *target = getClient(arguments[clientNumber]);
+			clientNumber++;
 			if (target == NULL || !channel->isOnChannel(target))
 			{
 				addToString = 0;
@@ -138,13 +181,13 @@ void Server::setModeChannel(Client* client, Channel* channel, std::vector<std::s
 		broadcast(channel->getChannelUsers(), client->getPrefix() + " MODE " + channel->getName() + " " + replyString + targets);
 }
 
-void Server::handleMode(Client* client, std::vector<std::string> arguments) // TODO by Alix
+void Server::handleMode(Client *client, std::vector<std::string> arguments) // TODO by Alix
 {
 	if (arguments.size() == 0)
 		return client->reply(ERR_NEEDMOREPARAMS, "MODE");
 
-	Client*	 target = getClient(arguments[0]);
-	Channel* channel = getChannel(arguments[0]);
+	Client *target = getClient(arguments[0]);
+	Channel *channel = getChannel(arguments[0]);
 
 	if (target == NULL && arguments[0][0] != '#')
 		return client->reply(ERR_NOSUCHNICK, arguments[0]);
@@ -170,11 +213,10 @@ void Server::handleMode(Client* client, std::vector<std::string> arguments) // T
 		if (arguments.size() == 1)
 		{
 			client->reply(RPL_CHANNELMODEIS, channel->getName(), channel->getModeString());
-			return client->reply(RPL_CREATIONTIME, channel->getName(),
-								 toString(channel->getCreationTime()));
+			return client->reply(RPL_CREATIONTIME, channel->getName(), toString(channel->getCreationTime()));
 		}
 
-		if (arguments.size() == 2 && arguments[1][0] == 'b')
+		if (arguments.size() == 2 && (arguments[1].find('b') != std::string::npos) && channel->getChannelUserMode(client) < OPERATOR)
 			return client->reply(RPL_ENDOFBANLIST, channel->getName());
 
 		if (channel->isOnChannel(client) == false || channel->getChannelUserMode(client) < OPERATOR)

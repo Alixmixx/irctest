@@ -24,9 +24,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	switch (replyCode)
 	{
 	case RPL_WELCOME:
-		return reply(":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 +
-						 "]",
-					 replyCode);
+		return reply(":Welcome to the " + arg1 + " Network, " + arg2 + "[!" + arg3 + "@" + arg4 + "]", replyCode);
 	case RPL_YOURHOST:
 		return reply(":Your host is " + arg1 + ", running version " + arg2, replyCode);
 	case RPL_CREATED:
@@ -56,9 +54,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case RPL_STATSHLINE:
 		return reply("H " + arg1 + " * " + arg2, replyCode);
 	case RPL_LUSERCLIENT:
-		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 +
-						 " servers",
-					 replyCode);
+		return reply(":There are " + arg1 + " users and " + arg2 + " invisibles on " + arg3 + " servers", replyCode);
 	case RPL_LUSEROP:
 		return reply(arg1 + " :IRC operators online", replyCode);
 	case RPL_LUSERUNKNOWN:
@@ -191,6 +187,8 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 		return reply(arg1 + " :Wildcard in toplevel domain", replyCode);
 	case ERR_UNKNOWNCOMMAND:
 		return reply(arg1 + " :Unknown command", replyCode);
+	case ERR_NOMOTD:
+		return reply(":MOTD File is missing", replyCode);
 	case ERR_NOADMININFO:
 		return reply(arg1 + " :No administrative info available", replyCode);
 	case ERR_FILEERROR:
@@ -248,8 +246,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_CANTKILLSERVER:
 		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone",
-					 replyCode);
+		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
 		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:
@@ -257,9 +254,9 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	}
 }
 
-void Server::broadcast(std::vector<Client*> recipients, std::string message, Client* except)
+void Server::broadcast(std::vector<Client *> recipients, std::string message, Client *except)
 {
-	for (std::vector<Client*>::const_iterator it = recipients.begin(); it != recipients.end(); ++it)
+	for (std::vector<Client *>::const_iterator it = recipients.begin(); it != recipients.end(); ++it)
 		if ((*it) != except)
 			(*it)->reply(message);
 }

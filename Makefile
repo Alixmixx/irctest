@@ -9,7 +9,7 @@ GARBAGE		:= .vscode classes commands message
 
 CXX			:= c++
 CXXLIBS		:= -lcurl # -lcurl for bonus
-CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -fsanitize=thread -fno-omit-frame-pointer -g -I$I
+CXXFLAGS	:= -Wall -Wextra -Werror -std=c++98 -g -I$I
 VALGRIND	:= valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -q
 
 SRCS		+= srcs/clean.cpp

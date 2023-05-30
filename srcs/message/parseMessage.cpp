@@ -48,7 +48,7 @@ void Server::parseMessageFromClient(Client* client, std::string message)
 		std::cout << BLUE << "Empty line received." << RESET << std::endl;
 		return;
 	}
-	std::string command = arguments[0];
+	std::string command = toUpperCase(arguments[0]);
 	if (command == "CAP" || command == "PONG")
 		return;
 	if (!canExecute(client, command))

@@ -19,6 +19,8 @@ public:
 	std::map<Client*, int>& getChannelUsersModes();
 	Client*					getHighestGradedUser();
 
+	std::vector<std::string>& getBanList();
+
 	int			getChannelUserMode(Client* client) const;
 	std::string getChannelPrefix(Client* client) const;
 
@@ -29,6 +31,7 @@ public:
 	bool isUserLimitSet() const;
 	bool isSecret() const;
 	bool isTopicProtected() const;
+	bool isUserBanned(Client* client) const;
 
 	void setMode(int mode, bool sign);
 
@@ -40,15 +43,6 @@ public:
 	void removeClientFromChannel(Client* client);
 
 	void addChannelUser(Client* client, int mode = USER);
-
-	void addChannelOperator(Client* client);
-	void removeChannelOperator(Client* client);
-
-	void addChannelBan(Client* client);
-	void removeChannelBan(Client* client);
-
-	void addChannelInvite(Client* client);
-	void removeChannelInvite(Client* client);
 
 private:
 	std::string _name;
@@ -65,4 +59,5 @@ private:
 	Server*				   _server;
 	std::map<Client*, int> _channelUsersModes;
 	std::vector<Client*>   _channelUsers;
+	std::vector<std::string> _banList;
 };

@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <algorithm>
 #include <pthread.h>
+#include <sys/stat.h>
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -109,6 +110,7 @@ typedef enum ReplyCode
 	ERR_NOTEXTTOSEND = 412,
 	ERR_WILDTOPLEVEL = 414,
 	ERR_UNKNOWNCOMMAND = 421,
+	ERR_NOMOTD = 422,
 	ERR_NOADMININFO = 423,
 	ERR_FILEERROR = 424,
 	ERR_NONICKNAMEGIVEN = 431,
@@ -240,6 +242,7 @@ void syscall(int returnValue, const char *funcName);
 int stoi(std::string &s);
 bool isPortNumberCorrect(std::string port);
 bool isStringPrintable(std::string str);
+bool isFileModified(const char *filename, time_t &lastLectureTime);
 std::string toLowerCase(std::string str);
 std::string toUpperCase(std::string str);
 std::string formatTime(time_t time);

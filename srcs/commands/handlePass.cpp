@@ -2,7 +2,7 @@
 
 void Server::handlePass(Client* client, std::vector<std::string> arguments)
 {
-	if (client->isPasswordCorrect())
+	if (client->isRegistered())
 		return client->reply(ERR_ALREADYREGISTRED);
 	if (arguments.empty())
 		return client->reply(ERR_NEEDMOREPARAMS, "PASS");

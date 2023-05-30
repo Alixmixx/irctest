@@ -35,7 +35,7 @@ void Server::addClientToChannel(Client* client, Channel* channel, std::string ch
 	if (channel->isPasswordProtected() && channel->getPassword() != channelPassword)
 		return client->reply(ERR_BADCHANNELKEY, channel->getName());
 
-	if (channel->getChannelUserMode(client) == BANNED)
+	if (channel->isUserBanned(client))
 		return client->reply(ERR_BANNEDFROMCHAN, channel->getName());
 
 	if (channel->getChannelUsers().size() >= MAX_USERS_PER_CHANNEL)
@@ -82,20 +82,20 @@ void Server::handleJoin(Client* client, std::vector<std::string> arguments)
 	std::string channelName;
 	std::string channelPassword;
 
-	while (!arguments[0].empty()) // alix > a changer en split
+	while (!arguments[0].empty())
 	{
 		channelName = extractFromArgument(arguments[0]);
-
-		if (checkChannelName(channelName) == false)
-		{
-			client->reply(ERR_NOSUCHCHANNEL, channelName);
-			return; // maybe continue ?
-		}
 
 		if (arguments.size() > 1)
 			channelPassword = extractFromArgument(arguments[1]);
 		else
 			channelPassword = "";
+		
+		if (checkChannelName(channelName) == false)
+		{
+			client->reply(ERR_NOSUCHCHANNEL, channelName);
+			continue; // maybe return ?
+		}
 
 		Channel* channel = getChannel(channelName);
 		if (channel != NULL)

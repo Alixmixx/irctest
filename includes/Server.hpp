@@ -39,7 +39,9 @@ private:
 	const std::string  _serverHostname;
 	const std::string  _serverInfo;
 	const std::string  _serverVersion;
-	short	   _port;
+	std::string		   _motd;
+	time_t			   _motdCreationTime;
+	short				_port;
 	unsigned int	   _maxUsers;
 
 	const std::string _serverPassword;
