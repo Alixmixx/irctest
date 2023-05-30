@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-void Server::handleUser(Client* client, std::vector<std::string> arguments)
+void Server::handleUser(Client *client, std::vector<std::string> arguments)
 {
 	if (client->getNickname() == "*")
 		return removeClient(client);
@@ -12,8 +12,8 @@ void Server::handleUser(Client* client, std::vector<std::string> arguments)
 		return client->reply(ERR_ALREADYREGISTRED);
 
 	client->setUsername("~" + arguments[0]);
-	char*			addr = inet_ntoa(client->getClientAddress().sin_addr);
-	struct hostent* host = gethostbyname(addr);
+	char			*addr = inet_ntoa(client->getClientAddress().sin_addr);
+	struct hostent	*host = gethostbyname(addr);
 	client->setHostname(host ? host->h_name : addr);
 	client->setRealname(arguments[3]);
 	if (client->getNickname() != "")

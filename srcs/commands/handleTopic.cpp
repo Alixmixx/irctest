@@ -1,11 +1,11 @@
 #include "Server.hpp"
 
-void Server::handleTopic(Client* client, std::vector<std::string> arguments)
+void Server::handleTopic(Client *client, std::vector<std::string> arguments)
 {
 	if (arguments.size() < 1)
 		return client->reply(ERR_NEEDMOREPARAMS, "TOPIC");
 
-	Channel* channel = getChannel(arguments[0]);
+	Channel *channel = getChannel(arguments[0]);
 	if (channel == NULL)
 		return client->reply(ERR_NOSUCHCHANNEL, arguments[0]);
 
@@ -15,7 +15,7 @@ void Server::handleTopic(Client* client, std::vector<std::string> arguments)
 	if (arguments.size() == 1)
 	{
 		if (channel->getTopic() == "")
-			return; //client->reply(RPL_NOTOPIC, channel->getName());
+			return; // client->reply(RPL_NOTOPIC, channel->getName());
 		else
 		{
 			client->reply(RPL_TOPIC, channel->getName(), channel->getTopic());

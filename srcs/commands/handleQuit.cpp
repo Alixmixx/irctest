@@ -1,14 +1,14 @@
 #include "Server.hpp"
 
-static std::vector<Client*> getRecipients(Client* client)
+static std::vector<Client *> getRecipients(Client *client)
 {
 	std::set<std::string> nicknames;
-	std::vector<Client*> recipients;
-	std::vector<Channel*> channels = client->getChannels();
-	for (std::vector<Channel*>::iterator channel = channels.begin(); channel != channels.end(); ++channel)
+	std::vector<Client *> recipients;
+	std::vector<Channel *> channels = client->getChannels();
+	for (std::vector<Channel *>::iterator channel = channels.begin(); channel != channels.end(); ++channel)
 	{
-		std::vector<Client*> users = (*channel)->getChannelUsers();
-		for (std::vector<Client*>::iterator user = users.begin(); user != users.end(); ++user)
+		std::vector<Client *> users = (*channel)->getChannelUsers();
+		for (std::vector<Client *>::iterator user = users.begin(); user != users.end(); ++user)
 		{
 			std::string nickname = (*user)->getNickname();
 			if (*user != client && nicknames.find(nickname) == nicknames.end())
@@ -21,18 +21,15 @@ static std::vector<Client*> getRecipients(Client* client)
 	return recipients;
 }
 
-void Server::handleQuit(Client* client, std::vector<std::string> arguments)
+void Server::handleQuit(Client *client, std::vector<std::string> arguments)
 {
 	std::string message = arguments.empty() ? "" : "Quit: " + arguments[0];
-	client->reply("ERROR :Closing Link: " + client->getIp() + " (" + message + ")");
 	std::string quitMessage = client->getPrefix() + " QUIT :" + message;
 	if (client->isRegistered())
 	{
-		FormerClient* formerClient =
-			new FormerClient(client->getNickname(), client->getUsername(), client->getRealname(),
-							 client->getHostname(), std::time(NULL));
+		FormerClient *formerClient = new FormerClient(client->getNickname(), client->getUsername(), client->getRealname(), client->getHostname(), std::time(NULL));
 		_formerClients.push_back(formerClient);
-		std::vector<Client*> recipients = getRecipients(client);
+		std::vector<Client *> recipients = getRecipients(client);
 		broadcast(recipients, quitMessage);
 	}
 	removeClient(client);
