@@ -19,6 +19,9 @@ void Server::handlePrivateMessage(Client* client, std::vector<std::string> argum
 
 		if (targetChannel->isUserBanned(client))
 			return client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
+		
+		if (targetChannel->isModerated() && targetChannel->getChannelUserMode(client) < VOICE)
+			return client->reply(ERR_CANNOTSENDTOCHAN, arguments[0]);
 
 		return broadcast(targetChannel->getChannelUsers(), client->getPrefix() + " PRIVMSG " + targetChannel->getName() + " :" + arguments[1], client);
 	}

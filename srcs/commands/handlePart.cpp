@@ -23,7 +23,8 @@ void Server::handlePart(Client* client, std::vector<std::string> argument)
 			client->reply(ERR_NOTONCHANNEL, (*it));
 			continue;
 		}
-		broadcast(channel->getChannelUsers(), client->getPrefix() + " PART " + channel->getName() + reason);
 		channel->removeClientFromChannel(client);
+		broadcast(channel->getChannelUsers(), client->getPrefix() + " PART " + channel->getName() + reason);
+		client->reply(client->getPrefix() + " PART " + channel->getName() + reason);
 	}
 }

@@ -86,20 +86,48 @@ bool Channel::isSecret() const { return (_modes & M_SECRET); }
 
 bool Channel::isTopicProtected() const { return (_modes & M_PROTECTED); }
 
+bool Channel::isModerated() const { return (_modes & M_MODERATED); }
+
+static bool wildcardMatch(const std::string &pattern, const std::string &text)
+{
+	if (pattern.empty() && text.empty())
+		return true;
+
+	if (pattern.empty())
+		return false;
+
+	if (pattern[0] == '*')
+		return wildcardMatch(pattern.substr(1), text) || wildcardMatch(pattern, text.substr(1));
+
+	if (!text.empty() && pattern[0] == text[0])
+		return wildcardMatch(pattern.substr(1), text.substr(1));
+
+	return false;
+}
+
 bool Channel::isUserBanned(Client *client) const
 {
+	if (getChannelUserMode(client) >= OPERATOR)
+		return (false);
 	for (std::vector<std::string>::const_iterator it = _banList.begin(); it != _banList.end(); it++)
 	{
 		std::string nickname = it->substr(0, it->find("!"));
 		std::string username = it->substr(it->find("!") + 1, it->find("@") - it->find("!") - 1);
 		std::string hostname = it->substr(it->find("@") + 1);
-		std::cout << "nickname: " << nickname << std::endl << "username: " << username << std::endl << "hostname: " << hostname << std::endl;
-		if ((nickname == "*" || toLowerCase(client->getNickname()) == toLowerCase(nickname))
-			&& (username == "*" || toLowerCase(client->getUsername()) == toLowerCase(username))
-			&& (hostname == "*" || toLowerCase(client->getHostname()) == toLowerCase(hostname)))
-			return (true);
+		std::cout << "nickname: " << nickname << std::endl
+				  << "username: " << username << std::endl
+				  << "hostname: " << hostname << std::endl;
+		bool nicknameMatch = wildcardMatch(nickname, client->getNickname());
+		bool usernameMatch = wildcardMatch(username, client->getUsername());
+		bool hostnameMatch = wildcardMatch(hostname, client->getHostname());
+
+		std::cout << "nicknameMatch: " << nicknameMatch << std::endl
+				  << "usernameMatch: " << usernameMatch << std::endl
+				  << "hostnameMatch: " << hostnameMatch << std::endl;
+		if (wildcardMatch(nickname, client->getNickname()) && wildcardMatch(username, client->getUsername()) && wildcardMatch(hostname, client->getHostname()))
+			return true;
 	}
-	return (false);
+	return false;
 }
 
 // Setters
@@ -135,25 +163,49 @@ void Channel::addChannelUser(Client *client, int mode)
 	client->addChannel(this);
 }
 
-Client *Channel::getHighestGradedUser()
+Client *Channel::getHighestGradedUser(Client *client) const
 {
 	int grade = INVITED;
-	Client *client = NULL;
+	Client *highestGradedUser = NULL;
 
-	for (std::map<Client *, int>::iterator it = _channelUsersModes.begin();
-		 it != _channelUsersModes.end(); it++)
+	for (std::map<Client *, int>::const_iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
 	{
-		if (it->second > grade && it->second != FOUNDER)
+		if (it->first == client)
+			continue;
+		if (it->second > grade)
 		{
-			client = it->first;
+			highestGradedUser = it->first;
 			grade = it->second;
 		}
 	}
-	return (client);
+	if (grade < OPERATOR) // if there is no operator, return the first user
+		return (highestGradedUser);
+	return (NULL); // if there is at least one operator, return NULL
 }
 
 void Channel::removeClientFromChannel(Client *client)
 {
+	for (std::map<Client *, int>::iterator it = _channelUsersModes.begin(); it != _channelUsersModes.end(); it++)
+	{
+		/* 		if (it->first == client)
+				{
+					it->second = NOTINCHANNEL;
+					break;
+				} */
+		if (it->first == client)
+		{
+			if (it->second >= OPERATOR && getChannelUsers().size() > 1 && getHighestGradedUser(client) != NULL)
+			{
+				std::vector<std::string> params;
+				params.push_back(_name);
+				params.push_back("+o");
+				params.push_back(getHighestGradedUser(client)->getNickname());
+				_server->handleMode(it->first, params);
+			}
+			_channelUsersModes.erase(it);
+			break;
+		}
+	}
 
 	for (std::vector<Client *>::iterator it = _channelUsers.begin(); it != _channelUsers.end(); it++)
 	{
@@ -162,23 +214,6 @@ void Channel::removeClientFromChannel(Client *client)
 			_channelUsers.erase(it);
 			break;
 		}
-	}
-
-	for (std::map<Client *, int>::iterator it = _channelUsersModes.begin();
-		 it != _channelUsersModes.end(); it++)
-	{
-		if (it->first == client)
-		{
-			it->second = NOTINCHANNEL;
-			break;
-		}
-		// if (it->first == client)
-		// {
-		// 	if (it->second == FOUNDER && getChannelUsers().size() > 1)
-		// 		setClientMode(getHighestGradedUser(), FOUNDER);
-		// 	_channelUsersModes.erase(it);
-		// 	break;
-		// }
 	}
 
 	client->leaveChannel(this);

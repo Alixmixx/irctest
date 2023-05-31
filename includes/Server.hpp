@@ -28,6 +28,7 @@ public:
 	const std::string	  getServerVersion() const;
 
 	void removeChannel(Channel* channel);
+	void handleMode(Client* client, std::vector<std::string> arguments);
 
 private:
 	int				   _serverSocket;
@@ -65,7 +66,6 @@ private:
 	void handleKick(Client* client, std::vector<std::string> arguments);
 	void handleList(Client* client, std::vector<std::string> arguments);
 	void handleLusers(Client* client, std::vector<std::string> arguments);
-	void handleMode(Client* client, std::vector<std::string> arguments);
 	void handleMotd(Client* client, std::vector<std::string> arguments);
 	void handleNames(Client* client, std::vector<std::string> arguments);
 	void handleNick(Client* client, std::vector<std::string> arguments);

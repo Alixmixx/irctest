@@ -46,6 +46,48 @@ void Server::setModeClient(Client *client, std::vector<std::string> arguments)
 		client->reply(client->getPrefix() + " MODE " + client->getNickname() + " " + replyString);
 }
 
+static std::string userMask(std::string input)
+{
+	std::string nickname;
+	std::string username;
+	std::string hostname;
+	/*						!		@
+		user	      		0		0		user!*@*
+
+		user!				1		0		user!*@*
+		user!asd			1		0		user!asd@*
+
+			asd@lol			0		1		   *!asd@lol
+			@lol			0		1		     *!*@lol
+
+			!asd@			1		1		   *!asd@*
+			!asd@lol		1		1		   *!asd@lol
+		user!asd@lol		1		1		user!asd@lol		*/
+	if (!(input.find("!") == std::string::npos && input.find("@") != std::string::npos))
+		nickname = input.substr(0, input.find("!"));
+	else
+		username = input.substr(0, input.find("@"));
+
+	if (nickname.empty())
+		nickname = "*";
+
+	if (input.find("!") != std::string::npos)
+		username = input.substr(input.find("!") + 1, input.find("@") - input.find("!") - 1);
+
+	if (username.empty())
+		username = "*";
+
+	if (input.find("@") != std::string::npos)
+		hostname = input.substr(input.find("@") + 1);
+
+	if (hostname.empty())
+		hostname = "*";
+
+	std::string mask = nickname + "!" + username + "@" + hostname;
+
+	return mask;
+}
+
 void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::string> arguments)
 {
 	std::string replyString = "";
@@ -81,28 +123,16 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 				}
 				break;
 			}
-			std::string mask = arguments[clientNumber];
+			std::string mask = userMask(arguments[clientNumber]);
 			clientNumber++;
-			if (mask.find('!') == std::string::npos)
-				mask += "!*@*";
-			else if (mask.find('@') == std::string::npos)
-			{
-				if (mask.end()[-1] == '!')
-					mask += "*@*";
-				else
-					mask += "@*";
-			}
-			else
-			{
-				size_t pos = mask.find("!@");
-				if (pos != std::string::npos)
-					mask.replace(pos, 2, "!*@");
-				if (mask.end()[-1] == '@')
-					mask += "*";
-			}
+
 			std::vector<std::string> &banList = channel->getBanList();
 			if (sign == PLUS)
+			{
+				if (std::find(banList.begin(), banList.end(), mask) != banList.end())
+					break;
 				banList.push_back(mask);
+			}
 			else if (sign == MINUS)
 				banList.erase(std::remove(banList.begin(), banList.end(), mask), banList.end());
 			targets += " " + mask;
@@ -161,6 +191,34 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 			if (!(first & M_PROTECTED) && (first |= M_PROTECTED) && ++addToString)
 				channel->setMode(M_PROTECTED, sign);
 			break;
+		case 'v':
+		{
+			if (arguments.size() <= clientNumber)
+			{
+				addToString = 0;
+				break;
+			}
+			Client *target = getClient(arguments[clientNumber]);
+			clientNumber++;
+			if (target == NULL || !channel->isOnChannel(target))
+			{
+				addToString = 0;
+				break;
+			}
+			if (channel->getChannelUserMode(client) <= channel->getChannelUserMode(target))
+			{
+				client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
+				addToString = 0;
+				break;
+			}
+			if (sign == PLUS)
+				channel->setClientMode(target, VOICE);
+			else if (sign == MINUS)
+				channel->setClientMode(target, USER);
+			targets += " " + target->getNickname();
+			addToString = 1;
+			break;
+		}
 		default:
 			if (!(first & M_ERROR) && (first |= M_ERROR))
 				client->reply(ERR_UNKNOWNMODE, std::string(1, modeString[i]));

@@ -17,7 +17,7 @@ public:
 
 	std::vector<Client*>&	getChannelUsers();
 	std::map<Client*, int>& getChannelUsersModes();
-	Client*					getHighestGradedUser();
+	Client*					getHighestGradedUser(Client* client) const;
 
 	std::vector<std::string>& getBanList();
 
@@ -31,6 +31,7 @@ public:
 	bool isUserLimitSet() const;
 	bool isSecret() const;
 	bool isTopicProtected() const;
+	bool isModerated() const;
 	bool isUserBanned(Client* client) const;
 
 	void setMode(int mode, bool sign);
