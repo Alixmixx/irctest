@@ -62,8 +62,7 @@ std::vector<std::string> &Channel::getBanList() { return _banList; }
 std::string Channel::getChannelPrefix(Client *client) const
 {
 	int mode = getChannelUserMode(client);
-	return mode == FOUNDER ? "~" : mode == OPERATOR ? "@"
-													: "";
+	return mode == FOUNDER ? "~" : mode == OPERATOR ? "@" : "";
 }
 
 bool Channel::isOnChannel(Client *client) const

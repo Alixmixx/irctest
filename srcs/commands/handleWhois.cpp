@@ -17,7 +17,7 @@ void Server::handleWhois(Client* client, std::vector<std::string> arguments)
 {
 	if (arguments.empty())
 		return client->reply(ERR_NONICKNAMEGIVEN);
-	if (arguments.size() >= 2 && arguments[0] != SERVERHOSTNAME)
+	if (arguments.size() >= 2 && toLowerCase(arguments[0]) != toLowerCase(SERVERHOSTNAME) && toLowerCase(arguments[0]) != toLowerCase(SERVERNAME))
 		return client->reply(ERR_NOSUCHSERVER, arguments[0]);
 
 	std::string nickname = arguments[arguments.size() >= 2];
