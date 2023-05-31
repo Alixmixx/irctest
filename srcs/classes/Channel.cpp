@@ -43,6 +43,8 @@ std::string Channel::getModeString() const
 
 time_t Channel::getTopicTimestamp() const { return _topicTimestamp; }
 
+int Channel::getUserLimit() const { return _userLimit; }
+
 std::vector<Client *> &Channel::getChannelUsers() { return _channelUsers; }
 
 std::map<Client *, int> &Channel::getChannelUsersModes() { return _channelUsersModes; }
@@ -149,10 +151,9 @@ void Channel::setMode(int mode, bool sign)
 		_modes |= mode;
 	else if (sign == MINUS)
 		_modes &= ~mode;
-
-	if (mode & M_LIMITED)
-		_userLimit = _channelUsers.size();
 }
+
+void Channel::setUserLimit(int limit) { _userLimit = limit; }
 
 // Methods
 

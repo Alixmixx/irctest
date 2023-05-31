@@ -70,7 +70,7 @@ void Bot::sendBotInit()
 {
 	std::string login;
 
-	login = "CAP LS\r\nPASS " + _serverPassword + "\r\n NICK " + _botName + "\r\n USER " +
+	login = "CAP LS\r\nPASS " + _serverPassword + "\r\nNICK " + _botName + "\r\nUSER " +
 			_botName + " 0 *: bot\r\n ";
 
 	send(_botSocket, login.c_str(), login.length(), 0);

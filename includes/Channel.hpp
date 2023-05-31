@@ -14,6 +14,7 @@ public:
 	const std::string& getTopicSetter() const;
 	std::string		   getModeString() const;
 	time_t			   getTopicTimestamp() const;
+	int				   getUserLimit() const;
 
 	std::vector<Client*>&	getChannelUsers();
 	std::map<Client*, int>& getChannelUsersModes();
@@ -35,6 +36,7 @@ public:
 	bool isUserBanned(Client* client) const;
 
 	void setMode(int mode, bool sign);
+	void setUserLimit(int limit);
 
 	void setTopic(Client* client, const std::string& topic);
 	void setPassword(const std::string& password);

@@ -144,12 +144,61 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 				channel->setMode(M_INVITE, sign);
 			break;
 		case 'k':
+		{
 			if (!(first & M_KEY) && (first |= M_KEY) && ++addToString)
+			{
+				if (sign == MINUS)
+				{
+					channel->setPassword("");
+					channel->setMode(M_KEY, sign);
+					break;
+				}
+				else if (arguments.size() <= clientNumber)
+				{
+					addToString = 0;
+					break;
+				}
+				std::string key = arguments[clientNumber];
+				clientNumber++;
+				channel->setPassword(key);
 				channel->setMode(M_KEY, sign);
+				targets += " " + key;
+			}
 			break;
+		}
 		case 'l':
 			if (!(first & M_LIMITED) && (first |= M_LIMITED) && ++addToString)
+			{
+				if (sign == MINUS)
+				{
+					channel->setMode(M_LIMITED, sign);
+					break;
+				}
+				else if (arguments.size() <= clientNumber)
+				{
+					int limitUser = channel->getChannelUsers().size();
+					channel->setMode(M_LIMITED, sign);
+					channel->setUserLimit(limitUser);
+					targets += " " + toString(limitUser);
+					break;
+				}
+				std::string limit = arguments[clientNumber];
+				clientNumber++;
+				if (limit.find_first_not_of("+0123456789") != std::string::npos || limit.length() > 11)
+				{
+					addToString = 0;
+					break;
+				}
+				int limitInt = std::atoi(limit.c_str());
+				if (limitInt < 1)
+				{
+					addToString = 0;
+					break;
+				}
+				channel->setUserLimit(limitInt);
 				channel->setMode(M_LIMITED, sign);
+				targets += " " + toString(limitInt);
+			}
 			break;
 		case 'm':
 			if (!(first & M_MODERATED) && (first |= M_MODERATED) && ++addToString)
@@ -169,7 +218,7 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 				addToString = 0;
 				break;
 			}
-			if (channel->getChannelUserMode(client) <= channel->getChannelUserMode(target))
+			if (channel->getChannelUserMode(client) < OPERATOR) // channel->getChannelUserMode(target))
 			{
 				client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
 				addToString = 0;

@@ -21,6 +21,8 @@ void Server::newChannel(Client* client, std::string channelName, std::string cha
 	Channel* channel = new Channel(server, channelName, std::time(NULL));
 
 	channel->setPassword(channelPassword);
+	if (channelPassword != "")
+		channel->setMode(M_KEY, PLUS);
 	channel->addChannelUser(client, FOUNDER);
 	server->addChannel(channel);
 
@@ -38,7 +40,10 @@ void Server::addClientToChannel(Client* client, Channel* channel, std::string ch
 	if (channel->isUserBanned(client))
 		return client->reply(ERR_BANNEDFROMCHAN, channel->getName());
 
-	if (channel->getChannelUsers().size() >= MAX_USERS_PER_CHANNEL)
+	if (channel->getChannelUsers().size() >= MAX_USERS_PER_CHANNEL) // lorenzo casse les couilles mais je laisse
+		return client->reply(ERR_CHANNELISFULL, channel->getName());
+
+	if (channel->isUserLimitSet() && (int)channel->getChannelUsers().size() >= channel->getUserLimit())
 		return client->reply(ERR_CHANNELISFULL, channel->getName());
 
 	if (channel->isInviteOnly() && channel->getChannelUserMode(client) != INVITED)
