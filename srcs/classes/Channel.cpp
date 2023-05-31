@@ -72,10 +72,10 @@ bool Channel::isOnChannel(Client *client) const
 	while (it != _channelUsers.end())
 	{
 		if (*it == client)
-			return (true);
+			return true;
 		it++;
 	}
-	return (false);
+	return false;
 }
 
 bool Channel::isInviteOnly() const { return (_modes & M_INVITE); }
@@ -110,22 +110,14 @@ static bool wildcardMatch(const std::string &pattern, const std::string &text)
 bool Channel::isUserBanned(Client *client) const
 {
 	if (getChannelUserMode(client) >= OPERATOR)
-		return (false);
+		return false;
+
 	for (std::vector<std::string>::const_iterator it = _banList.begin(); it != _banList.end(); it++)
 	{
 		std::string nickname = it->substr(0, it->find("!"));
 		std::string username = it->substr(it->find("!") + 1, it->find("@") - it->find("!") - 1);
 		std::string hostname = it->substr(it->find("@") + 1);
-		std::cout << "nickname: " << nickname << std::endl
-				  << "username: " << username << std::endl
-				  << "hostname: " << hostname << std::endl;
-		bool nicknameMatch = wildcardMatch(nickname, client->getNickname());
-		bool usernameMatch = wildcardMatch(username, client->getUsername());
-		bool hostnameMatch = wildcardMatch(hostname, client->getHostname());
 
-		std::cout << "nicknameMatch: " << nicknameMatch << std::endl
-				  << "usernameMatch: " << usernameMatch << std::endl
-				  << "hostnameMatch: " << hostnameMatch << std::endl;
 		if (wildcardMatch(nickname, client->getNickname()) && wildcardMatch(username, client->getUsername()) && wildcardMatch(hostname, client->getHostname()))
 			return true;
 	}

@@ -33,8 +33,7 @@ void Server::setModeClient(Client *client, std::vector<std::string> arguments)
 		}
 		if (addToString)
 		{
-			if ((sign == PLUS && stringSign == MINUS) || (sign == MINUS && stringSign == PLUS) ||
-				(replyString.empty()))
+			if ((sign == PLUS && stringSign == MINUS) || (sign == MINUS && stringSign == PLUS) || (replyString.empty()))
 			{
 				stringSign = sign;
 				replyString += (sign == PLUS) ? '+' : '-';
@@ -51,18 +50,7 @@ static std::string userMask(std::string input)
 	std::string nickname;
 	std::string username;
 	std::string hostname;
-	/*						!		@
-		user	      		0		0		user!*@*
 
-		user!				1		0		user!*@*
-		user!asd			1		0		user!asd@*
-
-			asd@lol			0		1		   *!asd@lol
-			@lol			0		1		     *!*@lol
-
-			!asd@			1		1		   *!asd@*
-			!asd@lol		1		1		   *!asd@lol
-		user!asd@lol		1		1		user!asd@lol		*/
 	if (!(input.find("!") == std::string::npos && input.find("@") != std::string::npos))
 		nickname = input.substr(0, input.find("!"));
 	else
@@ -114,7 +102,6 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 		{
 			if (arguments.size() <= clientNumber)
 			{
-				addToString = 0;
 				if (!(first & M_BAN) && (first |= M_BAN))
 				{
 					for (std::vector<std::string>::iterator it = channel->getBanList().begin(); it != channel->getBanList().end(); it++)
@@ -123,8 +110,7 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 				}
 				break;
 			}
-			std::string mask = userMask(arguments[clientNumber]);
-			clientNumber++;
+			std::string mask = userMask(arguments[clientNumber++]);
 
 			std::vector<std::string> &banList = channel->getBanList();
 			if (sign == PLUS)
@@ -145,59 +131,50 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 			break;
 		case 'k':
 		{
-			if (!(first & M_KEY) && (first |= M_KEY) && ++addToString)
+			if (!(first & M_KEY) && (first |= M_KEY))
 			{
+				std::string key;
 				if (sign == MINUS)
-				{
-					channel->setPassword("");
-					channel->setMode(M_KEY, sign);
-					break;
-				}
+					key = "";
 				else if (arguments.size() <= clientNumber)
-				{
-					addToString = 0;
 					break;
+				else if (sign == PLUS)
+				{
+					key = arguments[clientNumber++];
+					targets += " " + key;
 				}
-				std::string key = arguments[clientNumber];
-				clientNumber++;
 				channel->setPassword(key);
 				channel->setMode(M_KEY, sign);
-				targets += " " + key;
+				addToString = 1;
 			}
 			break;
 		}
 		case 'l':
-			if (!(first & M_LIMITED) && (first |= M_LIMITED) && ++addToString)
+			if (!(first & M_LIMITED) && (first |= M_LIMITED))
 			{
-				if (sign == MINUS)
+				if (sign == MINUS && ++addToString)
 				{
 					channel->setMode(M_LIMITED, sign);
 					break;
 				}
-				else if (arguments.size() <= clientNumber)
+				int userLimit;
+				if (arguments.size() <= clientNumber)
+					userLimit = channel->getChannelUsers().size();
+				else
 				{
-					int limitUser = channel->getChannelUsers().size();
-					channel->setMode(M_LIMITED, sign);
-					channel->setUserLimit(limitUser);
-					targets += " " + toString(limitUser);
-					break;
+					std::string limit = arguments[clientNumber++];
+					if ((limit.find_first_not_of("+0123456789") != std::string::npos || limit.length() > 11))
+						break;
+
+					userLimit = std::atoi(limit.c_str());
+
+					if (userLimit < 1)
+						break;
 				}
-				std::string limit = arguments[clientNumber];
-				clientNumber++;
-				if (limit.find_first_not_of("+0123456789") != std::string::npos || limit.length() > 11)
-				{
-					addToString = 0;
-					break;
-				}
-				int limitInt = std::atoi(limit.c_str());
-				if (limitInt < 1)
-				{
-					addToString = 0;
-					break;
-				}
-				channel->setUserLimit(limitInt);
+				channel->setUserLimit(userLimit);
 				channel->setMode(M_LIMITED, sign);
-				targets += " " + toString(limitInt);
+				addToString = 1;
+				targets += " " + toString(userLimit);
 			}
 			break;
 		case 'm':
@@ -207,27 +184,23 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 		case 'o':
 		{
 			if (arguments.size() <= clientNumber)
-			{
-				addToString = 0;
 				break;
-			}
-			Client *target = getClient(arguments[clientNumber]);
-			clientNumber++;
-			if (target == NULL || !channel->isOnChannel(target))
-			{
-				addToString = 0;
+
+			Client *target = getClient(arguments[clientNumber++]);
+			if ((target == NULL || !channel->isOnChannel(target)))
 				break;
-			}
+
 			if (channel->getChannelUserMode(client) < OPERATOR) // channel->getChannelUserMode(target))
 			{
 				client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
-				addToString = 0;
 				break;
 			}
+
 			if (sign == PLUS)
 				channel->setClientMode(target, OPERATOR);
 			else if (sign == MINUS)
 				channel->setClientMode(target, USER);
+
 			targets += " " + target->getNickname();
 			addToString = 1;
 			break;
@@ -243,27 +216,23 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 		case 'v':
 		{
 			if (arguments.size() <= clientNumber)
-			{
-				addToString = 0;
 				break;
-			}
-			Client *target = getClient(arguments[clientNumber]);
-			clientNumber++;
+
+			Client *target = getClient(arguments[clientNumber++]);
 			if (target == NULL || !channel->isOnChannel(target))
-			{
-				addToString = 0;
 				break;
-			}
-			if (channel->getChannelUserMode(client) <= channel->getChannelUserMode(target))
+
+			if (channel->getChannelUserMode(client) < OPERATOR)//<= channel->getChannelUserMode(target))
 			{
 				client->reply(ERR_CHANOPRIVSNEEDED, channel->getName());
-				addToString = 0;
 				break;
 			}
+
 			if (sign == PLUS)
 				channel->setClientMode(target, VOICE);
 			else if (sign == MINUS)
 				channel->setClientMode(target, USER);
+
 			targets += " " + target->getNickname();
 			addToString = 1;
 			break;
@@ -275,8 +244,7 @@ void Server::setModeChannel(Client *client, Channel *channel, std::vector<std::s
 		}
 		if (addToString)
 		{
-			if ((sign == PLUS && stringSign == MINUS) || (sign == MINUS && stringSign == PLUS) ||
-				(replyString.empty()))
+			if ((sign == PLUS && stringSign == MINUS) || (sign == MINUS && stringSign == PLUS) || (replyString.empty()))
 			{
 				stringSign = sign;
 				replyString += (sign == PLUS) ? '+' : '-';
