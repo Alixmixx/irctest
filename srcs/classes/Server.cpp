@@ -14,9 +14,11 @@ Server::Server(short port, std::string password)
 	  _serverCreationTime(std::time(NULL))
 {
 	_commandHandlers["ADMIN"] = &Server::handleAdmin;
+	_commandHandlers["DIE"] = &Server::handleDie;
 	_commandHandlers["INVITE"] = &Server::handleInvite;
 	_commandHandlers["JOIN"] = &Server::handleJoin;
 	_commandHandlers["KICK"] = &Server::handleKick;
+	_commandHandlers["KILL"] = &Server::handleKill;
 	_commandHandlers["LIST"] = &Server::handleList;
 	_commandHandlers["LUSERS"] = &Server::handleLusers;
 	_commandHandlers["MODE"] = &Server::handleMode;

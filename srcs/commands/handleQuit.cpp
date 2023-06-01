@@ -24,6 +24,9 @@ static std::vector<Client *> getRecipients(Client *client)
 void Server::handleQuit(Client *client, std::vector<std::string> arguments)
 {
 	std::string message = arguments.empty() ? "" : "Quit: " + arguments[0];
+	if (arguments.size() > 2 && arguments[2] == KILL)
+		message = "Killed by " + arguments[0] + " : " + arguments[1];
+
 	std::string quitMessage = client->getPrefix() + " QUIT :" + message;
 	if (client->isRegistered())
 	{

@@ -15,6 +15,7 @@ public:
 	void setIsInvisible(bool invisible);
 	void setLastAction();
 	void setPasswordCorrect();
+	void setAdmin(bool isAdmin);
 
 	void addChannel(Channel* channel);
 	void leaveChannel(Channel* channel);
@@ -23,6 +24,7 @@ public:
 	bool				  isRegistered() const;
 	bool				  isInvisible() const;
 	bool				  isPasswordCorrect() const;
+	bool				  isAdmin() const;
 	std::string			  getNickname() const;
 	std::string			  getUsername() const;
 	std::string			  getRealname() const;
@@ -50,6 +52,7 @@ private:
 	bool _isRegistered;
 	bool _isInvisible;
 	bool _isPasswordCorrect;
+	bool _isAdmin;
 
 	std::string _nickname;
 	std::string _username;

@@ -61,9 +61,11 @@ private:
 	void welcomeMessage(Client* client);
 
 	void handleAdmin(Client* client, std::vector<std::string> arguments);
+	void handleDie(Client* client, std::vector<std::string> arguments);
 	void handleInvite(Client* client, std::vector<std::string> arguments);
 	void handleJoin(Client* client, std::vector<std::string> arguments);
 	void handleKick(Client* client, std::vector<std::string> arguments);
+	void handleKill(Client* client, std::vector<std::string> arguments);
 	void handleList(Client* client, std::vector<std::string> arguments);
 	void handleLusers(Client* client, std::vector<std::string> arguments);
 	void handleMotd(Client* client, std::vector<std::string> arguments);

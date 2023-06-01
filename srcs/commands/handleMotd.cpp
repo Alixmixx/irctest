@@ -14,8 +14,7 @@ void Server::handleMotd(Client *client, std::vector<std::string> arguments)
 			std::stringstream ss;
 			char c;
 			while (motdFile.get(c))
-				if (isprint(c) || c == '\n')
-					ss << c;
+					ss << c;  // watch out for unicode
 			_motd = ss.str();
 			motdFile.close();
 		}

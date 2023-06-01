@@ -223,7 +223,7 @@ void Client::reply(ReplyCode replyCode, std::string arg1, std::string arg2, std:
 	case ERR_CANTKILLSERVER:
 		return reply(":You cant kill a server!", replyCode);
 	case ERR_NOOPERHOST:
-		return reply(arg1 + " :Only few of mere mortals may try to enter the twilight zone", replyCode);
+		return reply(arg1 + " :Can only give IRC operator privilege to yourself", replyCode);
 	case ERR_UMODEUNKNOWNFLAG:
 		return reply(":Unknown MODE flag", replyCode);
 	case ERR_USERSDONTMATCH:
